@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans');
+@import url('https://fonts.googleapis.com/css?family=Charm');
+
+$header-font: 'Charm', cursive;
+$regular-font: 'Fira Sans', sans-serif;
+
+$color-main: #ffffa9;
+$color-main-font: black;
+
+$color-secondary: whitesmoke;
+$color-secondary-font: black;
+
+%center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@import './containers/Login/Login.scss';
+
+html, body, #app {
+  height: 100%
+}
+
+#app {
+  @extend %center-wrapper;
+  width: 100%;
+  padding: 0px;
+}
