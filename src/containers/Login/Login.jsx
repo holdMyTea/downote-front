@@ -4,9 +4,15 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
 
+    this.INPUT_REQUIRED = 'input-required'
+    this.INPUT_CORRECT = 'input-correct'
+    this.INPUT_WRONG = 'input-wrong'
+
     this.state = {
       emailValue: '',
-      passValue: ''
+      emailStatus: this.INPUT_REQUIRED,
+      passValue: '',
+      passStatus: this.INPUT_REQUIRED
     }
 
     this.onEmailChange = this.onEmailChange.bind(this)
@@ -24,7 +30,8 @@ class Login extends React.Component {
               <label className='login-label'>
                 Email:
               </label>
-              <input className='login-input'
+              <input
+                className={`login-input ${this.state.emailStatus}`}
                 type='text' value={this.state.emailValue}
                 onChange={this.onEmailChange} placeholder={'Email'}/>
             </div>
@@ -32,7 +39,8 @@ class Login extends React.Component {
               <label className='login-label'>
                 Password:
               </label>
-              <input className='login-input'
+              <input
+                className={`login-input ${this.state.passStatus}`}
                 type='password' value={this.state.passValue}
                 onChange={this.onPassChange} placeholder={'Password'}/>
             </div>
@@ -44,19 +52,28 @@ class Login extends React.Component {
   }
 
   onEmailChange (event) {
+    const newInput = event.target.value
     this.setState({
-      emailValue: event.target.value
+      emailValue: newInput,
+      emailStatus: newInput.length === 0 ? this.INPUT_REQUIRED
+        : /(\w)+@(\w)+\.{1}\w{1,5}/.test(newInput) ? this.INPUT_CORRECT
+          : this.INPUT_WRONG
     })
   }
 
   onPassChange (event) {
+    const newInput = event.target.value
     this.setState({
-      passValue: event.target.value
+      passValue: newInput,
+      passStatus: newInput.length === 0 ? this.INPUT_REQUIRED
+        : newInput.length > 5 ? this.INPUT_CORRECT
+          : this.INPUT_WRONG
     })
   }
 
-  handleSubmit () {
-    console.logs(JSON.stringify(this.state))
+  handleSubmit (event) {
+    event.preventDefault()
+    console.log(JSON.stringify(this.state))
   }
 }
 
