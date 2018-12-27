@@ -48,7 +48,6 @@ $login-input-font-size: 11pt;
   font-family: $regular-font;
   font-size: $login-input-font-size;
   border-radius: 5px;
-  border: 2px solid #dadada;
 }
 .login-input {
   @extend %login-form-element;
@@ -58,20 +57,39 @@ $login-input-font-size: 11pt;
 }
 .login-button {
   @extend %login-form-element;
+  padding: 5px 10px;
 }
 
 .input-required {
   outline:none;
-  border-color:#5478ee;
-  box-shadow:0 0 10px #5478ee;
+  border-color: $color-input-pending;
+  box-shadow:0 0 10px $color-input-pending;
 }
 .input-wrong {
   outline:none;
-  border-color:#db7719;
-  box-shadow:0 0 10px #db7719;
+  border-color: $color-input-wrong;
+  box-shadow:0 0 10px $color-input-wrong;
 }
 .input-correct {
   outline:none;
-  border-color:#12bb75;
-  box-shadow:0 0 10px #12bb75;
+  border-color: $color-input-correct;
+  box-shadow:0 0 10px $color-input-correct;
+}
+
+%smooth-transition{
+  transition: background-color 0.5s ease;
+  transition: border 0.5s ease;
+  transition: color 0.5s ease;
+}
+.button-pending {
+  @extend %smooth-transition;
+  border: 2px solid $color-secondary;
+  background-color: white;
+  color: black;
+}
+.button-ready {
+  @extend %smooth-transition;
+  border: 2px solid $color-input-correct;
+  background-color: $color-input-correct;
+  color: white;
 }

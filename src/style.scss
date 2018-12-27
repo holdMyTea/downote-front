@@ -7,8 +7,12 @@ $regular-font: 'Fira Sans', sans-serif;
 $color-main: #ffffa9;
 $color-main-font: black;
 
-$color-secondary: whitesmoke;
+$color-secondary: #dadada;
 $color-secondary-font: black;
+
+$color-input-pending: #5478ee;
+$color-input-correct: #12bb75;
+$color-input-wrong: #db7719;
 
 %center-wrapper {
   display: flex;
