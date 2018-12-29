@@ -1,5 +1,4 @@
-$login-field-min-width: 250px;
-$login-input-font-size: 11pt;
+@import '../../style.scss';
 
 .login-container {
   @extend %center-wrapper;
@@ -27,69 +26,4 @@ $login-input-font-size: 11pt;
   color: $color-main-font;
   margin-top: 15px;
   margin-bottom: 5px;
-}
-
-.login-form {
-  @extend %center-wrapper;
-}
-
-.login-form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.login-label {
-  margin: 5px 0;
-  font-family: $regular-font;
-  font-size: $login-input-font-size;
-}
-
-%login-form-element {
-  font-family: $regular-font;
-  font-size: $login-input-font-size;
-  border-radius: 5px;
-}
-.login-input {
-  @extend %login-form-element;
-  min-width: $login-field-min-width;
-  margin-bottom: 15px;
-  height: 35px;
-}
-.login-button {
-  @extend %login-form-element;
-  padding: 5px 10px;
-}
-
-.input-required {
-  outline:none;
-  border-color: $color-input-pending;
-  box-shadow:0 0 10px $color-input-pending;
-}
-.input-wrong {
-  outline:none;
-  border-color: $color-input-wrong;
-  box-shadow:0 0 10px $color-input-wrong;
-}
-.input-correct {
-  outline:none;
-  border-color: $color-input-correct;
-  box-shadow:0 0 10px $color-input-correct;
-}
-
-%smooth-transition{
-  transition: background-color 0.5s ease;
-  transition: border 0.5s ease;
-  transition: color 0.5s ease;
-}
-.button-pending {
-  @extend %smooth-transition;
-  border: 2px solid $color-secondary;
-  background-color: white;
-  color: black;
-}
-.button-ready {
-  @extend %smooth-transition;
-  border: 2px solid $color-input-correct;
-  background-color: $color-input-correct;
-  color: white;
 }

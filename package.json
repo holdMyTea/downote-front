@@ -7,7 +7,7 @@
     "build": "webpack",
     "start": "webpack-dev-server"
   },
-  "author": "",
+  "author": "rise42",
   "license": "ISC",
   "dependencies": {
     "react": "^16.6.1",

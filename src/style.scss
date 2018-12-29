@@ -14,21 +14,12 @@ $color-input-pending: #5478ee;
 $color-input-correct: #12bb75;
 $color-input-wrong: #db7719;
 
+$login-field-min-width: 250px;
+$login-input-font-size: 11pt;
+
 %center-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-
-@import './containers/Login/Login.scss';
-
-html, body, #app {
-  height: 100%
-}
-
-#app {
-  @extend %center-wrapper;
-  width: 100%;
-  padding: 0px;
 }

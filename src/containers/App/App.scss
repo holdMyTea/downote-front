@@ -1,0 +1,11 @@
+@import '../../style.scss';
+
+html, body, #app {
+  height: 100%
+}
+
+#app {
+  @extend %center-wrapper;
+  width: 100%;
+  padding: 0px;
+}

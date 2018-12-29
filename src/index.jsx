@@ -7,8 +7,7 @@ import thunk from 'redux-thunk'
 import { logger } from 'redux-logger'
 
 import reducers from './reducers'
-import App from './containers/App'
-import './style.scss'
+import App from './containers/App/App'
 
 const store = createStore(
   reducers,
