@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Types from 'prop-types'
 
 import './LoginForm.scss'
 
@@ -85,8 +86,15 @@ class LoginForm extends Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    console.log(JSON.stringify(this.state))
+    this.props.onLogin(
+      this.state.emailValue,
+      this.state.passValue
+    )
   }
+}
+
+LoginForm.propTypes = {
+  onLogin: Types.func.isRequired
 }
 
 export default LoginForm

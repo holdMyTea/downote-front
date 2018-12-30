@@ -16,7 +16,7 @@ export const handleLoginFailure = (error) => ({
   error
 })
 
-export const tryLoggingIn = ({ email, pass }) => {
+export const tryLoggingIn = (email, pass) => {
   return dispatch => {
     dispatch(sendLoginRequest())
     return fetch('http://localhost:8082/login', {
@@ -29,6 +29,6 @@ export const tryLoggingIn = ({ email, pass }) => {
     })
       .then(response => response.json())
       .then(response => dispatch(receiveLoginResponse(response)))
-      .catch(error => dispatch(handleLoginFailure(error)))
+      .catch(error => dispatch(handleLoginFailure(error.message)))
   }
 }
