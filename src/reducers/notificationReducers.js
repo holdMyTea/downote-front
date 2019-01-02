@@ -1,0 +1,27 @@
+import { CREATE_NOTIFICATION, REMOVE_NOTIFICATION } from '../actions/actionsNotification'
+
+const createNotificationObject = action => ({
+  id: action.id,
+  header: action.header,
+  text: action.text,
+  type: action.notificationType
+})
+
+export default (
+  state = {
+    queue: []
+  },
+  action
+) => {
+  switch (action.type) {
+    case CREATE_NOTIFICATION:
+      return {
+        notificationQueue: [...state.queue, createNotificationObject(action)]
+      }
+
+    case REMOVE_NOTIFICATION:
+      return {
+        notificationQueue: state.queue.filter(e => e.id !== action.id)
+      }
+  }
+}

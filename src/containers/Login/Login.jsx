@@ -23,24 +23,20 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    isLoginPending: state.login.isLoginPending,
-    error: state.login.error
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onFormSubmit: (email, pass) => dispatch(tryLoggingIn(email, pass))
-  }
-}
-
 Login.propTypes = {
   isLoginPending: Types.bool.isRequired,
   error: Types.string,
   onFormSubmit: Types.func.isRequired
 }
+
+const mapStateToProps = state => ({
+  isLoginPending: state.login.isLoginPending,
+  error: state.login.error
+})
+
+const mapDispatchToProps = dispatch => ({
+  onFormSubmit: (email, pass) => dispatch(tryLoggingIn(email, pass))
+})
 
 export default connect(
   mapStateToProps,

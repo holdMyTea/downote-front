@@ -1,18 +1,40 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Types from 'prop-types'
 
+import Notification from '../../components/Notification/Notification/Notification'
 import './NotificationContainer.scss'
 
 class NotificationContainer extends Component {
   render () {
     return (
       <div className='notification-container'>
-        <div className='notification'>
-          <h4>Login failed</h4>
-          <p>Could not reach the server, please, check your connection</p>
-        </div>
+        {
+          this.props.queue.map(e =>
+            (<Notification key={e.id}
+              header={e.header} text={e.text} type={e.type} />)
+          )
+        }
       </div>
     )
   }
 }
 
-export default NotificationContainer
+NotificationContainer.propTypes = {
+  queue: Types.arrayOf(
+    Types.shape({
+      id: Types.number.isRequired,
+      header: Types.string.isRequired,
+      text: Types.string.isRequired,
+      type: Types.string.isRequired
+    })
+  )
+}
+
+const mapStateToProps = state => ({
+  queue: state.notifications.notificationQueue
+})
+
+export default connect(
+  mapStateToProps
+)(NotificationContainer)
