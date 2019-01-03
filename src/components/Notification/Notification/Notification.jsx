@@ -1,4 +1,5 @@
 import React from 'react'
+import Types from 'prop-types'
 
 const Notification = ({ header, text, type }) => (
   <div className={`notification ${type}`}>
@@ -6,5 +7,11 @@ const Notification = ({ header, text, type }) => (
     <p>{text}</p>
   </div>
 )
+
+Notification.propTypes = {
+  header: Types.string.isRequired,
+  text: Types.string.isRequired,
+  type: Types.string.isRequired
+}
 
 export default Notification

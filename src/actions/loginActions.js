@@ -1,4 +1,4 @@
-import { showErrorNotification } from './actionsNotification'
+import { showErrorNotification } from './notificationActions'
 
 export const SEND_LOGIN_REQUEST = 'SEND_LOGIN_REQUEST'
 export const RECEIVE_LOGIN_TOKEN = 'RECEIVE_LOGIN_TOKEN'

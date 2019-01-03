@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Types from 'prop-types'
 
 import LoginForm from '../../components/Login/LoginForm/LoginForm'
-import { tryLoggingIn } from '../../actions/actionsLogin'
+import { tryLoggingIn } from '../../actions/loginActions'
 import './Login.scss'
 
 class Login extends Component {

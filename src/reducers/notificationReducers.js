@@ -1,4 +1,4 @@
-import { CREATE_NOTIFICATION, REMOVE_NOTIFICATION } from '../actions/actionsNotification'
+import { CREATE_NOTIFICATION, REMOVE_NOTIFICATION } from '../actions/notificationActions'
 
 const createNotificationObject = action => ({
   id: action.id,

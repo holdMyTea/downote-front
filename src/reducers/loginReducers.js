@@ -1,4 +1,4 @@
-import { SEND_LOGIN_REQUEST, RECEIVE_LOGIN_TOKEN, HANDLE_LOGIN_FAILURE } from '../actions/actionsLogin'
+import { SEND_LOGIN_REQUEST, RECEIVE_LOGIN_TOKEN, HANDLE_LOGIN_FAILURE } from '../actions/loginActions'
 
 export default (
   state = {
