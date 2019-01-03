@@ -16,12 +16,14 @@ export default (
   switch (action.type) {
     case CREATE_NOTIFICATION:
       return {
-        notificationQueue: [...state.queue, createNotificationObject(action)]
+        queue: [...state.queue, createNotificationObject(action)]
       }
 
     case REMOVE_NOTIFICATION:
       return {
-        notificationQueue: state.queue.filter(e => e.id !== action.id)
+        queue: state.queue.filter(e => e.id !== action.id)
       }
+
+    default: return state
   }
 }

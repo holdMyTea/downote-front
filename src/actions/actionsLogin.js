@@ -1,3 +1,5 @@
+import { showErrorNotification } from './actionsNotification'
+
 export const SEND_LOGIN_REQUEST = 'SEND_LOGIN_REQUEST'
 export const RECEIVE_LOGIN_TOKEN = 'RECEIVE_LOGIN_TOKEN'
 export const HANDLE_LOGIN_FAILURE = 'HANDLE_LOGIN_FAILURE'
@@ -6,15 +8,23 @@ export const sendLoginRequest = () => ({
   type: SEND_LOGIN_REQUEST
 })
 
-export const receiveLoginResponse = (response) => ({
+const receiveLoginResponse = (token) => ({
   type: RECEIVE_LOGIN_TOKEN,
-  token: response.token
+  token: token
 })
 
-export const handleLoginFailure = (error) => ({
-  type: HANDLE_LOGIN_FAILURE,
-  error
+const handleLoginFailure = (message) => ({
+  type: RECEIVE_LOGIN_TOKEN,
+  token: message
 })
+
+// TODO: make valid messages
+const notifyAboutError = (message) => {
+  return dispatch => {
+    dispatch(showErrorNotification('No connection', 'Failed to connect'))
+    dispatch(handleLoginFailure(message))
+  }
+}
 
 export const tryLoggingIn = (email, pass) => {
   return dispatch => {
@@ -28,7 +38,7 @@ export const tryLoggingIn = (email, pass) => {
       body: JSON.stringify({ email, pass })
     })
       .then(response => response.json())
-      .then(response => dispatch(receiveLoginResponse(response)))
-      .catch(error => dispatch(handleLoginFailure(error.message)))
+      .then(response => dispatch(receiveLoginResponse(response.token)))
+      .catch(error => dispatch(notifyAboutError(error.message)))
   }
 }

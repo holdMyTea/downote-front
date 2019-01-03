@@ -32,7 +32,7 @@ NotificationContainer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  queue: state.notifications.notificationQueue
+  queue: state.notifications.queue
 })
 
 export default connect(
