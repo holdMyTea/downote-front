@@ -15,7 +15,8 @@ class Login extends Component {
           {
             this.props.isLoginPending
               ? <h6>Woopsi-Doopsie</h6>
-              : <LoginForm onLogin={this.props.onFormSubmit}/>
+              : <LoginForm email={this.props.email}
+                onLogin={this.props.onFormSubmit}/>
           }
         </div>
       </div>
@@ -24,12 +25,14 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+  email: Types.string,
   isLoginPending: Types.bool.isRequired,
   error: Types.string,
   onFormSubmit: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
+  email: state.login.email,
   isLoginPending: state.login.isLoginPending,
   error: state.login.error
 })

@@ -1,23 +1,28 @@
-import { SEND_LOGIN_REQUEST, RECEIVE_LOGIN_TOKEN, HANDLE_LOGIN_FAILURE } from '../actions/loginActions'
+import { SEND_LOGIN_REQUEST, RECEIVE_LOGIN_TOKEN, RECEIVE_LOGIN_FAILURE } from '../actions/loginActions'
 
 export default (
   state = {
+    email: '',
     isLoginPending: false
   },
   action
 ) => {
   switch (action.type) {
     case SEND_LOGIN_REQUEST:
-      return { isLoginPending: true }
+      return {
+        email: action.email,
+        isLoginPending: true
+      }
 
     case RECEIVE_LOGIN_TOKEN:
       return {
-        isLoginPending: false,
-        token: action.token
+        ...state,
+        isLoginPending: false
       }
 
-    case HANDLE_LOGIN_FAILURE:
+    case RECEIVE_LOGIN_FAILURE:
       return {
+        ...state,
         isLoginPending: false,
         error: action.error
       }

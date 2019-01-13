@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
 
-import Notification from '../../components/Notification/Notification/Notification'
+import Notification from '../../components/Notification/Notification'
 import './NotificationContainer.scss'
 
 class NotificationContainer extends Component {
@@ -12,7 +12,7 @@ class NotificationContainer extends Component {
         {
           this.props.queue.map(e =>
             (<Notification key={e.id}
-              header={e.header} text={e.text} type={e.type} />)
+              header={e.header} description={e.description} type={e.type} />)
           )
         }
       </div>
@@ -25,7 +25,7 @@ NotificationContainer.propTypes = {
     Types.shape({
       id: Types.number.isRequired,
       header: Types.string.isRequired,
-      text: Types.string.isRequired,
+      description: Types.string,
       type: Types.string.isRequired
     })
   )

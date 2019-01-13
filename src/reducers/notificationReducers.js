@@ -1,10 +1,10 @@
 import { CREATE_NOTIFICATION, REMOVE_NOTIFICATION } from '../actions/notificationActions'
 
 const createNotificationObject = action => ({
+  type: action.notificationType,
   id: action.id,
   header: action.header,
-  text: action.text,
-  type: action.notificationType
+  description: action.description
 })
 
 export default (

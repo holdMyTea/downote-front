@@ -1,16 +1,17 @@
 export const CREATE_NOTIFICATION = 'CREATE_NOTIFICATION'
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 
-export const NOTIFICATION_TYPE_ERROR = 'notification-error'
+const NOTIFICATION_TYPE_ERROR = 'notification-error'
+const NOTIFICATION_TYPE_SUCCESS = 'notification-success'
 
 const notificationTimeout = 1500
 
-const createNotification = (id, header, text, notificationType) => ({
+const createNotification = (notificationType, id, header, description) => ({
   type: CREATE_NOTIFICATION,
+  notificationType,
   id,
   header,
-  text,
-  notificationType
+  description
 })
 
 const removeNotification = id => ({
@@ -18,15 +19,18 @@ const removeNotification = id => ({
   id
 })
 
-const showNotification = (header, text, notificationType) => {
+const showNotification = (notificationType, header, description) => {
   return dispatch => {
     const notificationId = new Date().getTime()
-    dispatch(createNotification(notificationId, header, text, notificationType))
+    dispatch(createNotification(notificationType, notificationId, header, description))
     return setTimeout(() => {
       dispatch(removeNotification(notificationId))
     }, notificationTimeout)
   }
 }
 
-export const showErrorNotification = (header, text) =>
-  showNotification(header, text, NOTIFICATION_TYPE_ERROR)
+export const showErrorNotification = (header, description) =>
+  showNotification(NOTIFICATION_TYPE_ERROR, header, description)
+
+export const showSuccessNotification = (header, description) =>
+  showNotification(NOTIFICATION_TYPE_SUCCESS, header, description)

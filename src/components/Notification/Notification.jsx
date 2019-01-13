@@ -1,16 +1,18 @@
 import React from 'react'
 import Types from 'prop-types'
 
-const Notification = ({ header, text, type }) => (
+const Notification = ({ header, description, type }) => (
   <div className={`notification ${type}`}>
     <h4>{header}</h4>
-    <p>{text}</p>
+    {
+      description ? (<p>{description}</p>) : null
+    }
   </div>
 )
 
 Notification.propTypes = {
   header: Types.string.isRequired,
-  text: Types.string.isRequired,
+  description: Types.string,
   type: Types.string.isRequired
 }
 

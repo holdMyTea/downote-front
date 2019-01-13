@@ -12,16 +12,11 @@ class LoginForm extends Component {
     this.INPUT_WRONG = 'input-wrong'
 
     this.state = {
-      emailValue: '',
+      emailValue: props.email || '',
       emailStatus: this.INPUT_REQUIRED,
       passValue: '',
       passStatus: this.INPUT_REQUIRED
     }
-
-    this.onEmailChange = this.onEmailChange.bind(this)
-    this.onPassChange = this.onPassChange.bind(this)
-    this.updateButtonStyle = this.updateButtonStyle.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   render () {
@@ -57,7 +52,7 @@ class LoginForm extends Component {
     )
   }
 
-  onEmailChange (event) {
+  onEmailChange = (event) => {
     const newInput = event.target.value
     this.setState({
       emailValue: newInput,
@@ -67,7 +62,7 @@ class LoginForm extends Component {
     })
   }
 
-  onPassChange (event) {
+  onPassChange = (event) => {
     const newInput = event.target.value
     this.setState({
       passValue: newInput,
@@ -77,14 +72,14 @@ class LoginForm extends Component {
     })
   }
 
-  updateButtonStyle () {
+  updateButtonStyle = () => {
     const s = this.state
     return ((s.emailStatus === this.INPUT_CORRECT) &&
       (s.passStatus === this.INPUT_CORRECT))
       ? 'button-ready' : 'button-pending'
   }
 
-  handleSubmit (event) {
+  handleSubmit = (event) => {
     event.preventDefault()
     this.props.onLogin(
       this.state.emailValue,
@@ -94,6 +89,7 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  email: Types.string,
   onLogin: Types.func.isRequired
 }
 
