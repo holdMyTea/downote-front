@@ -4,7 +4,7 @@ export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 const NOTIFICATION_TYPE_ERROR = 'notification-error'
 const NOTIFICATION_TYPE_SUCCESS = 'notification-success'
 
-const notificationTimeout = 1500
+const notificationTimeout = 2000
 
 const createNotification = (notificationType, id, header, description) => ({
   type: CREATE_NOTIFICATION,

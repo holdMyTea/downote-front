@@ -33,7 +33,7 @@ export const tryLoggingIn = (email, pass) => {
         }
       })
       .catch(error => { // only triggers in case of network error
-        dispatch(showErrorNotification('No connection', 'Failed to connect'))
+        dispatch(showErrorNotification('No connection'))
         dispatch(receiveLoginFailure(error.message))
       })
   }

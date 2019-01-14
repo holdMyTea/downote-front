@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
 
-import LoginForm from '../../components/Login/LoginForm/LoginForm'
+import LoginForm from './LoginForm/LoginForm'
 import { tryLoggingIn } from '../../actions/loginActions'
 import './Login.scss'
 

@@ -15,7 +15,7 @@
   h4 {
     margin: 4px;
     font-family: $regular-font;
-    font-size: 11pt;
+    font-size: 9.5pt;
   }
   p {
     margin: 4px;
@@ -24,9 +24,34 @@
   }
 }
 
+$color-error-accent: #422323;
 .notification-error {
-  background: rgb(226, 121, 121);
+  background: #f19595;
+  border: 3px solid $color-error-accent;
+  * {
+    color: $color-error-accent;
+  }
 }
+$color-success-accent: #223b22;
 .notification-success {
-  background: rgb(89, 138, 77);
+  background: #64c464;
+  border: 3px solid $color-success-accent;
+  * {
+    color: $color-success-accent;
+  }
+}
+
+.notification-animation-enter {
+  opacity: 0.01;
+}
+.notification-animation-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.notification-animation-exit {
+  opacity: 1;
+}
+.notification-animation-exit-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
 }
