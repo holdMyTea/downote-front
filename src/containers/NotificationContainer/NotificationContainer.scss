@@ -2,7 +2,7 @@
 
 .notification-container {
   position: fixed;
-  width: 200px;
+  width: 150px;
   top: 0;
   left: 0;
   margin: 30px;
@@ -11,16 +11,16 @@
 .notification {
   margin: 5px;
   border-radius: 10px;
-  padding: 10px;
+  padding: 5px;
   h4 {
     margin: 4px;
     font-family: $regular-font;
-    font-size: 9.5pt;
+    font-size: 10pt;
   }
   p {
     margin: 4px;
     font-family: $regular-font;
-    font-size: 10pt;
+    font-size: 9pt;
   }
 }
 
@@ -39,19 +39,4 @@ $color-success-accent: #223b22;
   * {
     color: $color-success-accent;
   }
-}
-
-.notification-animation-enter {
-  opacity: 0.01;
-}
-.notification-animation-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-.notification-animation-exit {
-  opacity: 1;
-}
-.notification-animation-exit-active {
-  opacity: 0.01;
-  transition: opacity 500ms ease-in;
 }

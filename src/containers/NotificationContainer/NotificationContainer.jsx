@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { Transition } from 'react-spring'
 
 import Notification from './Notification/Notification'
 import './NotificationContainer.scss'
@@ -10,19 +10,22 @@ class NotificationContainer extends Component {
   render () {
     return (
       <div className='notification-container'>
-        <TransitionGroup>
-          { this.buildList() }
-        </TransitionGroup>
+        { this.buildList() }
       </div>
     )
   }
 
   buildList = () => (
-    this.props.queue.map(e => (
-      <CSSTransition key={e.id} timeout={500} classNames="notification-animation">
-        <Notification header={e.header} description={e.description} type={e.type} />
-      </CSSTransition>
-    ))
+    <Transition
+      items={this.props.queue}
+      keys={item => item.id}
+      from={{ opacity: 0.01, transform: 'translate(0px, 70px)' }}
+      enter={{ opacity: 1, transform: 'translate(0px, 0px)' }}
+      leave={{ opacity: 0.01, transform: 'translate(-100px, 0px)' }} >
+      { item => props => (
+        <Notification header={item.header} description={item.description} type={item.type} style={props} />
+      )}
+    </Transition>
   )
 }
 
