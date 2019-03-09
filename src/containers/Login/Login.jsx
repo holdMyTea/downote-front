@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
+import { Redirect } from 'react-router-dom'
 
 import LoginForm from './LoginForm/LoginForm'
 import { tryLoggingIn } from '../../actions/loginActions'
@@ -8,6 +9,9 @@ import './Login.scss'
 
 class Login extends Component {
   render () {
+    if (this.props.token)
+      return (<Redirect to='/home' />)
+
     return (
       <div className='login-container'>
         <div className='login-box'>
@@ -16,7 +20,7 @@ class Login extends Component {
             this.props.isLoginPending
               ? <h6>Woopsi-Doopsie</h6>
               : <LoginForm email={this.props.email}
-                onLogin={this.props.onFormSubmit}/>
+                onLogin={this.props.onFormSubmit} />
           }
         </div>
       </div>
@@ -25,6 +29,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+  token: Types.string,
   email: Types.string,
   isLoginPending: Types.bool.isRequired,
   error: Types.string,
@@ -32,6 +37,7 @@ Login.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  token: state.login.token,
   email: state.login.email,
   isLoginPending: state.login.isLoginPending,
   error: state.login.error

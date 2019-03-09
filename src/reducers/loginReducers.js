@@ -1,7 +1,14 @@
-import { SEND_LOGIN_REQUEST, RECEIVE_LOGIN_TOKEN, RECEIVE_LOGIN_FAILURE } from '../actions/loginActions'
+import Cookies from 'universal-cookie'
+
+import {
+  SEND_LOGIN_REQUEST,
+  SAVE_LOGIN_TOKEN,
+  RECEIVE_LOGIN_FAILURE
+} from '../actions/loginActions'
 
 export default (
   state = {
+    token: new Cookies().get('token'),
     email: '',
     isLoginPending: false
   },
@@ -14,10 +21,11 @@ export default (
         isLoginPending: true
       }
 
-    case RECEIVE_LOGIN_TOKEN:
+    case SAVE_LOGIN_TOKEN:
       return {
         ...state,
-        isLoginPending: false
+        isLoginPending: false,
+        token: action.token
       }
 
     case RECEIVE_LOGIN_FAILURE:

@@ -13,6 +13,7 @@
 .login-box {
   @extend %center-wrapper;
   margin: 0 auto;
+  min-height: 270px;
   min-width: $login-field-min-width * 1.1;
   width: 40%;
   max-width: $login-field-min-width * 1.4;

@@ -2,7 +2,7 @@ import { showErrorNotification, showSuccessNotification } from './notificationAc
 import request from '../helpers/request'
 
 export const SEND_LOGIN_REQUEST = 'SEND_LOGIN_REQUEST'
-export const RECEIVE_LOGIN_TOKEN = 'RECEIVE_LOGIN_TOKEN'
+export const SAVE_LOGIN_TOKEN = 'RECEIVE_LOGIN_TOKEN'
 export const RECEIVE_LOGIN_FAILURE = 'RECEIVE_LOGIN_FAILURE'
 
 export const sendLoginRequest = (email) => ({
@@ -10,23 +10,24 @@ export const sendLoginRequest = (email) => ({
   email
 })
 
-const receiveLoginResponse = () => ({
-  type: RECEIVE_LOGIN_TOKEN
+export const saveLoginToken = (token) => ({
+  type: SAVE_LOGIN_TOKEN,
+  token
 })
 
 const receiveLoginFailure = (message) => ({
-  type: RECEIVE_LOGIN_TOKEN,
-  token: message
+  type: SAVE_LOGIN_TOKEN,
+  error: message
 })
 
 export const tryLoggingIn = (email, pass) => {
   return dispatch => {
     dispatch(sendLoginRequest(email))
-    return request('http://localhost:8082/login', { email, pass }, 'post')
+    return request('http://localhost:8082/token', { email, pass }, 'post')
       .then(response => {
-        if (response.ok) {
+        if (response.ok) { // got 200
           dispatch(showSuccessNotification('Login successful'))
-          dispatch(receiveLoginResponse())
+          dispatch(saveLoginToken(response.body.token))
         } else {
           dispatch(showErrorNotification(response.body.error))
           dispatch(receiveLoginFailure(response.body.error))

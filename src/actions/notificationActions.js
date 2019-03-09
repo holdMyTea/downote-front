@@ -23,9 +23,10 @@ const showNotification = (notificationType, header, description) => {
   return dispatch => {
     const notificationId = new Date().getTime()
     dispatch(createNotification(notificationType, notificationId, header, description))
-    return setTimeout(() => {
-      dispatch(removeNotification(notificationId))
-    }, notificationTimeout)
+    return setTimeout(
+      () => dispatch(removeNotification(notificationId)),
+      notificationTimeout
+    )
   }
 }
 
