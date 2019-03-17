@@ -1,4 +1,4 @@
-const request = (url, body, method = 'get') => {
+const request = (url, method = 'get', body) => {
   let code, ok
   return fetch(url, {
     method,

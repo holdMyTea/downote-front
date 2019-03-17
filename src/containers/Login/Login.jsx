@@ -4,7 +4,7 @@ import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
 import LoginForm from './LoginForm/LoginForm'
-import { tryLoggingIn } from '../../actions/loginActions'
+import { logIn } from '../../actions/loginActions'
 import './Login.scss'
 
 class Login extends Component {
@@ -44,7 +44,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onFormSubmit: (email, pass) => dispatch(tryLoggingIn(email, pass))
+  onFormSubmit: (email, pass) => dispatch(logIn(email, pass))
 })
 
 export default connect(

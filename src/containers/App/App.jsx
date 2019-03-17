@@ -4,6 +4,7 @@ import Types from 'prop-types'
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom'
 
 import Login from '../Login/Login'
+import Home from '../Home/Home'
 import NotificationContainer from '../NotificationContainer/NotificationContainer'
 
 import './App.scss'
@@ -14,13 +15,15 @@ class App extends Component {
       <>
         <Switch>
           <Route path='/login' exact component={Login} />
-          <Route path='/home' exact component={() => (<h1>Home</h1>)} />
+          <Route path='/home' exact component={Home} />
 
-          <Route path='/' component={
+          <Route path='/' exact component={
             this.props.token
               ? () => <Redirect to='/home' />
               : () => <Redirect to='/login' />
           } />
+
+          <Route component={() => (<h1>ЧОЧ</h1>)} /> {/* no match route */}
         </Switch>
 
         <NotificationContainer />
