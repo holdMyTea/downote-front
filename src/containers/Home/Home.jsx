@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
+import TopBar from './TopBar/TopBar'
 import { logOut } from '../../actions/loginActions'
 
 class Home extends Component {
@@ -12,8 +13,13 @@ class Home extends Component {
 
     return (
       <div>
+        <TopBar>
+          <button
+            onClick={this.props.onLogOutClick}
+            className='topbar-logout'
+          >Log Out</button>
+        </TopBar>
         <h1>Home</h1>
-        <button onClick={this.props.onLogOutClick}>Log Out</button>
       </div>
     )
   }
