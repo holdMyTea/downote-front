@@ -4,7 +4,11 @@ import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
 import TopBar from './TopBar/TopBar'
+import NotesWrapper from './NotesWrapper/NotesWrapper'
+
 import { logOut } from '../../actions/loginActions'
+
+import './Home.scss'
 
 class Home extends Component {
   render () {
@@ -12,14 +16,13 @@ class Home extends Component {
       return (<Redirect to='/login' />)
 
     return (
-      <div>
+      <div className='home'>
         <TopBar>
-          <button
+          <button className='topbar-logout'
             onClick={this.props.onLogOutClick}
-            className='topbar-logout'
           >Log Out</button>
         </TopBar>
-        <h1>Home</h1>
+        <NotesWrapper />
       </div>
     )
   }

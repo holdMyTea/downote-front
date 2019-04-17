@@ -1,0 +1,31 @@
+.notes-wrapper{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.notes-column{
+  width: 100%;
+  margin: 5px;
+  border: 1px solid green;
+}
+
+.note{
+  margin: 3px;
+  padding: 4px;
+  border: 1px solid red;
+}
+
+.add-note-button{
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  font-size: 20pt;
+  padding: 0 0 3 0;
+  margin: 0;
+}
