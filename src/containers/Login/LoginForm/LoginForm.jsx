@@ -1,91 +1,82 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Types from 'prop-types'
 
 import './LoginForm.scss'
 
-class LoginForm extends Component {
-  constructor (props) {
-    super(props)
+const INPUT_REQUIRED = 'input-required'
+const INPUT_CORRECT = 'input-correct'
+const INPUT_WRONG = 'input-wrong'
 
-    this.INPUT_REQUIRED = 'input-required'
-    this.INPUT_CORRECT = 'input-correct'
-    this.INPUT_WRONG = 'input-wrong'
+const LoginForm = ({ email, onLogin }) => {
+  const [ emailInput, setEmailInput ] = useState()
+  const [ emailStatus, setEmailStatus ] = useState(INPUT_REQUIRED)
 
-    this.state = {
-      emailValue: props.email || '',
-      emailStatus: this.INPUT_REQUIRED,
-      passValue: '',
-      passStatus: this.INPUT_REQUIRED
-    }
-  }
+  const [ passInput, setPassInput ] = useState('')
+  const [ passStatus, setPassStatus ] = useState(INPUT_REQUIRED)
 
-  render () {
-    return (
-      <form className='login-form'>
-
-        <div className='login-form-group'>
-          <label className='login-label'>
-            Email:
-          </label>
-          <input
-            className={`login-input ${this.state.emailStatus}`}
-            type='text' value={this.state.emailValue}
-            onChange={this.onEmailChange} placeholder={'Email'}/>
-        </div>
-
-        <div className='login-form-group'>
-          <label className='login-label'>
-            Password:
-          </label>
-          <input
-            className={`login-input ${this.state.passStatus}`}
-            type='password' value={this.state.passValue}
-            onChange={this.onPassChange} placeholder={'Password'}/>
-        </div>
-
-        <button className={`login-button ${this.updateButtonStyle()}`}
-          onClick={this.handleSubmit}>
-          Log In
-        </button>
-
-      </form>
+  const onEmailChange = (event) => {
+    const newInput = event.target.value
+    setEmailInput(newInput)
+    setEmailStatus(
+      newInput.length === 0 ? INPUT_REQUIRED
+        : /(\w)+@(\w)+\.{1}\w{1,5}/.test(newInput) ? INPUT_CORRECT
+          : INPUT_WRONG
     )
   }
 
-  onEmailChange = (event) => {
+  const onPassChange = (event) => {
     const newInput = event.target.value
-    this.setState({
-      emailValue: newInput,
-      emailStatus: newInput.length === 0 ? this.INPUT_REQUIRED
-        : /(\w)+@(\w)+\.{1}\w{1,5}/.test(newInput) ? this.INPUT_CORRECT
-          : this.INPUT_WRONG
-    })
+    setPassInput(newInput)
+    setPassStatus(
+      newInput.length === 0 ? INPUT_REQUIRED
+        : newInput.length > 5 ? INPUT_CORRECT
+          : INPUT_WRONG
+    )
   }
 
-  onPassChange = (event) => {
-    const newInput = event.target.value
-    this.setState({
-      passValue: newInput,
-      passStatus: newInput.length === 0 ? this.INPUT_REQUIRED
-        : newInput.length > 5 ? this.INPUT_CORRECT
-          : this.INPUT_WRONG
-    })
-  }
-
-  updateButtonStyle = () => {
-    const s = this.state
-    return ((s.emailStatus === this.INPUT_CORRECT) &&
-      (s.passStatus === this.INPUT_CORRECT))
+  const updateButtonStyle = () => {
+    return ((emailStatus === INPUT_CORRECT) && (passStatus === INPUT_CORRECT))
       ? 'button-ready' : 'button-pending'
   }
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    this.props.onLogin(
-      this.state.emailValue,
-      this.state.passValue
+    onLogin(
+      emailInput,
+      passInput
     )
   }
+
+  return (
+    <form className='login-form'>
+
+      <div className='login-form-group'>
+        <label className='login-label'>
+          Email:
+        </label>
+        <input
+          className={`login-input ${emailStatus}`}
+          type='email' value={emailInput}
+          onChange={onEmailChange} placeholder={'Email'} />
+      </div>
+
+      <div className='login-form-group'>
+        <label className='login-label'>
+          Password:
+        </label>
+        <input
+          className={`login-input ${passStatus}`}
+          type='password' value={passInput}
+          onChange={onPassChange} placeholder={'Password'} />
+      </div>
+
+      <button className={`login-button ${updateButtonStyle()}`}
+        onClick={handleSubmit}>
+        Log In
+      </button>
+
+    </form>
+  )
 }
 
 LoginForm.propTypes = {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom'
@@ -9,28 +9,24 @@ import NotificationContainer from '../NotificationContainer/NotificationContaine
 
 import './App.scss'
 
-class App extends Component {
-  render () {
-    return (
-      <>
-        <Switch>
-          <Route path='/login' exact component={Login} />
-          <Route path='/home' exact component={Home} />
+const App = ({ token }) => (
+  <>
+    <Switch>
+      <Route path='/login' exact component={Login} />
+      <Route path='/home' exact component={Home} />
 
-          <Route path='/' exact component={
-            this.props.token
-              ? () => <Redirect to='/home' />
-              : () => <Redirect to='/login' />
-          } />
+      <Route path='/' exact component={
+        token
+          ? () => <Redirect to='/home' />
+          : () => <Redirect to='/login' />
+      } />
 
-          <Route component={() => (<h1>ЧОЧ</h1>)} /> {/* no match route */}
-        </Switch>
+      <Route component={() => (<h1>ЧОЧ</h1>)} /> {/* no match route */}
+    </Switch>
 
-        <NotificationContainer />
-      </>
-    )
-  }
-}
+    {/* <NotificationContainer /> */}
+  </>
+)
 
 const mapStateToProps = state => ({
   token: state.login.token
