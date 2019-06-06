@@ -1,13 +1,14 @@
 import React from 'react'
 import Types from 'prop-types'
+import { animated } from 'react-spring'
 
 const Notification = ({ header, description, type, style }) => (
-  <div className={`notification ${type}`} style={style}>
+  <animated.div className={`notification ${type}`} style={style}>
     <h4>{header}</h4>
     {
       description ? (<p>{description}</p>) : null
     }
-  </div>
+  </animated.div>
 )
 
 Notification.propTypes = {

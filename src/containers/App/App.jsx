@@ -24,7 +24,7 @@ const App = ({ token }) => (
       <Route component={() => (<h1>ЧОЧ</h1>)} /> {/* no match route */}
     </Switch>
 
-    {/* <NotificationContainer /> */}
+    <NotificationContainer />
   </>
 )
 
