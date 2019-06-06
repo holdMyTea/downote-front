@@ -8,7 +8,7 @@ const INPUT_CORRECT = 'input-correct'
 const INPUT_WRONG = 'input-wrong'
 
 const LoginForm = ({ email, onLogin }) => {
-  const [ emailInput, setEmailInput ] = useState()
+  const [ emailInput, setEmailInput ] = useState(email)
   const [ emailStatus, setEmailStatus ] = useState(INPUT_REQUIRED)
 
   const [ passInput, setPassInput ] = useState('')
@@ -54,8 +54,7 @@ const LoginForm = ({ email, onLogin }) => {
         <label className='login-label'>
           Email:
         </label>
-        <input
-          className={`login-input ${emailStatus}`}
+        <input className={`login-input ${emailStatus}`}
           type='email' value={emailInput}
           onChange={onEmailChange} placeholder={'Email'} />
       </div>
@@ -64,8 +63,7 @@ const LoginForm = ({ email, onLogin }) => {
         <label className='login-label'>
           Password:
         </label>
-        <input
-          className={`login-input ${passStatus}`}
+        <input className={`login-input ${passStatus}`}
           type='password' value={passInput}
           onChange={onPassChange} placeholder={'Password'} />
       </div>
