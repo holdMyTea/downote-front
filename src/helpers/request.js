@@ -7,8 +7,7 @@ const request = (url, method = 'get', body) => {
       'Content-Type': 'application/json'
     },
     credentials: 'include',
-    body: body ? JSON.stringify(body) : undefined,
-    mode: 'no-cors'
+    body: body ? JSON.stringify(body) : undefined
   }).then(response => {
     code = response.code
     ok = response.ok

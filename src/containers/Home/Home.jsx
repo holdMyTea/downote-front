@@ -12,8 +12,7 @@ import './Home.scss'
 
 class Home extends Component {
   render () {
-    if (!this.props.token)
-      return (<Redirect to='/login' />)
+    if (!this.props.token) { return (<Redirect to='/login' />) }
 
     return (
       <div className='home'>
