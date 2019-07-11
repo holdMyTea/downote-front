@@ -23,7 +23,7 @@ const NotificationContainer = ({ queue }) => {
         transitions.map(
           ({ item, key, props }) =>
             (<Notification key={key} header={item.header} description={item.description} type={item.type} style={props} />)
-          )
+        )
       }
     </div>
   )
