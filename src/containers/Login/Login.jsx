@@ -8,8 +8,7 @@ import { logIn } from '../../actions/loginActions'
 import './Login.scss'
 
 const Login = ({ token, email, isLoginPending, error, onFormSubmit }) => {
-  if (token)
-    return (<Redirect to='/home' />)
+  if (token) { return (<Redirect to='/home' />) }
 
   return (
     <div className='login-container'>
@@ -19,7 +18,7 @@ const Login = ({ token, email, isLoginPending, error, onFormSubmit }) => {
           isLoginPending
             ? <h6>Woopsi-Doopsie</h6>
             : <LoginForm email={email}
-              onLogin={onFormSubmit} />
+              onSubmit={onFormSubmit} />
         }
       </div>
     </div>
