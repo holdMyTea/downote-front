@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Types from 'prop-types'
 
-import './TopBar.scss'
-
 class TopBar extends Component {
   render () {
     return (
