@@ -1,8 +1,8 @@
 export const CREATE_NOTIFICATION = 'CREATE_NOTIFICATION'
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 
-const NOTIFICATION_TYPE_ERROR = 'notification-error'
-const NOTIFICATION_TYPE_SUCCESS = 'notification-success'
+export const NOTIFICATION_TYPE_ERROR = 'notification-error'
+export const NOTIFICATION_TYPE_SUCCESS = 'notification-success'
 
 const notificationTimeout = 2000
 

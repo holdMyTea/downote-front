@@ -1,33 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
-import { useTransition } from 'react-spring'
+import { Transition, List, Message } from 'semantic-ui-react'
 
-import Notification from './Notification/Notification'
-import './NotificationContainer.scss'
+import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '../../actions/notificationActions'
 
-const NotificationContainer = ({ queue }) => {
-  const transitions = useTransition(
-    queue,
-    queue => queue.key,
-    {
-      from: { opacity: 0.01, transform: 'translate(0px, 70px)' },
-      enter: { opacity: 1, transform: 'translate(0px, 0px)' },
-      leave: { opacity: 0.01, transform: 'translate(-100px, 0px)' }
-    }
-  )
-
-  return (
-    <div className='notification-container'>
-      {
-        transitions.map(
-          ({ item, key, props }) =>
-            (<Notification key={key} header={item.header} description={item.description} type={item.type} style={props} />)
-          )
-      }
-    </div>
-  )
+const containerStyle = {
+  position: 'fixed',
+  width: 150,
+  top: 0,
+  left: 0,
+  margin: 30
 }
+
+const NotificationContainer = ({ queue }) => (
+  <Transition.Group as={List} duration={300} style={containerStyle}>
+    { queue.map((item) =>
+      (<Message key={item.id}
+        positive={item.type === NOTIFICATION_TYPE_SUCCESS}
+        negative={item.type === NOTIFICATION_TYPE_ERROR}>
+        {item.header}
+      </Message>)
+    )}
+  </Transition.Group>
+)
 
 NotificationContainer.propTypes = {
   queue: Types.arrayOf(

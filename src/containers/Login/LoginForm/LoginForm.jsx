@@ -1,85 +1,80 @@
 import React, { useState } from 'react'
 import Types from 'prop-types'
+import { Form } from 'semantic-ui-react'
 
-import './LoginForm.scss'
-
-const INPUT_REQUIRED = 'input-required'
-const INPUT_CORRECT = 'input-correct'
-const INPUT_WRONG = 'input-wrong'
-
-const LoginForm = ({ email, onLogin }) => {
+/**
+ * Component with two inputs, email and password, and submit button
+ * @param {string} [email=''] value to pre-fill email input with
+ * @param {function} onSubmit submit function will be called with email string as the first param and password as the second one
+ */
+const LoginForm = ({ email = '', onSubmit }) => {
+  // stores the current email input value
   const [ emailInput, setEmailInput ] = useState(email)
-  const [ emailStatus, setEmailStatus ] = useState(INPUT_REQUIRED)
+  // used for applying styles to email input and submit button
+  const [ isEmailValid, setEmailValid ] = useState(true)
 
+  // stores the current pass input value
   const [ passInput, setPassInput ] = useState('')
-  const [ passStatus, setPassStatus ] = useState(INPUT_REQUIRED)
+  // used for applying styles to pass input and submit button
+  const [ isPassValid, setPassValid ] = useState(true)
 
+  // validates email input
   const onEmailChange = (event) => {
     const newInput = event.target.value
     setEmailInput(newInput)
-    setEmailStatus(
-      newInput.length === 0 ? INPUT_REQUIRED
-        : /(\w)+@(\w)+\.{1}\w{1,5}/.test(newInput) ? INPUT_CORRECT
-          : INPUT_WRONG
-    )
+    setEmailValid(newInput.length === 0 ||
+      /(\w)+@(\w)+\.{1}\w{1,5}/.test(newInput))
   }
 
+  // validates pass input
   const onPassChange = (event) => {
     const newInput = event.target.value
     setPassInput(newInput)
-    setPassStatus(
-      newInput.length === 0 ? INPUT_REQUIRED
-        : newInput.length > 5 ? INPUT_CORRECT
-          : INPUT_WRONG
+    setPassValid(
+      newInput.length === 0 || newInput.length > 5
     )
   }
 
-  const updateButtonStyle = () => {
-    return ((emailStatus === INPUT_CORRECT) && (passStatus === INPUT_CORRECT))
-      ? 'button-ready' : 'button-pending'
-  }
+  // checking for inputs' validity and lentgth to disable the submit button
+  const isButtonDisabled = !(isEmailValid && isPassValid) ||
+      emailInput.length === 0 || passInput.length === 0
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onLogin(
-      emailInput,
-      passInput
-    )
+    onSubmit(emailInput, passInput)
   }
 
   return (
-    <form className='login-form'>
+    <Form>
+      <Form.Input
+        label='Email'
+        type='email'
+        placeholder='Email'
+        error={!isEmailValid}
+        onChange={onEmailChange} />
 
-      <div className='login-form-group'>
-        <label className='login-label'>
-          Email:
-        </label>
-        <input className={`login-input ${emailStatus}`}
-          type='email' value={emailInput}
-          onChange={onEmailChange} placeholder={'Email'} />
-      </div>
+      <Form.Input
+        label='Password'
+        type='password'
+        placeholder='Password'
+        error={!isPassValid}
+        onChange={onPassChange} />
 
-      <div className='login-form-group'>
-        <label className='login-label'>
-          Password:
-        </label>
-        <input className={`login-input ${passStatus}`}
-          type='password' value={passInput}
-          onChange={onPassChange} placeholder={'Password'} />
-      </div>
-
-      <button className={`login-button ${updateButtonStyle()}`}
-        onClick={handleSubmit}>
+      <Form.Button
+        fluid
+        onClick={handleSubmit}
+        disabled={isButtonDisabled}
+        positive={!isButtonDisabled}
+      >
         Log In
-      </button>
-
-    </form>
+      </Form.Button>
+    </Form>
   )
 }
 
 LoginForm.propTypes = {
   email: Types.string,
-  onLogin: Types.func.isRequired
+  onSubmit: Types.func.isRequired
 }
 
 export default LoginForm

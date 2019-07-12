@@ -8,8 +8,6 @@ import NotesWrapper from './NotesWrapper/NotesWrapper'
 
 import { logOut } from '../../actions/loginActions'
 
-import './Home.scss'
-
 class Home extends Component {
   render () {
     if (!this.props.token) { return (<Redirect to='/login' />) }
