@@ -7,21 +7,17 @@ import Login from '../Login/Login'
 import Home from '../Home/Home'
 import NotificationContainer from '../NotificationContainer/NotificationContainer'
 
-import './App.scss'
-
 const App = ({ token }) => (
   <>
     <Switch>
       <Route path='/login' exact component={Login} />
       <Route path='/home' exact component={Home} />
 
-      <Route path='/' exact component={
-        token
-          ? () => <Redirect to='/home' />
-          : () => <Redirect to='/login' />
-      } />
+      {/* Redirecting to home/login from the root route */}
+      <Route path='/' exact component={() => <Redirect to={token ? '/home' : '/login'} />} />
 
-      <Route component={() => (<h1>ЧОЧ</h1>)} /> {/* no match route */}
+      {/* No match route */}
+      <Route component={() => (<h1>ЧОЧ</h1>)} />
     </Switch>
 
     <NotificationContainer />
