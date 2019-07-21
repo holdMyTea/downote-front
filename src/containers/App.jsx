@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import Types from 'prop-types'
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom'
 
-import Login from '../Login/Login'
-import Home from '../Home/Home'
-import NotificationContainer from '../NotificationContainer/NotificationContainer'
+import Login from './Login/Login'
+import Home from './Home/Home'
+import NotificationContainer from './NotificationContainer/NotificationContainer'
 
 const App = ({ token }) => (
   <>

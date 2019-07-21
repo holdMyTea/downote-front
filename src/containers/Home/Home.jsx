@@ -4,7 +4,6 @@ import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
 import TopBar from './TopBar/TopBar'
-import NotesWrapper from './NotesWrapper/NotesWrapper'
 
 import { logOut } from '../../actions/loginActions'
 
@@ -15,11 +14,9 @@ class Home extends Component {
     return (
       <div className='home'>
         <TopBar>
-          <button className='topbar-logout'
-            onClick={this.props.onLogOutClick}
+          <button className='topbar-logout' onClick={this.props.onLogOutClick}
           >Log Out</button>
         </TopBar>
-        <NotesWrapper />
       </div>
     )
   }
