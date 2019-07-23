@@ -1,25 +1,48 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { Button, Icon, Sidebar, Segment } from 'semantic-ui-react'
 import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
-import TopBar from './TopBar/TopBar'
-
+import SidePanel from './SidePanel'
+import Notes from './NotesContainer/NotesContainer'
 import { logOut } from '../../actions/loginActions'
 
-class Home extends Component {
-  render () {
-    if (!this.props.token) { return (<Redirect to='/login' />) }
-
-    return (
-      <div className='home'>
-        <TopBar>
-          <button className='topbar-logout' onClick={this.props.onLogOutClick}
-          >Log Out</button>
-        </TopBar>
-      </div>
-    )
+const styles = {
+  homeSegment: {
+    width: '100%',
+    height: '100%'
+  },
+  menuIconStyles: {
+    position: 'relative',
+    top: 3,
+    bottom: 3
   }
+}
+
+const Home = ({ token, onLogOutClick }) => {
+  const [sidePanleVisibility, setSidePanelVisibility] = useState(false)
+
+  if (!token) { return (<Redirect to='/login' />) }
+
+  return (
+    <Sidebar.Pushable>
+      <SidePanel visible={sidePanleVisibility}>
+        <Button onClick={onLogOutClick}>
+            Log Out
+        </Button>
+      </SidePanel>
+
+      <Sidebar.Pusher>
+        <Segment style={styles.homeSegment}>
+          <Icon style={styles.menuIconStyles} name='bars' onClick={() => setSidePanelVisibility(!sidePanleVisibility)}/>
+
+          <Notes />
+        </Segment>
+      </Sidebar.Pusher>
+
+    </Sidebar.Pushable>
+  )
 }
 
 Home.propTypes = {
