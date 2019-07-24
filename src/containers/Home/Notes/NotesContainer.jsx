@@ -1,5 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
+import Types from 'prop-types'
 
 import Note from './Note'
 
@@ -11,39 +13,45 @@ const styles = {
   }
 }
 
-const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
+const NotesContainer = ({ notes, columns = 3 }) => {
+  const fillColumn = (columnIndex) =>
+    notes.filter((note, index) => index % columns === columnIndex)
+      .map((note, order) => (
+        <Note
+          header={note.header}
+          text={note.text}
+          image={note.image}
+          key={order}
+        />))
 
-const Notes = () => (
-  <Grid padded columns={3} style={styles.notesGrid}>
+  return (
+    <Grid padded columns={columns} style={styles.notesGrid}>
+      {
+        Array(columns).fill(0).map((column, index) => (
+          <Grid.Column key={index}>
+            { fillColumn(index) }
+          </Grid.Column>
+        ))
+      }
+    </Grid>
+  )
+}
 
-    <Grid.Column>
-      <Note
-        header='A paragraph long note'
-        text={makePlaceholder(5)}
-      />
-      <Note
-        text='No header here, but still should be rendered ok'
-      />
-    </Grid.Column>
+NotesContainer.propTypes = {
+  notes: Types.arrayOf(
+    Types.shape({
+      header: Types.string,
+      text: Types.string,
+      image: Types.bool,
+      order: Types.number.isRequired
+    })
+  ).isRequired
+}
 
-    <Grid.Column>
-      <Note
-        header='A rather long note'
-        text={makePlaceholder(12)}
-      />
-      <Note
-        header='Just a header here, must be smth short but important'
-      />
-    </Grid.Column>
+const mapStateToProps = state => ({
+  notes: state.home.notes
+})
 
-    <Grid.Column>
-      <Note
-        header='A short note but with a pic'
-        text={makePlaceholder(2)}
-        image/>
-    </Grid.Column>
-
-  </Grid>
-)
-
-export default Notes
+export default connect(
+  mapStateToProps
+)(NotesContainer)
