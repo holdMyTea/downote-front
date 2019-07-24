@@ -1,18 +1,21 @@
 import React from 'react'
-import { Menu, Sidebar } from 'semantic-ui-react'
+import { Menu, Sidebar, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-const SidePanel = ({ visible, children }) => (
+const SidePanel = ({ visible, onLogOutClick }) => (
   <Sidebar
     as={Menu}
     animation='uncover'
-    icon='labeled'
     inverted
     vertical
     visible={visible}
     width='thin'
   >
-    { children }
+    <Menu.Item>
+      <Button onClick={onLogOutClick}>
+        Log Out
+      </Button>
+    </Menu.Item>
   </Sidebar>
 )
 
