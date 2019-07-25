@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 import Types from 'prop-types'
 
+import NotesColumn from './NotesColumn'
 import Note from './Note'
 
 const styles = {
@@ -30,9 +31,9 @@ const NotesContainer = ({ notes, columns = 3 }) => {
     <Grid padded columns={columns} style={styles.notesGrid}>
       {
         Array(columns).fill(0).map((column, index) => (
-          <Grid.Column key={index}>
+          <NotesColumn key={index}>
             { fillColumn(index) }
-          </Grid.Column>
+          </NotesColumn>
         ))
       }
     </Grid>

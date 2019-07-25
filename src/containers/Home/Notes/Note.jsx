@@ -14,10 +14,10 @@ const styles = {
 }
 
 const Note = ({ id, header, text, image }) => {
-  const [{ isDragging }, drag] = useDrag({
+  const drag = useDrag({
     item: { type: 'Note', id },
     collect: monitor => ({ isDragging: !!monitor.isDragging() })
-  })
+  })[1]
 
   return (
     <div style={styles} ref={drag}>
