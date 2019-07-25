@@ -5,14 +5,13 @@ import Types from 'prop-types'
 
 const defaultPic = process.env.PUBLIC_URL + 'images/defaultPic.png'
 
-const styles = (isDragging) => ({
+const styles = {
   backgroundColor: 'lightyellow',
   padding: '10px',
   border: '1px solid silver',
   borderRadius: 3,
-  margin: '1rem',
-  opacity: isDragging ? 0 : 1
-})
+  margin: '1rem'
+}
 
 const Note = ({ id, header, text, image }) => {
   const [{ isDragging }, drag] = useDrag({
@@ -21,7 +20,7 @@ const Note = ({ id, header, text, image }) => {
   })
 
   return (
-    <div style={styles(isDragging)} ref={drag}>
+    <div style={styles} ref={drag}>
       { header && (<Header as='h3'>{ header }</Header>) }
 
       { text && (<p>{ text }</p>) }

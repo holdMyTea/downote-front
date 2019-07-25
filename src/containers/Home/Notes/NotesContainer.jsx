@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
-import { DndProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
 import Types from 'prop-types'
 
 import Note from './Note'
@@ -29,17 +27,15 @@ const NotesContainer = ({ notes, columns = 3 }) => {
       ))
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Grid padded columns={columns} style={styles.notesGrid}>
-        {
-          Array(columns).fill(0).map((column, index) => (
-            <Grid.Column key={index}>
-              { fillColumn(index) }
-            </Grid.Column>
-          ))
-        }
-      </Grid>
-    </DndProvider>
+    <Grid padded columns={columns} style={styles.notesGrid}>
+      {
+        Array(columns).fill(0).map((column, index) => (
+          <Grid.Column key={index}>
+            { fillColumn(index) }
+          </Grid.Column>
+        ))
+      }
+    </Grid>
   )
 }
 

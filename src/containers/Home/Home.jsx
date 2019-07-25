@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Icon, Sidebar } from 'semantic-ui-react'
-import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
+import { DndProvider } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import Types from 'prop-types'
 
 import SidePanel from './SidePanel'
 import Notes from './Notes/NotesContainer'
@@ -22,16 +24,18 @@ const Home = ({ token, onLogOutClick }) => {
   if (!token) { return (<Redirect to='/login' />) }
 
   return (
-    <Sidebar.Pushable style={{ height: '100%' }}>
-      <SidePanel visible={sidePanleVisibility} onLogOutClick={onLogOutClick} />
+    <DndProvider backend={HTML5Backend}>
+      <Sidebar.Pushable style={{ height: '100%' }}>
+        <SidePanel visible={sidePanleVisibility} onLogOutClick={onLogOutClick} />
 
-      <Sidebar.Pusher>
-        <Icon style={styles.menuIconStyles} name='bars' onClick={() => setSidePanelVisibility(!sidePanleVisibility)}/>
+        <Sidebar.Pusher>
+          <Icon style={styles.menuIconStyles} name='bars' onClick={() => setSidePanelVisibility(!sidePanleVisibility)}/>
 
-        <Notes />
-      </Sidebar.Pusher>
+          <Notes />
+        </Sidebar.Pusher>
 
-    </Sidebar.Pushable>
+      </Sidebar.Pushable>
+    </DndProvider>
   )
 }
 
