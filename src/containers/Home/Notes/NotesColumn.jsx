@@ -5,18 +5,19 @@ import Types from 'prop-types'
 
 import Note from './Note'
 
-const NotesColumn = ({ notes, columnIndex }) => {
+const NotesColumn = ({ notes, columnIndex, moveNote }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'Note',
-    drop: (item, monitor) => console.log(item.id)
+    drop: (item) => moveNote(item.id, item.columnIndex, columnIndex)
   })
 
   return (
     <Grid.Column>
-      <div ref={drop}>
+      <div ref={drop} style={{ height: '100%' }}>
         {
           notes.map(note => (
             <Note id={note.id} key={note.id}
+              columnIndex={columnIndex}
               header={note.header}
               text={note.text}
               image={note.image}
@@ -29,8 +30,16 @@ const NotesColumn = ({ notes, columnIndex }) => {
 }
 
 NotesColumn.propTypes = {
-  columnIndex: Types.number,
-  children: Types.node
+  notes: Types.arrayOf(
+    Types.shape({
+      id: Types.string.isRequired,
+      header: Types.string,
+      text: Types.string,
+      image: Types.bool,
+      order: Types.number.isRequired
+    })),
+  columnIndex: Types.number.isRequired,
+  moveNote: Types.func.isRequired
 }
 
 export default NotesColumn

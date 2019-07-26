@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 import Types from 'prop-types'
 
+import { moveNote } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 
 const styles = {
@@ -11,12 +12,14 @@ const styles = {
   padding: '20px'
 }
 
-const NotesContainer = ({ columns }) => {
+const NotesContainer = ({ columns, moveNote }) => {
   return (
     <Grid padded columns={columns.length} style={styles}>
       {
         columns.map((col, index) => (
-          <NotesColumn notes={col} columnIndex={index} key={index} />
+          <NotesColumn notes={col} columnIndex={index}
+            key={index}
+            moveNote={moveNote} />
         ))
       }
     </Grid>
@@ -40,6 +43,12 @@ const mapStateToProps = state => ({
   columns: state.home.columns
 })
 
+const mapDispatchToProps = dispatch => ({
+  moveNote: (noteId, oldColumnIndex, newColumnIndex) =>
+    dispatch(moveNote(noteId, oldColumnIndex, newColumnIndex))
+})
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(NotesContainer)

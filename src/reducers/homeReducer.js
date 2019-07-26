@@ -1,3 +1,5 @@
+import { MOVE_NOTE } from '../actions/notesActions'
+
 const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
 
 const initialNotes = [
@@ -45,7 +47,18 @@ export default (
   },
   action
 ) => {
-  switch (action) {
+  switch (action.type) {
+    case MOVE_NOTE:
+      // TODO: handle order change, as well
+      const newColumns = [ ...state.columns ]
+      newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
+        note => note.id !== action.noteId
+      )
+      newColumns[action.newColumnIndex].push(
+        state.notes.find(note => note.id === action.noteId)
+      )
+      return { ...state, columns: newColumns }
+
     default: return state
   }
 }

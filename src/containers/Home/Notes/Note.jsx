@@ -13,9 +13,9 @@ const styles = {
   margin: '1rem'
 }
 
-const Note = ({ id, header, text, image }) => {
+const Note = ({ id, columnIndex, header, text, image }) => {
   const drag = useDrag({
-    item: { type: 'Note', id },
+    item: { type: 'Note', id, columnIndex },
     collect: monitor => ({ isDragging: !!monitor.isDragging() })
   })[1]
 
