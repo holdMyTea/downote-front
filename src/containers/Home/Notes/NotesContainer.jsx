@@ -4,36 +4,19 @@ import { Grid } from 'semantic-ui-react'
 import Types from 'prop-types'
 
 import NotesColumn from './NotesColumn'
-import Note from './Note'
 
 const styles = {
-  notesGrid: {
-    backgroundColor: 'snow',
-    height: '100%',
-    padding: '20px'
-  }
+  backgroundColor: 'snow',
+  height: '100%',
+  padding: '20px'
 }
 
-const NotesContainer = ({ notes, columns = 3 }) => {
-  const fillColumn = (columnIndex) =>
-    notes.filter((note, index) => index % columns === columnIndex)
-      .map(note => (
-        <Note
-          id={note.id}
-          header={note.header}
-          text={note.text}
-          image={note.image}
-          key={note.id}
-        />
-      ))
-
+const NotesContainer = ({ columns }) => {
   return (
-    <Grid padded columns={columns} style={styles.notesGrid}>
+    <Grid padded columns={columns.length} style={styles}>
       {
-        Array(columns).fill(0).map((column, index) => (
-          <NotesColumn key={index}>
-            { fillColumn(index) }
-          </NotesColumn>
+        columns.map((col, index) => (
+          <NotesColumn notes={col} columnIndex={index} key={index} />
         ))
       }
     </Grid>
@@ -41,19 +24,20 @@ const NotesContainer = ({ notes, columns = 3 }) => {
 }
 
 NotesContainer.propTypes = {
-  notes: Types.arrayOf(
-    Types.shape({
-      id: Types.string.isRequired,
-      header: Types.string,
-      text: Types.string,
-      image: Types.bool,
-      order: Types.number.isRequired
-    })
+  columns: Types.arrayOf(
+    Types.arrayOf(
+      Types.shape({
+        id: Types.string.isRequired,
+        header: Types.string,
+        text: Types.string,
+        image: Types.bool,
+        order: Types.number.isRequired
+      }))
   ).isRequired
 }
 
 const mapStateToProps = state => ({
-  notes: state.home.notes
+  columns: state.home.columns
 })
 
 export default connect(
