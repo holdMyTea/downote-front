@@ -8,12 +8,19 @@ import Note from './Note'
 const NotesColumn = ({ notes, columnIndex, moveNote }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'Note',
-    drop: (item) => moveNote(item.id, item.columnIndex, columnIndex)
+    drop: (item) => moveNote(item.id, item.columnIndex, columnIndex),
+    collect: monitor => ({ isOver: !!monitor.isOver() })
   })
 
   return (
-    <Grid.Column>
-      <div ref={drop} style={{ height: '100%' }}>
+    <Grid.Column style={{ padding: 0 }}>
+      <div ref={drop} style={{
+        height: '100%',
+        padding: '30px',
+        backgroundColor: isOver
+          ? 'gainsboro'
+          : 'inherit'
+      }}>
         {
           notes.map(note => (
             <Note id={note.id} key={note.id}

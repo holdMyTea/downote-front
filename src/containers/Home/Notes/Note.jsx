@@ -8,9 +8,9 @@ const defaultPic = process.env.PUBLIC_URL + 'images/defaultPic.png'
 const styles = {
   backgroundColor: 'lightyellow',
   padding: '10px',
+  marginBottom: '20px',
   border: '1px solid silver',
-  borderRadius: 3,
-  margin: '1rem'
+  borderRadius: 3
 }
 
 const Note = ({ id, columnIndex, header, text, image }) => {

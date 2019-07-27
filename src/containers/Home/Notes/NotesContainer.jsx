@@ -8,8 +8,7 @@ import NotesColumn from './NotesColumn'
 
 const styles = {
   backgroundColor: 'snow',
-  height: '100%',
-  padding: '20px'
+  height: '100%'
 }
 
 const NotesContainer = ({ columns, moveNote }) => {

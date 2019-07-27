@@ -14,7 +14,8 @@ const styles = {
   menuIconStyles: {
     position: 'absolute',
     top: '1em',
-    left: '1em'
+    left: '1em',
+    zIndex: 10
   }
 }
 
