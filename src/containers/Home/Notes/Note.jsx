@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Image } from 'semantic-ui-react'
-import { useDrag } from 'react-dnd'
+import { useDrag, useDrop } from 'react-dnd'
 import Types from 'prop-types'
 
 const defaultPic = process.env.PUBLIC_URL + 'images/defaultPic.png'
@@ -13,19 +13,27 @@ const styles = {
   borderRadius: 3
 }
 
-const Note = ({ id, columnIndex, header, text, image }) => {
-  const drag = useDrag({
+const Note = ({ id, columnIndex, header, text, image, onNoteDrop }) => {
+  const [, drag] = useDrag({
     item: { type: 'Note', id, columnIndex },
     collect: monitor => ({ isDragging: !!monitor.isDragging() })
-  })[1]
+  })
+
+  const [, drop] = useDrop({
+    accept: 'Note',
+    drop: (item) => onNoteDrop(item.id, id, item.columnIndex),
+    collect: monitor => ({ isOver: !!monitor.isOver() })
+  })
 
   return (
-    <div style={styles} ref={drag}>
-      { header && (<Header as='h3'>{ header }</Header>) }
+    <div ref={drop}>
+      <div style={styles} ref={drag}>
+        { header && (<Header as='h3'>{ header }</Header>) }
 
-      { text && (<p>{ text }</p>) }
+        { text && (<p>{ text }</p>) }
 
-      { image && (<Image src={defaultPic} />)}
+        { image && (<Image src={defaultPic} />)}
+      </div>
     </div>
   )
 }

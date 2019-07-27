@@ -1,5 +1,10 @@
-Before Pull request
+Before Pull request:
 
-1. Add highlight for columns when a note is dragged over to them - DONE
-2. Add vertical drag&drop, as well (oh shit, here we go again)
-3. Add comments
+- Add highlight for columns when a note is dragged over to them - DONE
+- Add vertical drag&drop, as well (oh shit, here we go again)
+- Optimize reducers
+- add a bit of smoothness
+- Handle "order" change
+- Check propTypes & linter
+- Add comments
+- Check scroll

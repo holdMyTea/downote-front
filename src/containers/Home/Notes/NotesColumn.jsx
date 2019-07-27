@@ -5,11 +5,19 @@ import Types from 'prop-types'
 
 import Note from './Note'
 
-const NotesColumn = ({ notes, columnIndex, moveNote }) => {
-  const [{ isOver }, drop] = useDrop({
+const NotesColumn = ({ notes, columnIndex, onColumnDrop, onNoteDrop }) => {
+  const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: 'Note',
-    drop: (item) => moveNote(item.id, item.columnIndex, columnIndex),
-    collect: monitor => ({ isOver: !!monitor.isOver() })
+    drop: (item) => {
+      if (!isOverCurrent) {
+        return
+      }
+      onColumnDrop(item.id, item.columnIndex)
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true })
+    })
   })
 
   return (
@@ -28,6 +36,7 @@ const NotesColumn = ({ notes, columnIndex, moveNote }) => {
               header={note.header}
               text={note.text}
               image={note.image}
+              onNoteDrop={onNoteDrop}
             />
           ))
         }
@@ -46,7 +55,8 @@ NotesColumn.propTypes = {
       order: Types.number.isRequired
     })),
   columnIndex: Types.number.isRequired,
-  moveNote: Types.func.isRequired
+  onColumnDrop: Types.func.isRequired,
+  onNoteDrop: Types.func.isRequired
 }
 
 export default NotesColumn

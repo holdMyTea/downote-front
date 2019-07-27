@@ -1,4 +1,4 @@
-import { MOVE_NOTE } from '../actions/notesActions'
+import { MOVE_NOTE_OVER_COLUMN, MOVE_NOTE_OVER_NOTE } from '../actions/notesActions'
 
 const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
 
@@ -48,8 +48,7 @@ export default (
   action
 ) => {
   switch (action.type) {
-    case MOVE_NOTE:
-      // TODO: handle order change, as well
+    case MOVE_NOTE_OVER_COLUMN: {
       const newColumns = [ ...state.columns ]
       newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
         note => note.id !== action.noteId
@@ -58,6 +57,20 @@ export default (
         state.notes.find(note => note.id === action.noteId)
       )
       return { ...state, columns: newColumns }
+    }
+
+    case MOVE_NOTE_OVER_NOTE: {
+      const newColumns = [ ...state.columns ]
+      newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
+        note => note.id !== action.noteId
+      )
+      newColumns[action.newColumnIndex].splice(
+        newColumns[action.newColumnIndex].findIndex(note => note.id === action.targetNoteId),
+        0,
+        state.notes.find(note => note.id === action.noteId)
+      )
+      return { ...state, columns: newColumns }
+    }
 
     default: return state
   }

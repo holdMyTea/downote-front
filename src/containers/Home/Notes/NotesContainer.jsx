@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-import { moveNote } from '../../../actions/notesActions'
+import { moveNoteOverColumn, moveNoteOverNote } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 
 const styles = {
@@ -11,14 +11,19 @@ const styles = {
   height: '100%'
 }
 
-const NotesContainer = ({ columns, moveNote }) => {
+const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
   return (
     <Grid padded columns={columns.length} style={styles}>
       {
         columns.map((col, index) => (
           <NotesColumn notes={col} columnIndex={index}
             key={index}
-            moveNote={moveNote} />
+            onColumnDrop={
+              (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
+            }
+            onNoteDrop={
+              (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
+            }/>
         ))
       }
     </Grid>
@@ -35,7 +40,9 @@ NotesContainer.propTypes = {
         image: Types.bool,
         order: Types.number.isRequired
       }))
-  ).isRequired
+  ).isRequired,
+  onColumnDrop: Types.func.isRequired,
+  onNoteDrop: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -43,8 +50,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  moveNote: (noteId, oldColumnIndex, newColumnIndex) =>
-    dispatch(moveNote(noteId, oldColumnIndex, newColumnIndex))
+  onColumnDrop: (noteId, oldColumnIndex, newColumnIndex) =>
+    dispatch(moveNoteOverColumn(noteId, oldColumnIndex, newColumnIndex)),
+
+  onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
+    dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex))
 })
 
 export default connect(
