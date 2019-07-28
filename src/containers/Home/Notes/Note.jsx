@@ -13,20 +13,24 @@ const styles = {
   borderRadius: 3
 }
 
-const Note = ({ id, columnIndex, header, text, image, onNoteDrop }) => {
+const Note = ({ id, columnIndex, header, text, image, onNoteDrop, onCanDrop }) => {
   const [, drag] = useDrag({
     item: { type: 'Note', id, columnIndex },
     collect: monitor => ({ isDragging: !!monitor.isDragging() })
   })
 
-  const [, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'Note',
     drop: (item) => onNoteDrop(item.id, id, item.columnIndex),
-    collect: monitor => ({ isOver: !!monitor.isOver() })
+    canDrop: (item) => onCanDrop(item),
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
   })
 
   return (
-    <div ref={drop}>
+    <div ref={drop} style={{ paddingTop: isOver && canDrop ? '40px' : 0 }}>
       <div style={styles} ref={drag}>
         { header && (<Header as='h3'>{ header }</Header>) }
 

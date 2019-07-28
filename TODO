@@ -3,7 +3,7 @@ Before Pull request:
 - Add highlight for columns when a note is dragged over to them - DONE
 - Add vertical drag&drop, as well (oh shit, here we go again)
 - Optimize reducers
-- add a bit of smoothness
+- Add a bit of smoothness
 - Handle "order" change
 - Check propTypes & linter
 - Add comments

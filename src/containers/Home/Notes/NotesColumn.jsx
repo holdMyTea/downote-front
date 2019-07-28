@@ -14,6 +14,7 @@ const NotesColumn = ({ notes, columnIndex, onColumnDrop, onNoteDrop }) => {
       }
       onColumnDrop(item.id, item.columnIndex)
     },
+    canDrop: (item) => item.id !== notes[notes.length - 1].id,
     collect: monitor => ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true })
@@ -25,20 +26,25 @@ const NotesColumn = ({ notes, columnIndex, onColumnDrop, onNoteDrop }) => {
       <div ref={drop} style={{
         height: '100%',
         padding: '30px',
-        backgroundColor: isOver
-          ? 'gainsboro'
-          : 'inherit'
+        backgroundColor: isOver ? 'gainsboro' : 'inherit'
       }}>
         {
-          notes.map(note => (
-            <Note id={note.id} key={note.id}
-              columnIndex={columnIndex}
-              header={note.header}
-              text={note.text}
-              image={note.image}
-              onNoteDrop={onNoteDrop}
-            />
-          ))
+          notes.map((note, index) => {
+            return (
+              <Note id={note.id} key={note.id}
+                header={note.header}
+                text={note.text}
+                image={note.image}
+                columnIndex={columnIndex}
+                onNoteDrop={onNoteDrop}
+                onCanDrop={
+                  index > 0
+                    ? (item) => item.id !== note.id && item.id !== notes[index - 1].id
+                    : (item) => item.id !== note.id
+                }
+              />
+            )
+          })
         }
       </div>
     </Grid.Column>
