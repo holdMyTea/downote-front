@@ -16,8 +16,10 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
     <Grid padded columns={columns.length} style={styles}>
       {
         columns.map((col, index) => (
-          <NotesColumn notes={col} columnIndex={index}
+          <NotesColumn
             key={index}
+            notes={col}
+            createNoteDragItem={(noteId) => ({ type: 'Note', id: noteId, columnIndex: index })}
             onColumnDrop={
               (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
             }

@@ -5,7 +5,7 @@ import Types from 'prop-types'
 
 import Note from './Note'
 
-const NotesColumn = ({ notes, columnIndex, onColumnDrop, onNoteDrop }) => {
+const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) => {
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: 'Note',
     drop: (item) => {
@@ -31,12 +31,12 @@ const NotesColumn = ({ notes, columnIndex, onColumnDrop, onNoteDrop }) => {
         {
           notes.map((note, index) => {
             return (
-              <Note id={note.id} key={note.id}
+              <Note key={note.id}
                 header={note.header}
                 text={note.text}
                 image={note.image}
-                columnIndex={columnIndex}
-                onNoteDrop={onNoteDrop}
+                dragItem={createNoteDragItem(note.id)}
+                onNoteDrop={(item) => onNoteDrop(item.id, note.id, item.columnIndex)}
                 onCanDrop={
                   index > 0
                     ? (item) => item.id !== note.id && item.id !== notes[index - 1].id
@@ -60,7 +60,7 @@ NotesColumn.propTypes = {
       image: Types.bool,
       order: Types.number.isRequired
     })),
-  columnIndex: Types.number.isRequired,
+  createNoteDragItem: Types.func.isRequired,
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired
 }

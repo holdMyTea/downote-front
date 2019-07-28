@@ -13,15 +13,15 @@ const styles = {
   borderRadius: 3
 }
 
-const Note = ({ id, columnIndex, header, text, image, onNoteDrop, onCanDrop }) => {
+const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop }) => {
   const [, drag] = useDrag({
-    item: { type: 'Note', id, columnIndex },
+    item: dragItem,
     collect: monitor => ({ isDragging: !!monitor.isDragging() })
   })
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'Note',
-    drop: (item) => onNoteDrop(item.id, id, item.columnIndex),
+    drop: (item) => onNoteDrop(item),
     canDrop: (item) => onCanDrop(item),
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -43,10 +43,16 @@ const Note = ({ id, columnIndex, header, text, image, onNoteDrop, onCanDrop }) =
 }
 
 Note.propTypes = {
-  id: Types.string.isRequired,
   header: Types.string,
   text: Types.string,
-  image: Types.bool
+  image: Types.bool,
+  dragItem: Types.shape({
+    type: Types.string.isRequired,
+    id: Types.string.isRequired,
+    columnIndex: Types.number.isRequired
+  }).isRequired,
+  onNoteDrop: Types.func.isRequired,
+  onCanDrop: Types.func.isRequired
 }
 
 export default Note
