@@ -21,7 +21,8 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) =>
       <div ref={drop} style={{
         height: '100%',
         padding: '30px',
-        backgroundColor: isOver ? 'gainsboro' : 'inherit'
+        backgroundColor: isOver ? 'gainsboro' : 'inherit',
+        transition: '500ms'
       }}>
         {
           notes.map((note, index) => (

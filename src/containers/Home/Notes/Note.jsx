@@ -14,7 +14,7 @@ const styles = {
 }
 
 const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop }) => {
-  const [, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: dragItem,
     collect: monitor => ({ isDragging: monitor.isDragging() })
   })
@@ -30,7 +30,11 @@ const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop }) => {
   })
 
   return (
-    <div ref={drop} style={{ paddingTop: isOver && canDrop ? '40px' : 0 }}>
+    <div ref={drop} style={{
+      paddingTop: isOver && canDrop ? '40px' : 0,
+      opacity: isDragging ? 0.5 : 1,
+      transition: '500ms'
+    }}>
       <div style={styles} ref={drag}>
         { header && (<Header as='h3'>{ header }</Header>) }
 
