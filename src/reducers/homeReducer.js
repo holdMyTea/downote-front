@@ -50,24 +50,24 @@ export default (
   switch (action.type) {
     case MOVE_NOTE_OVER_COLUMN: {
       const newColumns = [ ...state.columns ]
+      const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
       newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
-        note => note.id !== action.noteId
+        n => n.id !== action.noteId
       )
-      newColumns[action.newColumnIndex].push(
-        state.notes.find(note => note.id === action.noteId)
-      )
+      newColumns[action.newColumnIndex].push(note)
       return { ...state, columns: newColumns }
     }
 
     case MOVE_NOTE_OVER_NOTE: {
       const newColumns = [ ...state.columns ]
+      const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
       newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
-        note => note.id !== action.noteId
+        n => n.id !== action.noteId
       )
       newColumns[action.newColumnIndex].splice(
         newColumns[action.newColumnIndex].findIndex(note => note.id === action.targetNoteId),
         0,
-        state.notes.find(note => note.id === action.noteId)
+        note
       )
       return { ...state, columns: newColumns }
     }

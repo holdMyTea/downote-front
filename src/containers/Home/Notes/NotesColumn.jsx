@@ -8,13 +8,8 @@ import Note from './Note'
 const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) => {
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: 'Note',
-    drop: (item) => {
-      if (!isOverCurrent) {
-        return
-      }
-      onColumnDrop(item.id, item.columnIndex)
-    },
-    canDrop: (item) => item.id !== notes[notes.length - 1].id,
+    drop: (item) => isOverCurrent ? onColumnDrop(item.id, item.columnIndex) : null,
+    canDrop: (item) => notes.length === 0 || item.id !== notes[notes.length - 1].id,
     collect: monitor => ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true })
@@ -29,22 +24,20 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) =>
         backgroundColor: isOver ? 'gainsboro' : 'inherit'
       }}>
         {
-          notes.map((note, index) => {
-            return (
-              <Note key={note.id}
-                header={note.header}
-                text={note.text}
-                image={note.image}
-                dragItem={createNoteDragItem(note.id)}
-                onNoteDrop={(item) => onNoteDrop(item.id, note.id, item.columnIndex)}
-                onCanDrop={
-                  index > 0
-                    ? (item) => item.id !== note.id && item.id !== notes[index - 1].id
-                    : (item) => item.id !== note.id
-                }
-              />
-            )
-          })
+          notes.map((note, index) => (
+            <Note key={note.id}
+              header={note.header}
+              text={note.text}
+              image={note.image}
+              dragItem={createNoteDragItem(note.id)}
+              onNoteDrop={(item) => onNoteDrop(item.id, note.id, item.columnIndex)}
+              onCanDrop={
+                index > 0
+                  ? (item) => item.id !== note.id && item.id !== notes[index - 1].id
+                  : (item) => item.id !== note.id
+              }
+            />
+          ))
         }
       </div>
     </Grid.Column>

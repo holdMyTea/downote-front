@@ -19,7 +19,9 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
           <NotesColumn
             key={index}
             notes={col}
-            createNoteDragItem={(noteId) => ({ type: 'Note', id: noteId, columnIndex: index })}
+            createNoteDragItem={
+              (noteId) => ({ type: 'Note', id: noteId, columnIndex: index })
+            }
             onColumnDrop={
               (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
             }

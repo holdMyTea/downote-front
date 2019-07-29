@@ -16,7 +16,7 @@ const styles = {
 const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop }) => {
   const [, drag] = useDrag({
     item: dragItem,
-    collect: monitor => ({ isDragging: !!monitor.isDragging() })
+    collect: monitor => ({ isDragging: monitor.isDragging() })
   })
 
   const [{ isOver, canDrop }, drop] = useDrop({
