@@ -11,6 +11,12 @@ const styles = {
   height: '100%'
 }
 
+/**
+ * The root notes component, a Grid container for NotesColumns
+ * @param {Object[][]} props.columns - Array of arrays of notes
+ * @param {function} props.onColumnDrop - Function to be called when note is dropped on column
+ * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
+ */
 const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
   return (
     <Grid padded columns={columns.length} style={styles}>

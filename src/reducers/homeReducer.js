@@ -34,11 +34,22 @@ const initialNotes = [
   }
 ]
 
+/**
+ * Spread a single notes array into an array of arrays
+ * @param {Object[]} notes - array to unflatten
+ * @param {number} columnCount - number of resulting sub-arrays
+ */
 const spreadNotesToColumns = (notes, columnCount) =>
   Array(columnCount).fill(0).map((column, columnIndex) => (
     notes.filter((note, index) => index % columnCount === columnIndex)
   ))
 
+/**
+ * Updates the order property of all notes in array
+ * @param {Object[]} column - array to check
+ * @param {number} columnIndex - index of supplied column
+ * @param {number} columnCount - total number of columns
+ */
 const updateOrderInColumn = (column, columnIndex, columnCount) => column.map(
   (note, index) => {
     note.order = index * columnCount + columnIndex
@@ -57,7 +68,9 @@ export default (
   switch (action.type) {
     case MOVE_NOTE_OVER_COLUMN: {
       const newColumns = [ ...state.columns ]
+      // finding the dragged note
       const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
+      // removing the node from the oldColumn and updating order in it
       newColumns[action.oldColumnIndex] = updateOrderInColumn(
         newColumns[action.oldColumnIndex].filter(
           n => n.id !== action.noteId
@@ -65,14 +78,18 @@ export default (
         action.oldColumnIndex,
         state.columnCount
       )
+      // updating the order of the note before inserting it
       note.order = newColumns[action.newColumnIndex].length * state.columnCount + action.newColumnIndex
+      // inserting the note into the new column
       newColumns[action.newColumnIndex].push(note)
       return { ...state, columns: newColumns }
     }
 
     case MOVE_NOTE_OVER_NOTE: {
       const newColumns = [ ...state.columns ]
+      // finding the dragged note
       const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
+      // removing the node from the oldColumn and updating order in it
       newColumns[action.oldColumnIndex] = updateOrderInColumn(
         newColumns[action.oldColumnIndex].filter(
           n => n.id !== action.noteId
@@ -80,11 +97,13 @@ export default (
         action.oldColumnIndex,
         state.columnCount
       )
+      // inserting the note into the newColumn
       newColumns[action.newColumnIndex].splice(
         newColumns[action.newColumnIndex].findIndex(note => note.id === action.targetNoteId),
         0,
         note
       )
+      // updating the order of the newColumn
       newColumns[action.newColumnIndex] = updateOrderInColumn(
         newColumns[action.newColumnIndex],
         action.newColumnIndex,
