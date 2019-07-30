@@ -39,6 +39,13 @@ const spreadNotesToColumns = (notes, columnCount) =>
     notes.filter((note, index) => index % columnCount === columnIndex)
   ))
 
+const updateOrderInColumn = (column, columnIndex, columnCount) => column.map(
+  (note, index) => {
+    note.order = index * columnCount + columnIndex
+    return note
+  }
+)
+
 export default (
   state = {
     notes: initialNotes,
@@ -51,9 +58,14 @@ export default (
     case MOVE_NOTE_OVER_COLUMN: {
       const newColumns = [ ...state.columns ]
       const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
-      newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
-        n => n.id !== action.noteId
+      newColumns[action.oldColumnIndex] = updateOrderInColumn(
+        newColumns[action.oldColumnIndex].filter(
+          n => n.id !== action.noteId
+        ),
+        action.oldColumnIndex,
+        state.columnCount
       )
+      note.order = newColumns[action.newColumnIndex].length * state.columnCount + action.newColumnIndex
       newColumns[action.newColumnIndex].push(note)
       return { ...state, columns: newColumns }
     }
@@ -61,13 +73,22 @@ export default (
     case MOVE_NOTE_OVER_NOTE: {
       const newColumns = [ ...state.columns ]
       const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
-      newColumns[action.oldColumnIndex] = newColumns[action.oldColumnIndex].filter(
-        n => n.id !== action.noteId
+      newColumns[action.oldColumnIndex] = updateOrderInColumn(
+        newColumns[action.oldColumnIndex].filter(
+          n => n.id !== action.noteId
+        ),
+        action.oldColumnIndex,
+        state.columnCount
       )
       newColumns[action.newColumnIndex].splice(
         newColumns[action.newColumnIndex].findIndex(note => note.id === action.targetNoteId),
         0,
         note
+      )
+      newColumns[action.newColumnIndex] = updateOrderInColumn(
+        newColumns[action.newColumnIndex],
+        action.newColumnIndex,
+        state.columnCount
       )
       return { ...state, columns: newColumns }
     }
