@@ -1,28 +1,43 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import Types from 'prop-types'
+import { Icon, Sidebar } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
+import { DndProvider } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import Types from 'prop-types'
 
-import TopBar from './TopBar/TopBar'
-import NotesWrapper from './NotesWrapper/NotesWrapper'
-
+import SidePanel from './SidePanel'
+import Notes from './Notes/NotesContainer'
 import { logOut } from '../../actions/loginActions'
 
-class Home extends Component {
-  render () {
-    if (!this.props.token) { return (<Redirect to='/login' />) }
-
-    return (
-      <div className='home'>
-        <TopBar>
-          <button className='topbar-logout'
-            onClick={this.props.onLogOutClick}
-          >Log Out</button>
-        </TopBar>
-        <NotesWrapper />
-      </div>
-    )
+const styles = {
+  menuIconStyles: {
+    position: 'absolute',
+    top: '1em',
+    left: '1em',
+    zIndex: 10
   }
+}
+
+const Home = ({ token, onLogOutClick }) => {
+  const [sidePanleVisibility, setSidePanelVisibility] = useState(false)
+
+  if (!token) { return (<Redirect to='/login' />) }
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <Sidebar.Pushable style={{ height: '100%' }}>
+        <SidePanel visible={sidePanleVisibility} onLogOutClick={onLogOutClick} />
+
+        <Sidebar.Pusher>
+          <Icon style={styles.menuIconStyles} name='bars' onClick={() => setSidePanelVisibility(!sidePanleVisibility)}/>
+
+          <Notes />
+        </Sidebar.Pusher>
+
+      </Sidebar.Pushable>
+    </DndProvider>
+  )
 }
 
 Home.propTypes = {
