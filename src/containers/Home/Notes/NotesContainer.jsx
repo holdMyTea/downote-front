@@ -8,7 +8,8 @@ import NotesColumn from './NotesColumn'
 
 const styles = {
   backgroundColor: 'snow',
-  height: '100%'
+  height: '100%',
+  overflowY: 'auto'
 }
 
 /**

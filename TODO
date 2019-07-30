@@ -5,6 +5,6 @@ Before Pull request:
 - Optimize reducers - DONE
 - Add a bit of smoothness - DONE
 - Handle "order" change - DONE
-- Check propTypes & linter
-- Add comments
-- Check scroll
+- Check propTypes & linter - DONE
+- Add comments - DONE
+- Check scroll - DONE
