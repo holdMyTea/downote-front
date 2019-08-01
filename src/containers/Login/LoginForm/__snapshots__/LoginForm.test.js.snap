@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Note renders correctly 1`] = `
+<form
+  className="ui form"
+  onSubmit={[Function]}
+>
+  <div
+    className="field"
+  >
+    <label>
+      Email
+    </label>
+    <div
+      className="ui input"
+    >
+      <input
+        onChange={[Function]}
+        placeholder="Email"
+        type="email"
+      />
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <label>
+      Password
+    </label>
+    <div
+      className="ui input"
+    >
+      <input
+        onChange={[Function]}
+        placeholder="Password"
+        type="password"
+      />
+    </div>
+  </div>
+  <div
+    className="disabled field"
+  >
+    <button
+      className="ui fluid disabled button"
+      disabled={true}
+      onClick={[Function]}
+      tabIndex={-1}
+    >
+      Log In
+    </button>
+  </div>
+</form>
+`;
