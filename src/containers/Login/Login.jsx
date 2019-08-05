@@ -4,7 +4,7 @@ import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
 import { Grid, Header } from 'semantic-ui-react'
 
-import LoginForm from './LoginForm/LoginForm'
+import LoginForm from './LoginForm'
 import { logIn } from '../../actions/loginActions'
 
 const backgroundStyles = {
