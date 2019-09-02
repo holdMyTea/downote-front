@@ -30,6 +30,3 @@ export const renderWithRedux = (
     store
   }
 }
-
-// immediate resolve for pending promises
-export const flushAllPromises = () => new Promise(resolve => setImmediate(resolve), reject => setImmediate(reject))

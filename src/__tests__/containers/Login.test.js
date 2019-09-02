@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom/extend-expect'
-import { fireEvent, findByText } from '@testing-library/react'
+import { fireEvent, findByText, wait } from '@testing-library/react'
 
 import React from 'react'
 
-import { history, renderWithRedux, flushAllPromises } from '../../../test/utils'
+import { history, renderWithRedux } from '../../../test/utils'
 import Login from '../../containers/Login/Login'
 
 describe('Login component', () => {
@@ -29,9 +29,9 @@ describe('Login component', () => {
 
     expect(findByText('Woopsi-Doopsie')).toBeTruthy() // loading message is shown
 
-    await flushAllPromises() // awaiting request processed
-
-    expect(location.pathname).toBe('/home') // checking the user was redirected after login
+    await wait(() =>
+      expect(location.pathname).toBe('/home') // checking the user was redirected after login
+    )
   })
 
   it('Shows wrong credentials message on 401', async () => {
@@ -54,9 +54,10 @@ describe('Login component', () => {
 
     expect(findByText('Woopsi-Doopsie')).toBeTruthy() // loading message is shown
 
-    await flushAllPromises() // awaiting request processed
+    await wait(() =>
+      expect(findByText('Wrong login credentials')).toBeTruthy() // loading message is shown
+    )
 
     expect(location.pathname).toBe('/') // checking the user was NOT redirected
-    expect(findByText('Wrong login credentials')).toBeTruthy() // finding error notification
   })
 })
