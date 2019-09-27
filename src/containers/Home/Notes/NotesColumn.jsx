@@ -27,12 +27,14 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) =>
 
   return (
     <Grid.Column style={{ padding: 0 }}>
-      <div ref={drop} style={{
-        height: '100%',
-        padding: '30px',
-        backgroundColor: isOver ? 'gainsboro' : 'inherit',
-        transition: '500ms'
-      }}>
+      <div ref={drop}
+        data-testid={`note-col`}
+        style={{
+          height: '100%',
+          padding: '30px',
+          backgroundColor: isOver ? 'gainsboro' : 'inherit',
+          transition: '500ms'
+        }}>
         {
           notes.map((note, index) => (
             <Note key={note.id}
