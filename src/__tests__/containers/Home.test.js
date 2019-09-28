@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect'
 
 import React from 'react'
 
-import { renderWithRedux } from '../../../test/utils'
+import { renderForHome } from '../../../test/utils'
 import Home from '../../containers/Home/Home'
 import { fireEvent, within, cleanup } from '@testing-library/react'
 
@@ -10,12 +10,7 @@ describe('Home component', () => {
   afterEach(cleanup)
 
   it('Moves a note to another column using drag\'n\'drop', async () => {
-    // render
-    const { findAllByTestId } = renderWithRedux(
-      (<Home />),
-      // mock login token to not get redirected to login page
-      { login: { token: 'totally-valid-token-for-testing' } }
-    )
+    const { findAllByTestId } = renderForHome((<Home/>))
 
     const [intialColumn, targetColumn] = await findAllByTestId('note-col')
 
@@ -32,12 +27,7 @@ describe('Home component', () => {
   })
 
   it('Moves a note in from of another one using drag\'n\'drop', async () => {
-    // render
-    const { findAllByTestId } = renderWithRedux(
-      (<Home />),
-      // mock login token to not get redirected to login page
-      { login: { token: 'totally-valid-token-for-testing' } }
-    )
+    const { findAllByTestId } = renderForHome((<Home/>))
 
     const [initialColumn, targetColumn] = await findAllByTestId('note-col')
 
@@ -60,12 +50,7 @@ describe('Home component', () => {
   })
 
   it('Moves a note to the bottom when dragged\'n\'dropped onto its current column', async () => {
-    // render
-    const { findAllByTestId } = renderWithRedux(
-      (<Home />),
-      // mock login token to not get redirected to login page
-      { login: { token: 'totally-valid-token-for-testing' } }
-    )
+    const { findAllByTestId } = renderForHome((<Home/>))
 
     const [intialColumn] = await findAllByTestId('note-col')
     // saving the initial state of note column
@@ -82,12 +67,7 @@ describe('Home component', () => {
   })
 
   it('Doesn\'t move a note when dragged\'n\'dropped onto the following note in the same column', async () => {
-    // render
-    const { findAllByTestId } = renderWithRedux(
-      (<Home />),
-      // mock login token to not get redirected to login page
-      { login: { token: 'totally-valid-token-for-testing' } }
-    )
+    const { findAllByTestId } = renderForHome((<Home/>))
 
     const [initialColumn] = await findAllByTestId('note-col')
     // saving the initial state of note column
@@ -104,12 +84,7 @@ describe('Home component', () => {
   })
 
   it('Doesn\'t move a note when dragged\'n\'dropped onto itself', async () => {
-    // render
-    const { findAllByTestId } = renderWithRedux(
-      (<Home />),
-      // mock login token to not get redirected to login page
-      { login: { token: 'totally-valid-token-for-testing' } }
-    )
+    const { findAllByTestId } = renderForHome((<Home/>))
 
     const [initialColumn] = await findAllByTestId('note-col')
     // saving the initial state of note column
