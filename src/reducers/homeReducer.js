@@ -24,7 +24,7 @@ const initialNotes = [
   },
   {
     id: 'pojef023iwwldjfwpo',
-    text: 'No header here, but still should be rendered ok',
+    text: 'No header in the note, but still should be rendered ok',
     order: 3
   },
   {
@@ -33,6 +33,18 @@ const initialNotes = [
     order: 4
   }
 ]
+
+/**
+ * Creates initial state from the array of notes,
+ * used in tests
+ * @param {Object[]} notes - array of notes
+ * @param {number} columnCount - number of notes columns
+ */
+export const prepareInitialState = (notes, columnCount = 3) => ({
+  notes,
+  columnCount,
+  columns: spreadNotesToColumns(notes, columnCount)
+})
 
 /**
  * Spread a single notes array into an array of arrays
@@ -57,12 +69,8 @@ const updateOrderInColumn = (column, columnIndex, columnCount) => column.map(
   }
 )
 
-export default (
-  state = {
-    notes: initialNotes,
-    columnCount: 3,
-    columns: spreadNotesToColumns(initialNotes, 3)
-  },
+export const reducer = (
+  state = prepareInitialState(initialNotes, 3),
   action
 ) => {
   switch (action.type) {
