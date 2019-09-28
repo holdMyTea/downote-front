@@ -9,7 +9,7 @@ import { fireEvent, within, cleanup } from '@testing-library/react'
 describe('Home component', () => {
   afterEach(cleanup)
 
-  it('Drags and drops a note onto a column', async () => {
+  it('Moves a note to another column using drag\'n\'drop', async () => {
     // render
     const { findAllByTestId } = renderWithRedux(
       (<Home />),
@@ -31,7 +31,7 @@ describe('Home component', () => {
     expect(within(intialColumn).queryByText(noteText)).toBeFalsy()
   })
 
-  it('Drags and drops onto another note', async () => {
+  it('Moves a note in from of another one using drag\'n\'drop', async () => {
     // render
     const { findAllByTestId } = renderWithRedux(
       (<Home />),
@@ -57,5 +57,70 @@ describe('Home component', () => {
 
     // dragged note should not be in the initial column now
     expect(within(initialColumn).queryByText(draggedNoteText)).toBeFalsy()
+  })
+
+  it('Moves a note to the bottom when dragged\'n\'dropped onto its current column', async () => {
+    // render
+    const { findAllByTestId } = renderWithRedux(
+      (<Home />),
+      // mock login token to not get redirected to login page
+      { login: { token: 'totally-valid-token-for-testing' } }
+    )
+
+    const [intialColumn] = await findAllByTestId('note-col')
+    // saving the initial state of note column
+    const [initialFirst, initialSecond] = within(intialColumn).getAllByText(/note/i)
+
+    fireEvent.dragStart(initialFirst)
+    fireEvent.dragOver(intialColumn)
+    fireEvent.drop(intialColumn)
+
+    // final state should be equal to the initial one with reversed order
+    const [finalFirst, finalSecond] = within(intialColumn).getAllByText(/note/i)
+    expect(finalFirst).toBe(initialSecond)
+    expect(finalSecond).toBe(initialFirst)
+  })
+
+  it('Doesn\'t move a note when dragged\'n\'dropped onto the following note in the same column', async () => {
+    // render
+    const { findAllByTestId } = renderWithRedux(
+      (<Home />),
+      // mock login token to not get redirected to login page
+      { login: { token: 'totally-valid-token-for-testing' } }
+    )
+
+    const [initialColumn] = await findAllByTestId('note-col')
+    // saving the initial state of note column
+    const [initialFirst, initialSecond] = within(initialColumn).getAllByText(/note/i)
+
+    fireEvent.dragStart(initialFirst)
+    fireEvent.dragOver(initialSecond)
+    fireEvent.drop(initialSecond)
+
+    // final state should be equal to the initial one, order shouldn't have changed
+    const [finalFirst, finalSecond] = within(initialColumn).getAllByText(/note/i)
+    expect(finalFirst).toBe(initialFirst)
+    expect(finalSecond).toBe(initialSecond)
+  })
+
+  it('Doesn\'t move a note when dragged\'n\'dropped onto itself', async () => {
+    // render
+    const { findAllByTestId } = renderWithRedux(
+      (<Home />),
+      // mock login token to not get redirected to login page
+      { login: { token: 'totally-valid-token-for-testing' } }
+    )
+
+    const [initialColumn] = await findAllByTestId('note-col')
+    // saving the initial state of note column
+    const initialState = within(initialColumn).getAllByText(/note/i)
+    const note = initialState[0]
+
+    fireEvent.dragStart(note)
+    fireEvent.dragOver(note)
+    fireEvent.drop(note)
+
+    // final state should be equal to the initial one, order shouldn't have changed
+    expect(initialState).toStrictEqual(within(initialColumn).getAllByText(/note/i))
   })
 })

@@ -24,7 +24,7 @@ const initialNotes = [
   },
   {
     id: 'pojef023iwwldjfwpo',
-    text: 'No header here, but still should be rendered ok',
+    text: 'No header in the note, but still should be rendered ok',
     order: 3
   },
   {
