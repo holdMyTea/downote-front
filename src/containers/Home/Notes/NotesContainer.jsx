@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
 
 import { moveNoteOverColumn, moveNoteOverNote } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
+import AddNoteModal from './AddNoteModal'
 
 const styles = {
   backgroundColor: 'snow',
@@ -19,25 +20,37 @@ const styles = {
  * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
  */
 const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
+  const [modalOpen, setModalOpen] = useState(false)
+
   return (
-    <Grid padded columns={columns.length} style={styles}>
-      {
-        columns.map((col, index) => (
-          <NotesColumn
-            key={index}
-            notes={col}
-            createNoteDragItem={
-              (noteId) => ({ type: 'Note', id: noteId, columnIndex: index })
-            }
-            onColumnDrop={
-              (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
-            }
-            onNoteDrop={
-              (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
-            }/>
-        ))
-      }
-    </Grid>
+    <>
+      <Grid padded columns={columns.length} style={styles}>
+        {
+          columns.map((col, index) => (
+            <NotesColumn
+              key={index}
+              notes={col}
+              createNoteDragItem={
+                (noteId) => ({ type: 'Note', id: noteId, columnIndex: index })
+              }
+              onColumnDrop={
+                (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
+              }
+              onNoteDrop={
+                (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
+              }/>
+          ))
+        }
+      </Grid>
+
+      <Button icon='add circle'
+        onClick={() => setModalOpen(true)}
+        style={{ position: 'fixed', bottom: 15, right: 15 }}
+      />
+
+      <AddNoteModal open={modalOpen}
+        onClose={() => setModalOpen(false)} />
+    </>
   )
 }
 

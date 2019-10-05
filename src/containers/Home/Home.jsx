@@ -26,7 +26,8 @@ const Home = ({ token, onLogOutClick }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Sidebar.Pushable style={{ height: '100%' }}>
+      {/* https://github.com/Semantic-Org/Semantic-UI-React/issues/2897 */}
+      <Sidebar.Pushable style={{ height: '100%', transfrom: 'none' }}>
         <SidePanel visible={sidePanleVisibility} onLogOutClick={onLogOutClick} />
 
         <Sidebar.Pusher>
