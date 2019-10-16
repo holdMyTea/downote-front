@@ -1,6 +1,4 @@
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
-export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
-
 /**
  * Redux action to remove note from the oldColumn and append to the end of the newColumn
  * @param {string} noteId - id of the note
@@ -14,6 +12,7 @@ export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) => ({
   newColumnIndex
 })
 
+export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
 /**
  * Redux action to move one note on top of the other
  * @param {string} noteId - id of the note
@@ -27,4 +26,16 @@ export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumn
   targetNoteId,
   oldColumnIndex,
   newColumnIndex
+})
+
+export const CREATE_NOTE = 'CREATE_NOTE'
+/**
+ * Redux action to add a new note
+ * @param {string} header - header of the note
+ * @param {string} text - text of the note
+ */
+export const createNote = (header, text) => ({
+  type: CREATE_NOTE,
+  header,
+  text
 })

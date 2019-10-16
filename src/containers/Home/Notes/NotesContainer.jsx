@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Grid, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-import { moveNoteOverColumn, moveNoteOverNote } from '../../../actions/notesActions'
+import { moveNoteOverColumn, moveNoteOverNote, createNote } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 import AddNoteModal from './AddNoteModal'
 
@@ -18,8 +18,9 @@ const styles = {
  * @param {Object[][]} props.columns - Array of arrays of notes
  * @param {function} props.onColumnDrop - Function to be called when note is dropped on column
  * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
+ * @param {function} props.onCreateNote - Function to be called when a new note is created
  */
-const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
+const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote }) => {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -48,7 +49,9 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop }) => {
         style={{ position: 'fixed', bottom: 15, right: 15 }}
       />
 
-      <AddNoteModal open={modalOpen}
+      <AddNoteModal
+        open={modalOpen}
+        onSave={onCreateNote}
         onClose={() => setModalOpen(false)} />
     </>
   )
@@ -66,7 +69,8 @@ NotesContainer.propTypes = {
       }))
   ).isRequired,
   onColumnDrop: Types.func.isRequired,
-  onNoteDrop: Types.func.isRequired
+  onNoteDrop: Types.func.isRequired,
+  onCreateNote: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -78,7 +82,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(moveNoteOverColumn(noteId, oldColumnIndex, newColumnIndex)),
 
   onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
-    dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex))
+    dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
+
+  onCreateNote: (header, text) => dispatch(createNote(header, text))
 })
 
 export default connect(
