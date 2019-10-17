@@ -1,6 +1,6 @@
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
- * Redux action to remove note from the oldColumn and append to the end of the newColumn
+ * Redux action for removing note from the oldColumn and append to the end of the newColumn
  * @param {string} noteId - id of the note
  * @param {number} oldColumnIndex - initial column the note belonged to
  * @param {number} newColumnIndex - column the note was dropped on
@@ -14,7 +14,7 @@ export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) => ({
 
 export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
 /**
- * Redux action to move one note on top of the other
+ * Redux action for moving one note on top of the other
  * @param {string} noteId - id of the note
  * @param {string} targetNoteId - the dragged note will be placed on top of
  * @param {number} oldColumnIndex - initial column the note belonged to
@@ -30,12 +30,26 @@ export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumn
 
 export const CREATE_NOTE = 'CREATE_NOTE'
 /**
- * Redux action to add a new note
+ * Redux action for adding a new note
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
 export const createNote = (header, text) => ({
   type: CREATE_NOTE,
+  header,
+  text
+})
+
+export const EDIT_NOTE = 'EDIT_NOTE'
+/**
+ * Redux action for editing of a note
+ * @param {string} noteId - id of the note
+ * @param {string} header - header of the note
+ * @param {string} text - text of the note
+ */
+export const editNote = (noteId, header, text) => ({
+  type: EDIT_NOTE,
+  noteId,
   header,
   text
 })

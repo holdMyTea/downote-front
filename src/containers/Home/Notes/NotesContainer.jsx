@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Grid, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-import { moveNoteOverColumn, moveNoteOverNote, createNote } from '../../../actions/notesActions'
+import { moveNoteOverColumn, moveNoteOverNote, createNote, editNote } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 import AddNoteModal from './AddNoteModal'
 
@@ -19,8 +19,9 @@ const styles = {
  * @param {function} props.onColumnDrop - Function to be called when note is dropped on column
  * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
  * @param {function} props.onCreateNote - Function to be called when a new note is created
+ * @param {function} props.onEditNote - Function to be called when an existing note is edited
  */
-const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote }) => {
+const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote }) => {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -39,7 +40,9 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote }) => 
               }
               onNoteDrop={
                 (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
-              }/>
+              }
+              onEditNote={onEditNote}
+            />
           ))
         }
       </Grid>
@@ -52,7 +55,8 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote }) => 
       <AddNoteModal
         open={modalOpen}
         onSave={onCreateNote}
-        onClose={() => setModalOpen(false)} />
+        onClose={() => setModalOpen(false)}
+      />
     </>
   )
 }
@@ -70,7 +74,8 @@ NotesContainer.propTypes = {
   ).isRequired,
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired,
-  onCreateNote: Types.func.isRequired
+  onCreateNote: Types.func.isRequired,
+  onEditNote: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -84,7 +89,8 @@ const mapDispatchToProps = dispatch => ({
   onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
     dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
-  onCreateNote: (header, text) => dispatch(createNote(header, text))
+  onCreateNote: (header, text) => dispatch(createNote(header, text)),
+  onEditNote: (noteId, header, text) => dispatch(editNote(noteId, header, text))
 })
 
 export default connect(

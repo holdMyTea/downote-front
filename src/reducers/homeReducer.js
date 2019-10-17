@@ -3,7 +3,8 @@ import uuid from 'uuid/v4'
 import {
   MOVE_NOTE_OVER_COLUMN,
   MOVE_NOTE_OVER_NOTE,
-  CREATE_NOTE
+  CREATE_NOTE,
+  EDIT_NOTE
 } from '../actions/notesActions'
 
 const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
@@ -132,6 +133,27 @@ export const reducer = (
         header: action.header,
         text: action.text
       }]
+
+      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
+      newColumns.map(col => updateOrderInColumn(col))
+      return {
+        ...state,
+        notes: newNotes,
+        columns: newColumns
+      }
+    }
+
+    case EDIT_NOTE: {
+      const newNotes = state.notes.map(note =>
+        note.id === action.noteId
+          ? {
+            ...note,
+            id: action.noteId,
+            header: action.header,
+            text: action.text
+          }
+          : note
+      )
 
       const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
       newColumns.map(col => updateOrderInColumn(col))
