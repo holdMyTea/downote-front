@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Modal, Form, Input, TextArea, Button, ModalActions } from 'semantic-ui-react'
+import { Modal, Form, Input, TextArea, Button, ModalActions, Icon } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-const AddNoteModal = ({ open = true, onClose, onSave, header = '', text = '' }) => {
+const AddNoteModal = ({ open = true, header = '', text = '', onClose, onSave, onDelete }) => {
   const [headerValue, setHeader] = useState(header)
   const onHeaderChange = event => setHeader(event.target.value)
 
@@ -16,8 +16,27 @@ const AddNoteModal = ({ open = true, onClose, onSave, header = '', text = '' }) 
     onClose() // closing
   }
 
+  const handeleDelete = () => {
+    onDelete()
+    onClose()
+  }
+
   return (
     <Modal open={open} onClose={onClose} closeIcon>
+
+      {
+        onDelete && (
+          <Icon
+            name='trash alternate'
+            onClick={handeleDelete}
+            size='large'
+            style={{
+              margin: '3 3 3 95%'
+            }}
+          />
+        )
+      }
+
       <Form style={{ padding: 8 }}>
         {/* Header input */}
         <Input
@@ -43,11 +62,12 @@ const AddNoteModal = ({ open = true, onClose, onSave, header = '', text = '' }) 
 }
 
 AddNoteModal.propTypes = {
-  open: Types.bool.isRequired,
+  open: Types.bool,
+  header: Types.string,
+  text: Types.string,
   onClose: Types.func.isRequired,
   onSave: Types.func.isRequired,
-  header: Types.string,
-  text: Types.string
+  onDelete: Types.func
 }
 
 export default AddNoteModal

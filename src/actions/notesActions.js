@@ -53,3 +53,13 @@ export const editNote = (noteId, header, text) => ({
   header,
   text
 })
+
+export const DELETE_NOTE = 'DELETE_NOTE'
+/**
+ * Redux action for deleting a note
+ * @param {string} noteId - id of the deleted note
+ */
+export const deleteNote = noteId => ({
+  type: DELETE_NOTE,
+  noteId
+})

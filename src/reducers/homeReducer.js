@@ -4,7 +4,8 @@ import {
   MOVE_NOTE_OVER_COLUMN,
   MOVE_NOTE_OVER_NOTE,
   CREATE_NOTE,
-  EDIT_NOTE
+  EDIT_NOTE,
+  DELETE_NOTE
 } from '../actions/notesActions'
 
 const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
@@ -153,6 +154,20 @@ export const reducer = (
             text: action.text
           }
           : note
+      )
+
+      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
+      newColumns.map(col => updateOrderInColumn(col))
+      return {
+        ...state,
+        notes: newNotes,
+        columns: newColumns
+      }
+    }
+
+    case DELETE_NOTE: {
+      const newNotes = state.notes.filter(note =>
+        note.id !== action.noteId
       )
 
       const newColumns = spreadNotesToColumns(newNotes, state.columnCount)

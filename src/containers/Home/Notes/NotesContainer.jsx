@@ -3,7 +3,13 @@ import { connect } from 'react-redux'
 import { Grid, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
 
-import { moveNoteOverColumn, moveNoteOverNote, createNote, editNote } from '../../../actions/notesActions'
+import {
+  moveNoteOverColumn,
+  moveNoteOverNote,
+  createNote,
+  editNote,
+  deleteNote
+} from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 import AddNoteModal from './AddNoteModal'
 
@@ -20,8 +26,9 @@ const styles = {
  * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
  * @param {function} props.onCreateNote - Function to be called when a new note is created
  * @param {function} props.onEditNote - Function to be called when an existing note is edited
+ * @param {function} props.onDeleteNote - Function to be called when an existing note is deleted
  */
-const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote }) => {
+const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote }) => {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -42,6 +49,7 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEdi
                 (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
               }
               onEditNote={onEditNote}
+              onDeleteNote={onDeleteNote}
             />
           ))
         }
@@ -75,7 +83,8 @@ NotesContainer.propTypes = {
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired,
   onCreateNote: Types.func.isRequired,
-  onEditNote: Types.func.isRequired
+  onEditNote: Types.func.isRequired,
+  onDeleteNote: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -90,7 +99,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
   onCreateNote: (header, text) => dispatch(createNote(header, text)),
-  onEditNote: (noteId, header, text) => dispatch(editNote(noteId, header, text))
+  onEditNote: (noteId, header, text) => dispatch(editNote(noteId, header, text)),
+  onDeleteNote: noteId => dispatch(deleteNote(noteId))
 })
 
 export default connect(

@@ -27,8 +27,9 @@ const styles = {
  * @param {function} props.onNoteDrop - the function to be called when a Note dropped on this Note
  * @param {function} props.onCanDrop - the function that checks whether a note can be droped on this note
  * @param {function} props.onEdit - functions that's called when the note is updated
+ * @param {function} props.onEdit - functions that's called when the note is deleted
  */
-const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop, onEdit }) => {
+const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop, onEdit, onDelete }) => {
   const [{ isDragging }, drag] = useDrag({
     item: dragItem,
     collect: monitor => ({ isDragging: monitor.isDragging() })
@@ -71,6 +72,7 @@ const Note = ({ header, text, image, dragItem, onNoteDrop, onCanDrop, onEdit }) 
           header={header}
           text={text}
           onClose={() => setModalOpen(false)}
+          onDelete={onDelete}
           onSave={onEdit}
         />
       )}
@@ -89,7 +91,8 @@ Note.propTypes = {
   }).isRequired,
   onNoteDrop: Types.func.isRequired,
   onCanDrop: Types.func.isRequired,
-  onEdit: Types.func.isRequired
+  onEdit: Types.func.isRequired,
+  onDelete: Types.func.isRequired
 }
 
 export default Note
