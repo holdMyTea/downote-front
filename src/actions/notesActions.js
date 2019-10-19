@@ -1,3 +1,5 @@
+import { showSuccessNotification } from './notificationActions'
+
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
  * Redux action for removing note from the oldColumn and append to the end of the newColumn
@@ -34,11 +36,16 @@ export const CREATE_NOTE = 'CREATE_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const createNote = (header, text) => ({
-  type: CREATE_NOTE,
-  header,
-  text
-})
+export const createNote = (header, text) => {
+  return dispatch => {
+    dispatch({
+      type: CREATE_NOTE,
+      header,
+      text
+    })
+    dispatch(showSuccessNotification('Note created'))
+  }
+}
 
 export const EDIT_NOTE = 'EDIT_NOTE'
 /**
@@ -47,19 +54,29 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const editNote = (noteId, header, text) => ({
-  type: EDIT_NOTE,
-  noteId,
-  header,
-  text
-})
+export const editNote = (noteId, header, text) => {
+  return dispatch => {
+    dispatch({
+      type: EDIT_NOTE,
+      noteId,
+      header,
+      text
+    })
+    dispatch(showSuccessNotification('Note updated'))
+  }
+}
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 /**
  * Redux action for deleting a note
  * @param {string} noteId - id of the deleted note
  */
-export const deleteNote = noteId => ({
-  type: DELETE_NOTE,
-  noteId
-})
+export const deleteNote = noteId => {
+  return dispatch => {
+    dispatch({
+      type: DELETE_NOTE,
+      noteId
+    })
+    dispatch(showSuccessNotification('Note deleted'))
+  }
+}
