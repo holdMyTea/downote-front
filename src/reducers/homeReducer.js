@@ -38,7 +38,7 @@ const initialNotes = [
   {
     id: uuid(),
     header: 'Just a header here, must be smth short but important',
-    order: 4
+    order: 6
   }
 ]
 
@@ -60,9 +60,9 @@ export const prepareInitialState = (notes, columnCount = 3) => ({
  * @param {number} columnCount - number of resulting sub-arrays
  */
 const spreadNotesToColumns = (notes, columnCount) =>
-  Array(columnCount).fill(0).map((column, columnIndex) => (
-    notes.filter((note, index) => index % columnCount === columnIndex)
-  ))
+  Array(columnCount).fill(0).map(
+    (column, columnIndex) => notes.filter(note => note.order % columnCount === columnIndex)
+  )
 
 /**
  * Updates the order property of all notes in array
@@ -70,12 +70,31 @@ const spreadNotesToColumns = (notes, columnCount) =>
  * @param {number} columnIndex - index of supplied column
  * @param {number} columnCount - total number of columns
  */
-const updateOrderInColumn = (column, columnIndex, columnCount) => column.map(
-  (note, index) => {
-    note.order = index * columnCount + columnIndex
-    return note
+const updateOrderInColumn = (column, columnIndex, columnCount) =>
+  column.map(
+    (note, index) => {
+      note.order = index * columnCount + columnIndex
+      return note
+    }
+  )
+
+/**
+   * Returns the lowest available order for the new note
+   * @param {Object[]} notes - arrays of notes to check
+   */
+const findSmallestAvailableOrder = notes => {
+  const sortedOrders = notes
+    .map(note => note.order)
+    .sort((a, b) => a - b)
+
+  for (let i = 0; i < sortedOrders.length; i++) {
+    if (sortedOrders[i] > i) {
+      return i
+    }
   }
-)
+
+  return sortedOrders.length
+}
 
 export const reducer = (
   state = prepareInitialState(initialNotes, 3),
@@ -132,11 +151,12 @@ export const reducer = (
       const newNotes = [ ...state.notes, {
         id: uuid(),
         header: action.header,
-        text: action.text
+        text: action.text,
+        order: findSmallestAvailableOrder(state.notes)
       }]
 
       const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
-      newColumns.map(col => updateOrderInColumn(col))
+      newColumns.map((col, index) => updateOrderInColumn(col, index, state.columnCount))
       return {
         ...state,
         notes: newNotes,
@@ -156,8 +176,16 @@ export const reducer = (
           : note
       )
 
-      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
-      newColumns.map(col => updateOrderInColumn(col))
+      const newColumns = [...state.columns]
+      newColumns[action.columnIndex] = newColumns[action.columnIndex].map(
+        note => note.id === action.noteId
+          ? {
+            ...note,
+            header: action.header,
+            text: action.text
+          }
+          : note
+      )
       return {
         ...state,
         notes: newNotes,
@@ -166,12 +194,18 @@ export const reducer = (
     }
 
     case DELETE_NOTE: {
-      const newNotes = state.notes.filter(note =>
-        note.id !== action.noteId
+      const newNotes = state.notes.filter(
+        note => note.id !== action.noteId
       )
 
-      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
-      newColumns.map(col => updateOrderInColumn(col))
+      const newColumns = [...state.columns]
+      newColumns[action.columnIndex] = updateOrderInColumn(
+        newColumns[action.columnIndex].filter(
+          note => note.id !== action.noteId
+        ),
+        action.columnIndex,
+        state.columnCount
+      )
       return {
         ...state,
         notes: newNotes,

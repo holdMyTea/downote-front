@@ -54,13 +54,14 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const editNote = (noteId, header, text) => {
+export const editNote = (noteId, header, text, columnIndex) => {
   return dispatch => {
     dispatch({
       type: EDIT_NOTE,
       noteId,
       header,
-      text
+      text,
+      columnIndex
     })
     dispatch(showSuccessNotification('Note updated'))
   }
@@ -71,11 +72,12 @@ export const DELETE_NOTE = 'DELETE_NOTE'
  * Redux action for deleting a note
  * @param {string} noteId - id of the deleted note
  */
-export const deleteNote = noteId => {
+export const deleteNote = (noteId, columnIndex) => {
   return dispatch => {
     dispatch({
       type: DELETE_NOTE,
-      noteId
+      noteId,
+      columnIndex
     })
     dispatch(showSuccessNotification('Note deleted'))
   }

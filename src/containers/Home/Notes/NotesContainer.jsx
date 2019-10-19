@@ -40,7 +40,7 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEdi
               key={index}
               notes={col}
               createNoteDragItem={
-                (noteId) => ({ type: 'Note', id: noteId, columnIndex: index })
+                noteId => ({ type: 'Note', id: noteId, columnIndex: index })
               }
               onColumnDrop={
                 (noteId, oldColumnIndex) => onColumnDrop(noteId, oldColumnIndex, index)
@@ -48,8 +48,12 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEdi
               onNoteDrop={
                 (noteId, targetNoteId, oldColumnIndex) => onNoteDrop(noteId, targetNoteId, oldColumnIndex, index)
               }
-              onEditNote={onEditNote}
-              onDeleteNote={onDeleteNote}
+              onEditNote={
+                (noteId, header, text) => onEditNote(noteId, header, text, index)
+              }
+              onDeleteNote={
+                noteId => onDeleteNote(noteId, index)
+              }
             />
           ))
         }
@@ -99,8 +103,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
   onCreateNote: (header, text) => dispatch(createNote(header, text)),
-  onEditNote: (noteId, header, text) => dispatch(editNote(noteId, header, text)),
-  onDeleteNote: noteId => dispatch(deleteNote(noteId))
+  onEditNote: (noteId, header, text, columnIndex) => dispatch(editNote(noteId, header, text, columnIndex)),
+  onDeleteNote: (noteId, columnIndex) => dispatch(deleteNote(noteId, columnIndex))
 })
 
 export default connect(
