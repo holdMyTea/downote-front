@@ -6,8 +6,8 @@ import Types from 'prop-types'
  * Modal for adding/editing notes
  * @param {Object} props
  * @param {boolean} [props.open=true]
- * @param {string} [props.header=] - prefilled value for the header field
- * @param {string} [props.text=] - prefilled value for the text field
+ * @param {string} [props.header=''] - prefilled value for the header field
+ * @param {string} [props.text=''] - prefilled value for the text field
  * @param {function} props.onClose - function to be called when modal is closed
  * @param {function} props.onSave - function to be called when `Save` button is clicked
  * @param {function} [props.onDelete] - function to be called when modal the `Trashbin` icon is clicked (won't be rendered if `onDelete` is null)
@@ -32,13 +32,14 @@ const AddNoteModal = ({ open = true, header = '', text = '', onClose, onSave, on
   }
 
   return (
-    <Modal open={open} onClose={onClose} closeIcon>
+    <Modal open={open} onClose={onClose} closeIcon data-testid='add-note-modal'>
 
       {
         onDelete && (
           <Icon
             name='trash alternate'
             onClick={handeleDelete}
+            title='Delete note'
             size='large'
             style={{
               margin: '3 3 3 95%'
@@ -52,6 +53,7 @@ const AddNoteModal = ({ open = true, header = '', text = '', onClose, onSave, on
         <Input
           value={headerValue}
           onChange={onHeaderChange}
+          placeholder='Header'
           size='big'
           fluid />
 
@@ -59,6 +61,7 @@ const AddNoteModal = ({ open = true, header = '', text = '', onClose, onSave, on
         <TextArea
           value={textValue}
           onChange={onTextChange}
+          placeholder='Text'
           rows={10} />
       </Form>
 

@@ -98,4 +98,84 @@ describe('Home component', () => {
     // final state should be equal to the initial one, order shouldn't have changed
     expect(initialState).toStrictEqual(within(initialColumn).getAllByText(/note/i))
   })
+
+  it('Opens \'Add note\' modal and creates a note', async () => {
+    const { findByTitle, findByPlaceholderText, findByText, queryByTestId } = renderForHome((<Home/>))
+
+    fireEvent.click(await findByTitle('Add note'))
+
+    // modal open
+    expect(queryByTestId('add-note-modal')).toBeTruthy()
+
+    const headerValue = 'Test header'
+    fireEvent.change(
+      await findByPlaceholderText('Header'),
+      { target: { value: headerValue } }
+    )
+
+    const textValue = 'Test text'
+    fireEvent.change(
+      await findByPlaceholderText('Text'),
+      { target: { value: textValue } }
+    )
+
+    fireEvent.click(await findByText('Save'))
+
+    // modal closed
+    expect(queryByTestId('add-note-modal')).toBeFalsy()
+
+    // new note should appear
+    expect(findByText(headerValue)).toBeTruthy()
+    expect(findByText(textValue)).toBeTruthy()
+  })
+
+  it('Opens \'Edit note\' modal and updates the note', async () => {
+    const { findByPlaceholderText, findByText, queryByTestId, queryByText } = renderForHome((<Home/>))
+
+    const initialHeader = 'A paragraph long note'
+    fireEvent.click(await findByText(initialHeader))
+
+    // modal open
+    expect(queryByTestId('add-note-modal')).toBeTruthy()
+
+    const headerValue = 'Test header'
+    fireEvent.change(
+      await findByPlaceholderText('Header'),
+      { target: { value: headerValue } }
+    )
+
+    const textValue = 'Test text'
+    fireEvent.change(
+      await findByPlaceholderText('Text'),
+      { target: { value: textValue } }
+    )
+
+    fireEvent.click(await findByText('Save'))
+
+    // modal closed
+    expect(queryByTestId('add-note-modal')).toBeFalsy()
+
+    // note should be updated
+    expect(findByText(headerValue)).toBeTruthy()
+    expect(findByText(textValue)).toBeTruthy()
+    expect(queryByText(initialHeader)).toBeFalsy()
+  })
+
+  it('Opens \'Edit note\' modal and deletes the note', async () => {
+    const { findByTitle, findByText, queryByTestId, queryByText } = renderForHome((<Home/>))
+
+    const initialHeader = 'A paragraph long note'
+    fireEvent.click(await findByText(initialHeader))
+
+    // modal open
+    expect(queryByTestId('add-note-modal')).toBeTruthy()
+
+    fireEvent.click(await findByTitle('Delete note'))
+
+    // modal closed
+    expect(queryByTestId('add-note-modal')).toBeFalsy()
+
+    // note should be deleted
+    expect(queryByText(initialHeader)).toBeFalsy()
+  })
 })

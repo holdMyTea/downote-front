@@ -63,6 +63,7 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEdi
       <Button icon='add circle'
         onClick={() => setModalOpen(true)}
         style={{ position: 'fixed', bottom: 15, right: 15 }}
+        title='Add note'
       />
 
       <AddNoteModal
