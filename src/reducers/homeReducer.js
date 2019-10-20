@@ -43,10 +43,19 @@ const initialNotes = [
 ]
 
 /**
+ * @typedef {Object} Note
+ * @property {string} id
+ * @property {string} [header]
+ * @property {string} [text]
+ * @property {boolean} [image] - temporal abstraction for an attached image
+ * @property {number} order - integer to determine order of a note for render
+ */
+
+/**
  * Creates initial state from the array of notes,
  * used in tests
- * @param {Object[]} notes - array of notes
- * @param {number} columnCount - number of notes columns
+ * @param {Note[]} notes - array of notes
+ * @param {number} [columnCount=3] - number of notes columns
  */
 export const prepareInitialState = (notes, columnCount = 3) => ({
   notes,
@@ -55,9 +64,10 @@ export const prepareInitialState = (notes, columnCount = 3) => ({
 })
 
 /**
- * Spread a single notes array into an array of arrays
- * @param {Object[]} notes - array to unflatten
+ * Spread (using order) a single notes array into an array of arrays
+ * @param {Note[]} notes - array to unflatten
  * @param {number} columnCount - number of resulting sub-arrays
+ * @returns {Note[][]} array of arrays (columns) of notes
  */
 const spreadNotesToColumns = (notes, columnCount) =>
   Array(columnCount).fill(0).map(
@@ -66,9 +76,10 @@ const spreadNotesToColumns = (notes, columnCount) =>
 
 /**
  * Updates the order property of all notes in array
- * @param {Object[]} column - array to check
+ * @param {Note[]} column - array to update
  * @param {number} columnIndex - index of supplied column
  * @param {number} columnCount - total number of columns
+ * @returns {Note[]} array of Notes with updated order
  */
 const updateOrderInColumn = (column, columnIndex, columnCount) =>
   column.map(
@@ -80,7 +91,8 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
 
 /**
    * Returns the lowest available order for the new note
-   * @param {Object[]} notes - arrays of notes to check
+   * @param {Note[]} notes - arrays of notes to check
+   * @returns {number} the lowest available order for the new note
    */
 const findSmallestAvailableOrder = notes => {
   const sortedOrders = notes

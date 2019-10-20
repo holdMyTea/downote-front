@@ -2,6 +2,16 @@ import React, { useState } from 'react'
 import { Modal, Form, Input, TextArea, Button, ModalActions, Icon } from 'semantic-ui-react'
 import Types from 'prop-types'
 
+/**
+ * Modal for adding/editing notes
+ * @param {Object} props
+ * @param {boolean} [props.open=true]
+ * @param {string} [props.header=] - prefilled value for the header field
+ * @param {string} [props.text=] - prefilled value for the text field
+ * @param {function} props.onClose - function to be called when modal is closed
+ * @param {function} props.onSave - function to be called when `Save` button is clicked
+ * @param {function} [props.onDelete] - function to be called when modal the `Trashbin` icon is clicked (won't be rendered if `onDelete` is null)
+ */
 const AddNoteModal = ({ open = true, header = '', text = '', onClose, onSave, onDelete }) => {
   const [headerValue, setHeader] = useState(header)
   const onHeaderChange = event => setHeader(event.target.value)

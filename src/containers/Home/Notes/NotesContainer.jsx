@@ -21,12 +21,13 @@ const styles = {
 
 /**
  * The root notes component, a Grid container for NotesColumns
- * @param {Object[][]} props.columns - Array of arrays of notes
- * @param {function} props.onColumnDrop - Function to be called when note is dropped on column
- * @param {function} props.onNoteDrop - Function to be called when note is dropped on another note
- * @param {function} props.onCreateNote - Function to be called when a new note is created
- * @param {function} props.onEditNote - Function to be called when an existing note is edited
- * @param {function} props.onDeleteNote - Function to be called when an existing note is deleted
+ * @param {Object} props
+ * @param {Object[][]} props.columns - array of arrays (one for each column) of notes
+ * @param {function} props.onColumnDrop - function to be called when note is dropped on column
+ * @param {function} props.onNoteDrop - function to be called when note is dropped on another note
+ * @param {function} props.onCreateNote - function to be called when a new note is created
+ * @param {function} props.onEditNote - function to be called when an existing note is edited
+ * @param {function} props.onDeleteNote - function to be called when an existing note is deleted
  */
 const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote }) => {
   const [modalOpen, setModalOpen] = useState(false)

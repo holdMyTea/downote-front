@@ -17,10 +17,11 @@ const styles = {
 
 /**
  * A basic Note view, handles both drag and drop
- * @param {string} props.header - Note's header
- * @param {string} props.text - Note's text
- * @param {boolean} props.image - A flag to display the image (temporal abstraction)
- * @param {Object} props.dragItem - A data object to contain the drag information
+ * @param {Object} props
+ * @param {string} [props.header=''] - note's header
+ * @param {string} [props.text=''] - note's text
+ * @param {boolean} [props.image] - flag to display the image (temporal abstraction)
+ * @param {Object} props.dragItem - data object to contain the drag information
  * @param {string} props.dragItem.type - should be 'Note'
  * @param {string} props.dragItem.id - the id of the current (dragged) note
  * @param {number} props.dragItem.columnIndex - the column the Note belongs to

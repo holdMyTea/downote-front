@@ -7,12 +7,13 @@ import Note from './Note'
 
 /**
  * A Grid.Column for Notes, also handles Notes drops
+ * @param {Object} props
  * @param {Object[]} props.notes - notes to be rendered within column
- * @param {function} props.createNoteDragItem - a function to generate drag items for Notes
- * @param {function} props.onColumnDrop - a function called when a Note is dropped on a column
- * @param {function} props.onNoteDrop - a function passed to Notes to handle drop
- * @param {function} props.onEditNote - a function passed to Notes to handle edit
- * @param {function} props.onDeleteNote - a function passed to Notes to handle deletion
+ * @param {function} props.createNoteDragItem - function to generate drag items for Notes
+ * @param {function} props.onColumnDrop - function called when a Note is dropped on a column
+ * @param {function} props.onNoteDrop - function passed to Notes to handle drop
+ * @param {function} props.onEditNote - function passed to Notes to handle edit
+ * @param {function} props.onDeleteNote - function passed to Notes to handle deletion
  */
 const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop, onEditNote, onDeleteNote }) => {
   const [{ isOver, isOverCurrent }, drop] = useDrop({
