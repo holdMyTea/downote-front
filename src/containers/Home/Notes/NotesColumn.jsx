@@ -7,17 +7,20 @@ import Note from './Note'
 
 /**
  * A Grid.Column for Notes, also handles Notes drops
+ * @param {Object} props
  * @param {Object[]} props.notes - notes to be rendered within column
- * @param {function} props.createNoteDragItem - a function to generate drag items for Notes
- * @param {function} props.onColumnDrop - a function called when a Note is dropped on a column
- * @param {function} props.onNoteDrop - a function passed to Notes to handle drop
+ * @param {function} props.createNoteDragItem - function to generate drag items for Notes
+ * @param {function} props.onColumnDrop - function called when a Note is dropped on a column
+ * @param {function} props.onNoteDrop - function passed to Notes to handle drop
+ * @param {function} props.onEditNote - function passed to Notes to handle edit
+ * @param {function} props.onDeleteNote - function passed to Notes to handle deletion
  */
-const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) => {
+const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop, onEditNote, onDeleteNote }) => {
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: 'Note',
     // not calling drop on column, if the drag is dropped on child (another note)
     drop: (item) => isOverCurrent ? onColumnDrop(item.id, item.columnIndex) : null,
-    // allowing drop if the column is empty or the Note is not the las in this column
+    // allowing drop if the column is empty or the Note is not the last in this column
     canDrop: (item) => notes.length === 0 || item.id !== notes[notes.length - 1].id,
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -49,6 +52,8 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop }) =>
                   ? (item) => item.id !== note.id && item.id !== notes[index - 1].id
                   : (item) => item.id !== note.id
               }
+              onEdit={(header, text) => onEditNote(note.id, header, text)}
+              onDelete={() => onDeleteNote(note.id)}
             />
           ))
         }
@@ -68,7 +73,9 @@ NotesColumn.propTypes = {
     })),
   createNoteDragItem: Types.func.isRequired,
   onColumnDrop: Types.func.isRequired,
-  onNoteDrop: Types.func.isRequired
+  onNoteDrop: Types.func.isRequired,
+  onEditNote: Types.func.isRequired,
+  onDeleteNote: Types.func.isRequired
 }
 
 export default NotesColumn

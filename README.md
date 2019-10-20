@@ -9,3 +9,4 @@ The front-end part of my pet note-taking app.
   - Drag&drop for notes :fire: (I'm glad I went for it)
   - Possibility to adjust number of columns :hushed: (not for the user though :anger: :construction: )
 + 28.09.2019 - Added tests for login and drag'n'drops :wrench: :guardsman:
++ 20.10.2019 - Added notes creation :heavy_plus_sign: editing :memo: and deletion :heavy_multiplication_x:
