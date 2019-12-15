@@ -5,7 +5,9 @@ import {
   MOVE_NOTE_OVER_NOTE,
   CREATE_NOTE,
   EDIT_NOTE,
-  DELETE_NOTE
+  DELETE_NOTE,
+  REQUEST_NOTES,
+  RECEIVE_NOTES
 } from '../actions/notesActions'
 
 const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
@@ -60,6 +62,7 @@ const initialNotes = [
 export const prepareInitialState = (notes, columnCount = 3) => ({
   notes,
   columnCount,
+  isLoading: false,
   columns: spreadNotesToColumns(notes, columnCount)
 })
 
@@ -113,6 +116,12 @@ export const reducer = (
   action
 ) => {
   switch (action.type) {
+    case REQUEST_NOTES:
+      return { ...state, isLoading: true }
+
+    case RECEIVE_NOTES:
+      return prepareInitialState(action.notes, state.columnCount)
+
     case MOVE_NOTE_OVER_COLUMN: {
       const newColumns = [ ...state.columns ]
       // finding the dragged note

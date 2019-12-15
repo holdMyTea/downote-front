@@ -1,8 +1,9 @@
-import { showSuccessNotification } from './notificationActions'
+import { showSuccessNotification, showErrorNotification } from './notificationActions'
+import request from '../helpers/request'
 
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
- * Redux action for removing note from the oldColumn and append to the end of the newColumn
+ * Redux action for removing note from the oldColumn and appending it to the end of the newColumn
  * @param {string} noteId - id of the note
  * @param {number} oldColumnIndex - initial column the note belonged to
  * @param {number} newColumnIndex - column the note was dropped on
@@ -81,4 +82,28 @@ export const deleteNote = (noteId, columnIndex) => {
     })
     dispatch(showSuccessNotification('Note deleted'))
   }
+}
+
+export const REQUEST_NOTES = 'REQUEST_NOTES'
+const requestNotes = () => ({ type: REQUEST_NOTES })
+
+export const RECEIVE_NOTES = 'RECEIVE_NOTES'
+const receiveNotes = notes => ({
+  type: RECEIVE_NOTES,
+  notes
+})
+
+/**
+ * Redux action to fetch notes from API.
+ */
+export const fetchNotes = _ => dispatch => {
+  dispatch(requestNotes())
+  return request('http://localhost:8082/notes')
+    .then(response => {
+      if (response.ok) {
+        dispatch(receiveNotes(response.body))
+      } else {
+        dispatch(showErrorNotification(response.body.error))
+      }
+    })
 }

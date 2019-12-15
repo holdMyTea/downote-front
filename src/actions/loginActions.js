@@ -44,7 +44,7 @@ export const logOut = () => {
   return dispatch => {
     // TODO: add something to lock the screen while logging out
     return request('http://localhost:8082/token', 'delete')
-      .then(response => {
+      .then(() => {
         dispatch(showSuccessNotification('Logout successful'))
         dispatch(removeToken())
       })

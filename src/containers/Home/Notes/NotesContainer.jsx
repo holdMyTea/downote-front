@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button } from 'semantic-ui-react'
 import Types from 'prop-types'
@@ -8,7 +8,8 @@ import {
   moveNoteOverNote,
   createNote,
   editNote,
-  deleteNote
+  deleteNote,
+  fetchNotes
 } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 import AddNoteModal from './AddNoteModal'
@@ -29,8 +30,10 @@ const styles = {
  * @param {function} props.onEditNote - function to be called when an existing note is edited
  * @param {function} props.onDeleteNote - function to be called when an existing note is deleted
  */
-const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote }) => {
+const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote, onFetchNotes }) => {
   const [modalOpen, setModalOpen] = useState(false)
+
+  useEffect(() => { onFetchNotes() }, [])
 
   return (
     <>
@@ -90,7 +93,8 @@ NotesContainer.propTypes = {
   onNoteDrop: Types.func.isRequired,
   onCreateNote: Types.func.isRequired,
   onEditNote: Types.func.isRequired,
-  onDeleteNote: Types.func.isRequired
+  onDeleteNote: Types.func.isRequired,
+  onFetchNotes: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -106,7 +110,9 @@ const mapDispatchToProps = dispatch => ({
 
   onCreateNote: (header, text) => dispatch(createNote(header, text)),
   onEditNote: (noteId, header, text, columnIndex) => dispatch(editNote(noteId, header, text, columnIndex)),
-  onDeleteNote: (noteId, columnIndex) => dispatch(deleteNote(noteId, columnIndex))
+  onDeleteNote: (noteId, columnIndex) => dispatch(deleteNote(noteId, columnIndex)),
+
+  onFetchNotes: () => dispatch(fetchNotes())
 })
 
 export default connect(
