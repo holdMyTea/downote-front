@@ -1,48 +1,13 @@
-import uuid from 'uuid/v4'
-
 import {
   MOVE_NOTE_OVER_COLUMN,
   MOVE_NOTE_OVER_NOTE,
   CREATE_NOTE,
+  RECEIVE_CREATE_NOTE,
   EDIT_NOTE,
   DELETE_NOTE,
   REQUEST_NOTES,
   RECEIVE_NOTES
 } from '../actions/notesActions'
-
-const makePlaceholder = i => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(i)
-
-const initialNotes = [
-  {
-    id: uuid(),
-    header: 'A paragraph long note',
-    text: makePlaceholder(5),
-    order: 0
-  },
-  {
-    id: uuid(),
-    header: 'A rather long note',
-    text: makePlaceholder(12),
-    order: 1
-  },
-  {
-    id: uuid(),
-    header: 'A short note but with a pic',
-    text: makePlaceholder(2),
-    image: true,
-    order: 2
-  },
-  {
-    id: uuid(),
-    text: 'No header in the note, but still should be rendered ok',
-    order: 3
-  },
-  {
-    id: uuid(),
-    header: 'Just a header here, must be smth short but important',
-    order: 6
-  }
-]
 
 /**
  * @typedef {Object} Note
@@ -92,27 +57,8 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
     }
   )
 
-/**
-   * Returns the lowest available order for the new note
-   * @param {Note[]} notes - arrays of notes to check
-   * @returns {number} the lowest available order for the new note
-   */
-const findSmallestAvailableOrder = notes => {
-  const sortedOrders = notes
-    .map(note => note.order)
-    .sort((a, b) => a - b)
-
-  for (let i = 0; i < sortedOrders.length; i++) {
-    if (sortedOrders[i] > i) {
-      return i
-    }
-  }
-
-  return sortedOrders.length
-}
-
 export const reducer = (
-  state = prepareInitialState(initialNotes, 3),
+  state = prepareInitialState([], 3),
   action
 ) => {
   switch (action.type) {
@@ -170,11 +116,26 @@ export const reducer = (
 
     case CREATE_NOTE: {
       const newNotes = [ ...state.notes, {
-        id: uuid(),
+        uiID: action.uiID,
         header: action.header,
         text: action.text,
-        order: findSmallestAvailableOrder(state.notes)
+        order: action.order
       }]
+
+      // TODO: this can be optimized
+      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
+      newColumns.map((col, index) => updateOrderInColumn(col, index, state.columnCount))
+      return {
+        ...state,
+        notes: newNotes,
+        columns: newColumns
+      }
+    }
+
+    case RECEIVE_CREATE_NOTE: {
+      const newNotes = state.notes.map(
+        note => note.uiID === action.uiID ? { ...note, id: action.id } : note
+      )
 
       const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
       newColumns.map((col, index) => updateOrderInColumn(col, index, state.columnCount))

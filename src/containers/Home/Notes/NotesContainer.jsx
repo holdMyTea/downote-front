@@ -33,6 +33,7 @@ const styles = {
 const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote, onFetchNotes }) => {
   const [modalOpen, setModalOpen] = useState(false)
 
+  // TODO: do smth to the warning here
   useEffect(() => { onFetchNotes() }, [])
 
   return (
@@ -98,7 +99,8 @@ NotesContainer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  columns: state.home.columns
+  columns: state.home.columns,
+  notes: state.home.notes
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -108,14 +110,22 @@ const mapDispatchToProps = dispatch => ({
   onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
     dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
-  onCreateNote: (header, text) => dispatch(createNote(header, text)),
+  onCreateNote: (notes, header, text) => dispatch(createNote(notes, header, text)),
   onEditNote: (noteId, header, text, columnIndex) => dispatch(editNote(noteId, header, text, columnIndex)),
   onDeleteNote: (noteId, columnIndex) => dispatch(deleteNote(noteId, columnIndex)),
 
   onFetchNotes: () => dispatch(fetchNotes())
 })
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  columns: stateProps.columns,
+  ...dispatchProps,
+  onCreateNote: (header, text) => dispatchProps.onCreateNote(stateProps.notes, header, text),
+  ...ownProps
+})
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(NotesContainer)

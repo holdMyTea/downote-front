@@ -1,5 +1,27 @@
+import uuid from 'uuid/v4'
+
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
+
+// TODO: move this somewhere
+/**
+   * Returns the lowest available order for the new note
+   * @param {Note[]} notes - arrays of notes to check
+   * @returns {number} the lowest available order for the new note
+   */
+const findSmallestAvailableOrder = notes => {
+  const sortedOrders = notes
+    .map(note => note.order)
+    .sort((a, b) => a - b)
+
+  for (let i = 0; i < sortedOrders.length; i++) {
+    if (sortedOrders[i] > i) {
+      return i
+    }
+  }
+
+  return sortedOrders.length
+}
 
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
@@ -32,20 +54,40 @@ export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumn
 })
 
 export const CREATE_NOTE = 'CREATE_NOTE'
+export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
 /**
  * Redux action for adding a new note
+ * @param {Object[]} notes - all current notes
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const createNote = (header, text) => {
-  return dispatch => {
-    dispatch({
-      type: CREATE_NOTE,
-      header,
-      text
-    })
-    dispatch(showSuccessNotification('Note created'))
-  }
+export const createNote = (notes, header, text) => dispatch => {
+  const uiID = uuid()
+  const order = findSmallestAvailableOrder(notes)
+  dispatch({ // dispatching note creation before fetching
+    type: CREATE_NOTE,
+    uiID,
+    header,
+    text,
+    order
+  })
+  dispatch(showSuccessNotification('Note created'))
+
+  return request('http://localhost:8082/note', 'POST', {
+    header,
+    text,
+    order
+  }).then(response => {
+    if (response.ok) {
+      dispatch({
+        type: RECEIVE_CREATE_NOTE,
+        uiID,
+        id: response.noteId
+      })
+    } else {
+      dispatch(showErrorNotification(response.body.error))
+    }
+  })
 }
 
 export const EDIT_NOTE = 'EDIT_NOTE'
