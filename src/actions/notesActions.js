@@ -97,8 +97,8 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const editNote = (noteId, header, text, columnIndex) => {
-  return dispatch => {
+export const editNote = (noteId, header, text, columnIndex) =>
+  dispatch => {
     dispatch({
       type: EDIT_NOTE,
       noteId,
@@ -107,24 +107,38 @@ export const editNote = (noteId, header, text, columnIndex) => {
       columnIndex
     })
     dispatch(showSuccessNotification('Note updated'))
+
+    return request(`http://localhost:8082/note/${noteId}`, 'PUT', {
+      header,
+      text
+    }).then(response => {
+      if (!response.ok) {
+        dispatch(showErrorNotification(response.body.error))
+      }
+    })
   }
-}
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 /**
  * Redux action for deleting a note
  * @param {string} noteId - id of the deleted note
  */
-export const deleteNote = (noteId, columnIndex) => {
-  return dispatch => {
+export const deleteNote = (noteId, columnIndex) =>
+  dispatch => {
     dispatch({
       type: DELETE_NOTE,
       noteId,
       columnIndex
     })
     dispatch(showSuccessNotification('Note deleted'))
+
+    return request(`http://localhost:8082/note/${noteId}`, 'DELETE')
+      .then(response => {
+        if (!response.ok) {
+          dispatch(showErrorNotification(response.body.error))
+        }
+      })
   }
-}
 
 export const REQUEST_NOTES = 'REQUEST_NOTES'
 const requestNotes = () => ({ type: REQUEST_NOTES })
