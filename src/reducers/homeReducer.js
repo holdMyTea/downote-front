@@ -116,7 +116,7 @@ export const reducer = (
 
     case CREATE_NOTE: {
       const newNotes = [ ...state.notes, {
-        uiID: action.uiID,
+        id: action.uiID,
         header: action.header,
         text: action.text,
         order: action.order
@@ -134,7 +134,7 @@ export const reducer = (
 
     case RECEIVE_CREATE_NOTE: {
       const newNotes = state.notes.map(
-        note => note.uiID === action.uiID ? { ...note, id: action.id } : note
+        note => note.id === action.uiID ? { ...note, id: action.id } : note
       )
 
       const newColumns = spreadNotesToColumns(newNotes, state.columnCount)

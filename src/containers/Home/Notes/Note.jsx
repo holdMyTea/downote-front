@@ -87,7 +87,7 @@ Note.propTypes = {
   image: Types.bool,
   dragItem: Types.shape({
     type: Types.string.isRequired,
-    id: Types.string.isRequired,
+    id: Types.oneOfType([ Types.number, Types.string ]),
     columnIndex: Types.number.isRequired
   }).isRequired,
   onNoteDrop: Types.func.isRequired,

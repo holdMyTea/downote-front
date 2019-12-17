@@ -82,7 +82,7 @@ export const createNote = (notes, header, text) => dispatch => {
       dispatch({
         type: RECEIVE_CREATE_NOTE,
         uiID,
-        id: response.noteId
+        id: response.body.noteId
       })
     } else {
       dispatch(showErrorNotification(response.body.error))

@@ -83,7 +83,7 @@ NotesContainer.propTypes = {
   columns: Types.arrayOf(
     Types.arrayOf(
       Types.shape({
-        id: Types.string.isRequired,
+        id: Types.oneOfType([ Types.number, Types.string ]),
         header: Types.string,
         text: Types.string,
         image: Types.bool,
