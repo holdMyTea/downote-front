@@ -99,8 +99,7 @@ NotesContainer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  columns: state.home.columns,
-  notes: state.home.notes
+  columns: state.home.columns
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -110,7 +109,7 @@ const mapDispatchToProps = dispatch => ({
   onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
     dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
-  onCreateNote: (notes, header, text) => dispatch(createNote(notes, header, text)),
+  onCreateNote: (columns, header, text) => dispatch(createNote(columns, header, text)),
   onEditNote: (noteId, header, text, columnIndex) => dispatch(editNote(noteId, header, text, columnIndex)),
   onDeleteNote: (noteId, columnIndex) => dispatch(deleteNote(noteId, columnIndex)),
 
@@ -120,7 +119,7 @@ const mapDispatchToProps = dispatch => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   columns: stateProps.columns,
   ...dispatchProps,
-  onCreateNote: (header, text) => dispatchProps.onCreateNote(stateProps.notes, header, text),
+  onCreateNote: (header, text) => dispatchProps.onCreateNote(stateProps.columns, header, text),
   ...ownProps
 })
 

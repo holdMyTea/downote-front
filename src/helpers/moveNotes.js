@@ -1,3 +1,5 @@
+import uuid from 'uuid/v4'
+
 // TODO: this is duplicate, and should not be in reducer
 /**
  * Updates the order property of all notes in array
@@ -13,6 +15,34 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
       return note
     }
   )
+
+const addNote = (columns, header, text) => {
+  // selecting the column with the fewest notes
+  let index = 0
+  let length = Number.POSITIVE_INFINITY
+  columns.forEach((c, i) => {
+    if (c.length < length) {
+      index = i
+      length = c.length
+    }
+  })
+
+  const uiID = uuid()
+  columns[index].push({
+    header,
+    text,
+    id: uiID
+  })
+
+  columns[index] = updateOrderInColumn(columns[index], index, columns.length)
+  const order = columns[index][columns[index].length - 1].order
+  return {
+    newColumns: [...columns],
+    uiID,
+    order,
+    columnIndex: index
+  }
+}
 
 const moveNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns, columnCount) => {
   const newColumns = [ ...columns ]
@@ -61,6 +91,7 @@ const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, 
 }
 
 export {
+  addNote,
   moveNoteOnColumn,
   moveNoteOverNote
 }

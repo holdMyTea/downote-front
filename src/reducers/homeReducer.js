@@ -99,33 +99,22 @@ export const reducer = (
     }
 
     case CREATE_NOTE: {
-      const newNotes = [ ...state.notes, {
-        id: action.uiID,
-        header: action.header,
-        text: action.text,
-        order: action.order
-      }]
-
-      // TODO: this can be optimized
-      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
-      newColumns.map((col, index) => updateOrderInColumn(col, index, state.columnCount))
       return {
         ...state,
-        notes: newNotes,
-        columns: newColumns
+        columns: action.newColumns
       }
     }
 
     case RECEIVE_CREATE_NOTE: {
-      const newNotes = state.notes.map(
-        note => note.id === action.uiID ? { ...note, id: action.id } : note
-      )
+      const { uiID, id, columnIndex } = action
 
-      const newColumns = spreadNotesToColumns(newNotes, state.columnCount)
-      newColumns.map((col, index) => updateOrderInColumn(col, index, state.columnCount))
+      const newColumns = [...state.columns]
+      // replacing temporal uiId with a permanent noteId from API
+      newColumns[columnIndex] = newColumns[columnIndex]
+        .map(note => note.id === uiID ? { ...note, id } : note)
+
       return {
         ...state,
-        notes: newNotes,
         columns: newColumns
       }
     }

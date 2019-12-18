@@ -1,27 +1,7 @@
-import uuid from 'uuid/v4'
+import { addNote } from '../helpers/moveNotes'
 
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
-
-// TODO: move this somewhere
-/**
-   * Returns the lowest available order for the new note
-   * @param {Note[]} notes - arrays of notes to check
-   * @returns {number} the lowest available order for the new note
-   */
-const findSmallestAvailableOrder = notes => {
-  const sortedOrders = notes
-    .map(note => note.order)
-    .sort((a, b) => a - b)
-
-  for (let i = 0; i < sortedOrders.length; i++) {
-    if (sortedOrders[i] > i) {
-      return i
-    }
-  }
-
-  return sortedOrders.length
-}
 
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
@@ -57,19 +37,15 @@ export const CREATE_NOTE = 'CREATE_NOTE'
 export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
 /**
  * Redux action for adding a new note
- * @param {Object[]} notes - all current notes
+ * @param {Object[][]} columns - current notes in columns
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const createNote = (notes, header, text) => dispatch => {
-  const uiID = uuid()
-  const order = findSmallestAvailableOrder(notes)
+export const createNote = (columns, header, text) => dispatch => {
+  const { newColumns, uiID, order, columnIndex } = addNote(columns, header, text)
   dispatch({ // dispatching note creation before fetching
     type: CREATE_NOTE,
-    uiID,
-    header,
-    text,
-    order
+    newColumns
   })
   dispatch(showSuccessNotification('Note created'))
 
@@ -82,7 +58,8 @@ export const createNote = (notes, header, text) => dispatch => {
       dispatch({
         type: RECEIVE_CREATE_NOTE,
         uiID,
-        id: response.body.noteId
+        id: response.body.noteId,
+        columnIndex
       })
     } else {
       dispatch(showErrorNotification(response.body.error))
