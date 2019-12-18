@@ -1,3 +1,4 @@
+import { moveNoteOnColumn, moveNoteOverNote } from '../helpers/moveNotes'
 import {
   MOVE_NOTE_OVER_COLUMN,
   MOVE_NOTE_OVER_NOTE,
@@ -25,7 +26,7 @@ import {
  * @param {number} [columnCount=3] - number of notes columns
  */
 export const prepareInitialState = (notes, columnCount = 3) => ({
-  notes,
+  notes, // TODO: remove notes from state
   columnCount,
   isLoading: false,
   columns: spreadNotesToColumns(notes, columnCount)
@@ -69,49 +70,32 @@ export const reducer = (
       return prepareInitialState(action.notes, state.columnCount)
 
     case MOVE_NOTE_OVER_COLUMN: {
-      const newColumns = [ ...state.columns ]
-      // finding the dragged note
-      const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
-      // removing the node from the oldColumn and updating order in it
-      newColumns[action.oldColumnIndex] = updateOrderInColumn(
-        newColumns[action.oldColumnIndex].filter(
-          n => n.id !== action.noteId
-        ),
-        action.oldColumnIndex,
-        state.columnCount
-      )
-      // updating the order of the note before inserting it
-      note.order = newColumns[action.newColumnIndex].length * state.columnCount + action.newColumnIndex
-      // inserting the note into the new column
-      newColumns[action.newColumnIndex].push(note)
-      return { ...state, columns: newColumns }
+      const { noteId, oldColumnIndex, newColumnIndex } = action
+      return {
+        ...state,
+        columns: moveNoteOnColumn(
+          noteId,
+          oldColumnIndex,
+          newColumnIndex,
+          state.columns,
+          state.columnCount
+        )
+      }
     }
 
     case MOVE_NOTE_OVER_NOTE: {
-      const newColumns = [ ...state.columns ]
-      // finding the dragged note
-      const note = newColumns[action.oldColumnIndex].find(n => n.id === action.noteId)
-      // removing the node from the oldColumn and updating order in it
-      newColumns[action.oldColumnIndex] = updateOrderInColumn(
-        newColumns[action.oldColumnIndex].filter(
-          n => n.id !== action.noteId
-        ),
-        action.oldColumnIndex,
-        state.columnCount
-      )
-      // inserting the note into the newColumn
-      newColumns[action.newColumnIndex].splice(
-        newColumns[action.newColumnIndex].findIndex(note => note.id === action.targetNoteId),
-        0,
-        note
-      )
-      // updating the order of the newColumn
-      newColumns[action.newColumnIndex] = updateOrderInColumn(
-        newColumns[action.newColumnIndex],
-        action.newColumnIndex,
-        state.columnCount
-      )
-      return { ...state, columns: newColumns }
+      const { noteId, targetNoteId, oldColumnIndex, newColumnIndex } = action
+      return {
+        ...state,
+        columns: moveNoteOverNote(
+          noteId,
+          targetNoteId,
+          oldColumnIndex,
+          newColumnIndex,
+          state.columns,
+          state.columnCount
+        )
+      }
     }
 
     case CREATE_NOTE: {
