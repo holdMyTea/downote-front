@@ -1,4 +1,4 @@
-import { addNote } from '../helpers/moveNotes'
+import { addNote, dropNoteOnColumn } from '../helpers/moveNotes'
 
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
@@ -10,12 +10,23 @@ export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
  * @param {number} oldColumnIndex - initial column the note belonged to
  * @param {number} newColumnIndex - column the note was dropped on
  */
-export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) => ({
-  type: MOVE_NOTE_OVER_COLUMN,
-  noteId,
-  oldColumnIndex,
-  newColumnIndex
-})
+export const moveNoteOverColumn = (columns, noteId, oldColumnIndex, newColumnIndex) =>
+  dispatch => {
+    const { newColumns, newOrder } = dropNoteOnColumn(noteId, oldColumnIndex, newColumnIndex, columns)
+
+    dispatch({
+      type: MOVE_NOTE_OVER_COLUMN,
+      newColumns
+    })
+
+    return request('http://localhost:8082/notes/reorder', 'PUT', {
+      newOrder
+    }).then(response => {
+      if (!response.ok) {
+        dispatch(showErrorNotification(response.body.error))
+      }
+    })
+  }
 
 export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
 /**

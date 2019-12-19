@@ -44,8 +44,9 @@ const addNote = (columns, header, text) => {
   }
 }
 
-const moveNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns, columnCount) => {
+const dropNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   const newColumns = [ ...columns ]
+  const columnCount = newColumns.length
   // finding the dragged note
   const note = newColumns[oldColumnIndex].find(n => n.id === noteId)
   // removing the node from the oldColumn and updating order in it
@@ -60,7 +61,22 @@ const moveNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns, colum
   note.order = newColumns[newColumnIndex].length * columnCount + newColumnIndex
   // inserting the note into the new column
   newColumns[newColumnIndex].push(note)
-  return newColumns
+
+  const newOrder = newColumns[oldColumnIndex]
+    .map(n => ({
+      id: n.id,
+      order: n.order
+    }))
+
+  newOrder.push({
+    id: note.id,
+    order: note.order
+  })
+
+  return {
+    newColumns,
+    newOrder
+  }
 }
 
 const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns, columnCount) => {
@@ -92,6 +108,6 @@ const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, 
 
 export {
   addNote,
-  moveNoteOnColumn,
+  dropNoteOnColumn,
   moveNoteOverNote
 }

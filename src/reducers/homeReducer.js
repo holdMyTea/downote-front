@@ -1,4 +1,4 @@
-import { moveNoteOnColumn, moveNoteOverNote } from '../helpers/moveNotes'
+import { moveNoteOverNote } from '../helpers/moveNotes'
 import {
   MOVE_NOTE_OVER_COLUMN,
   MOVE_NOTE_OVER_NOTE,
@@ -70,16 +70,10 @@ export const reducer = (
       return prepareInitialState(action.notes, state.columnCount)
 
     case MOVE_NOTE_OVER_COLUMN: {
-      const { noteId, oldColumnIndex, newColumnIndex } = action
+      const { newColumns } = action
       return {
         ...state,
-        columns: moveNoteOnColumn(
-          noteId,
-          oldColumnIndex,
-          newColumnIndex,
-          state.columns,
-          state.columnCount
-        )
+        columns: newColumns
       }
     }
 
