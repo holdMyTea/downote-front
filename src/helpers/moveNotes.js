@@ -16,6 +16,8 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
     }
   )
 
+const toOrderArray = n => ({ id: n.id, order: n.order })
+
 const addNote = (columns, header, text) => {
   // selecting the column with the fewest notes
   let index = 0
@@ -62,11 +64,7 @@ const dropNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   // inserting the note into the new column
   newColumns[newColumnIndex].push(note)
 
-  const newOrder = newColumns[oldColumnIndex]
-    .map(n => ({
-      id: n.id,
-      order: n.order
-    }))
+  const newOrder = newColumns[oldColumnIndex].map(toOrderArray)
 
   newOrder.push({
     id: note.id,
@@ -79,18 +77,27 @@ const dropNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   }
 }
 
-const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns, columnCount) => {
+const dropNoteOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns) => {
   const newColumns = [ ...columns ]
+  const columnCount = newColumns.length
+
   // finding the dragged note
   const note = newColumns[oldColumnIndex].find(n => n.id === noteId)
-  // removing the node from the oldColumn and updating order in it
-  newColumns[oldColumnIndex] = updateOrderInColumn(
-    newColumns[oldColumnIndex].filter(
+
+  // removing the node from the oldColumn
+  newColumns[oldColumnIndex] = oldColumnIndex === newColumnIndex
+    //
+    ? newColumns[oldColumnIndex] = newColumns[oldColumnIndex].filter(
       n => n.id !== noteId
-    ),
-    oldColumnIndex,
-    columnCount
-  )
+    )
+    : updateOrderInColumn( // and updating order in it
+      newColumns[oldColumnIndex].filter(
+        n => n.id !== noteId
+      ),
+      oldColumnIndex,
+      columnCount
+    )
+
   // inserting the note into the newColumn
   newColumns[newColumnIndex].splice(
     newColumns[newColumnIndex].findIndex(note => note.id === targetNoteId),
@@ -103,11 +110,23 @@ const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, 
     newColumnIndex,
     columnCount
   )
-  return newColumns
+
+  const newOrder = oldColumnIndex === newColumnIndex
+    ? newColumns[oldColumnIndex].map(toOrderArray)
+    : newColumns[oldColumnIndex]
+      .map(toOrderArray)
+      .concat(
+        newColumns[newColumnIndex].map(toOrderArray)
+      )
+
+  return {
+    newColumns,
+    newOrder
+  }
 }
 
 export {
   addNote,
   dropNoteOnColumn,
-  moveNoteOverNote
+  dropNoteOnNote
 }

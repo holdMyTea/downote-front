@@ -106,8 +106,8 @@ const mapDispatchToProps = dispatch => ({
   onColumnDrop: (columns, noteId, oldColumnIndex, newColumnIndex) =>
     dispatch(moveNoteOverColumn(columns, noteId, oldColumnIndex, newColumnIndex)),
 
-  onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
-    dispatch(moveNoteOverNote(noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
+  onNoteDrop: (columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
+    dispatch(moveNoteOverNote(columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex)),
 
   onCreateNote: (columns, header, text) => dispatch(createNote(columns, header, text)),
   onEditNote: (noteId, header, text, columnIndex) => dispatch(editNote(noteId, header, text, columnIndex)),
@@ -124,7 +124,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     dispatchProps.onCreateNote(stateProps.columns, header, text),
 
   onColumnDrop: (noteId, oldColumnIndex, newColumnIndex) =>
-    dispatchProps.onColumnDrop(stateProps.columns, noteId, oldColumnIndex, newColumnIndex)
+    dispatchProps.onColumnDrop(stateProps.columns, noteId, oldColumnIndex, newColumnIndex),
+
+  onNoteDrop: (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
+    dispatchProps.onNoteDrop(stateProps.columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex)
 })
 
 export default connect(
