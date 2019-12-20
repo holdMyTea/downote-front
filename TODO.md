@@ -1,7 +1,7 @@
 - ~~Fetch notes~~
 - ~~Add notes~~
 - ~~Update notes~~
-- Move notes
+- ~~Move notes~~
 - ~~Delete notes~~
 - Separate URL to env
 - Handle 401 and errors in general

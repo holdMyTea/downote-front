@@ -1,4 +1,4 @@
-import { addNote, dropNoteOnColumn, dropNoteOnNote } from '../helpers/moveNotes'
+import { add, edit, remove, dropOnColumn, dropOnNote } from '../helpers/moveNotes'
 
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
@@ -12,7 +12,7 @@ export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
  */
 export const moveNoteOverColumn = (columns, noteId, oldColumnIndex, newColumnIndex) =>
   dispatch => {
-    const { newColumns, newOrder } = dropNoteOnColumn(
+    const { newColumns, newOrder } = dropOnColumn(
       noteId,
       oldColumnIndex,
       newColumnIndex,
@@ -43,7 +43,7 @@ export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
  */
 export const moveNoteOverNote = (columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
   dispatch => {
-    const { newColumns, newOrder } = dropNoteOnNote(
+    const { newColumns, newOrder } = dropOnNote(
       noteId,
       targetNoteId,
       oldColumnIndex,
@@ -74,7 +74,7 @@ export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
  * @param {string} text - text of the note
  */
 export const createNote = (columns, header, text) => dispatch => {
-  const { newColumns, uiID, order, columnIndex } = addNote(columns, header, text)
+  const { newColumns, uiID, order, columnIndex } = add(columns, header, text)
   dispatch({ // dispatching note creation before fetching
     type: CREATE_NOTE,
     newColumns
@@ -106,14 +106,12 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const editNote = (noteId, header, text, columnIndex) =>
+export const editNote = (noteId, header, text, columnIndex, columns) =>
   dispatch => {
+    const { newColumns } = edit(noteId, header, text, columnIndex, columns)
     dispatch({
       type: EDIT_NOTE,
-      noteId,
-      header,
-      text,
-      columnIndex
+      newColumns
     })
     dispatch(showSuccessNotification('Note updated'))
 
@@ -132,12 +130,12 @@ export const DELETE_NOTE = 'DELETE_NOTE'
  * Redux action for deleting a note
  * @param {string} noteId - id of the deleted note
  */
-export const deleteNote = (noteId, columnIndex) =>
+export const deleteNote = (noteId, columnIndex, columns) =>
   dispatch => {
+    const { newColumns } = remove(noteId, columnIndex, columns)
     dispatch({
       type: DELETE_NOTE,
-      noteId,
-      columnIndex
+      newColumns
     })
     dispatch(showSuccessNotification('Note deleted'))
 
@@ -157,7 +155,6 @@ const receiveNotes = notes => ({
   type: RECEIVE_NOTES,
   notes
 })
-
 /**
  * Redux action to fetch notes from API.
  */

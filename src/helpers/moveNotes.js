@@ -1,6 +1,5 @@
 import uuid from 'uuid/v4'
 
-// TODO: this is duplicate, and should not be in reducer
 /**
  * Updates the order property of all notes in array
  * @param {Note[]} column - array to update
@@ -18,7 +17,10 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
 
 const toOrderArray = n => ({ id: n.id, order: n.order })
 
-const addNote = (columns, header, text) => {
+// TODO param ordering in exported functions
+// TODO move column spreads to return
+
+const add = (columns, header, text) => {
   // selecting the column with the fewest notes
   let index = 0
   let length = Number.POSITIVE_INFINITY
@@ -46,30 +48,49 @@ const addNote = (columns, header, text) => {
   }
 }
 
-const dropNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
+const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   const newColumns = [ ...columns ]
   const columnCount = newColumns.length
   // finding the dragged note
   const note = newColumns[oldColumnIndex].find(n => n.id === noteId)
-  // removing the node from the oldColumn and updating order in it
-  newColumns[oldColumnIndex] = updateOrderInColumn(
-    newColumns[oldColumnIndex].filter(
+
+  let newOrder
+
+  if (newColumnIndex === oldColumnIndex) {
+    const columnIndex = newColumnIndex
+    // removing the note from the column
+    newColumns[columnIndex] = newColumns[columnIndex].filter(
       n => n.id !== noteId
-    ),
-    oldColumnIndex,
-    columnCount
-  )
-  // updating the order of the note before inserting it
-  note.order = newColumns[newColumnIndex].length * columnCount + newColumnIndex
-  // inserting the note into the new column
-  newColumns[newColumnIndex].push(note)
+    )
+    // and appending it again
+    newColumns[columnIndex].push(note)
+    newColumns[columnIndex] = updateOrderInColumn(
+      newColumns[columnIndex],
+      columnIndex,
+      columnCount
+    )
+    newOrder = newColumns[columnIndex].map(toOrderArray)
+  } else {
+    // removing the node from the oldColumn and updating order in it
+    newColumns[oldColumnIndex] = updateOrderInColumn(
+      newColumns[oldColumnIndex].filter(
+        n => n.id !== noteId
+      ),
+      oldColumnIndex,
+      columnCount
+    )
+    // updating the order of the note before inserting it
+    note.order = newColumns[newColumnIndex].length * columnCount + newColumnIndex
+    // inserting the note into the new column
+    newColumns[newColumnIndex].push(note)
 
-  const newOrder = newColumns[oldColumnIndex].map(toOrderArray)
+    newOrder = newColumns[oldColumnIndex].map(toOrderArray)
 
-  newOrder.push({
-    id: note.id,
-    order: note.order
-  })
+    newOrder.push({
+      id: note.id,
+      order: note.order
+    })
+  }
 
   return {
     newColumns,
@@ -77,7 +98,7 @@ const dropNoteOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   }
 }
 
-const dropNoteOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns) => {
+const dropOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns) => {
   const newColumns = [ ...columns ]
   const columnCount = newColumns.length
 
@@ -125,8 +146,33 @@ const dropNoteOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, co
   }
 }
 
+const edit = (noteId, header, text, columnIndex, columns) => {
+  const newColumns = [...columns]
+
+  const noteIndex = newColumns[columnIndex].findIndex(n => n.id === noteId)
+
+  newColumns[columnIndex][noteIndex].header = header
+  newColumns[columnIndex][noteIndex].text = text
+
+  return {
+    newColumns
+  }
+}
+
+const remove = (noteId, columnIndex, columns) => {
+  const newColumns = [...columns]
+
+  newColumns[columnIndex] = newColumns[columnIndex].filter(n => n.id !== noteId)
+
+  return {
+    newColumns
+  }
+}
+
 export {
-  addNote,
-  dropNoteOnColumn,
-  dropNoteOnNote
+  add,
+  edit,
+  remove,
+  dropOnColumn,
+  dropOnNote
 }

@@ -42,21 +42,6 @@ const spreadNotesToColumns = (notes, columnCount) =>
     (column, columnIndex) => notes.filter(note => note.order % columnCount === columnIndex)
   )
 
-/**
- * Updates the order property of all notes in array
- * @param {Note[]} column - array to update
- * @param {number} columnIndex - index of supplied column
- * @param {number} columnCount - total number of columns
- * @returns {Note[]} array of Notes with updated order
- */
-const updateOrderInColumn = (column, columnIndex, columnCount) =>
-  column.map(
-    (note, index) => {
-      note.order = index * columnCount + columnIndex
-      return note
-    }
-  )
-
 export const reducer = (
   state = prepareInitialState([], 3),
   action
@@ -106,51 +91,16 @@ export const reducer = (
     }
 
     case EDIT_NOTE: {
-      const newNotes = state.notes.map(note =>
-        note.id === action.noteId
-          ? {
-            ...note,
-            id: action.noteId,
-            header: action.header,
-            text: action.text
-          }
-          : note
-      )
-
-      const newColumns = [...state.columns]
-      newColumns[action.columnIndex] = newColumns[action.columnIndex].map(
-        note => note.id === action.noteId
-          ? {
-            ...note,
-            header: action.header,
-            text: action.text
-          }
-          : note
-      )
       return {
         ...state,
-        notes: newNotes,
-        columns: newColumns
+        columns: action.newColumns
       }
     }
 
     case DELETE_NOTE: {
-      const newNotes = state.notes.filter(
-        note => note.id !== action.noteId
-      )
-
-      const newColumns = [...state.columns]
-      newColumns[action.columnIndex] = updateOrderInColumn(
-        newColumns[action.columnIndex].filter(
-          note => note.id !== action.noteId
-        ),
-        action.columnIndex,
-        state.columnCount
-      )
       return {
         ...state,
-        notes: newNotes,
-        columns: newColumns
+        columns: action.newColumns
       }
     }
 
