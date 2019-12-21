@@ -1,7 +1,20 @@
-import { add, edit, remove, dropOnColumn, dropOnNote } from '../helpers/moveNotes'
+import { add, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
 
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
+import uuid from 'uuid'
+
+export const START_SYNC = 'START_SYNC'
+const startSync = syncId => ({
+  type: START_SYNC,
+  syncId
+})
+
+export const COMPLETE_SYNC = 'COMPLETE_SYNC'
+const completeSync = syncId => ({
+  type: COMPLETE_SYNC,
+  syncId
+})
 
 export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
@@ -24,10 +37,15 @@ export const moveNoteOverColumn = (columns, noteId, oldColumnIndex, newColumnInd
       newColumns
     })
 
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
     return request('http://localhost:8082/notes/reorder', 'PUT', {
       newOrder
     }).then(response => {
-      if (!response.ok) {
+      if (response.ok) {
+        dispatch(completeSync(syncId))
+      } else {
         dispatch(showErrorNotification(response.body.error))
       }
     })
@@ -56,10 +74,15 @@ export const moveNoteOverNote = (columns, noteId, targetNoteId, oldColumnIndex, 
       newColumns
     })
 
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
     return request('http://localhost:8082/notes/reorder', 'PUT', {
       newOrder
     }).then(response => {
-      if (!response.ok) {
+      if (response.ok) {
+        dispatch(completeSync(syncId))
+      } else {
         dispatch(showErrorNotification(response.body.error))
       }
     })
@@ -81,6 +104,9 @@ export const createNote = (columns, header, text) => dispatch => {
   })
   dispatch(showSuccessNotification('Note created'))
 
+  const syncId = uuid()
+  dispatch(startSync(syncId))
+
   return request('http://localhost:8082/note', 'POST', {
     header,
     text,
@@ -93,6 +119,7 @@ export const createNote = (columns, header, text) => dispatch => {
         id: response.body.noteId,
         columnIndex
       })
+      dispatch(completeSync(syncId))
     } else {
       dispatch(showErrorNotification(response.body.error))
     }
@@ -115,11 +142,16 @@ export const editNote = (noteId, header, text, columnIndex, columns) =>
     })
     dispatch(showSuccessNotification('Note updated'))
 
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
     return request(`http://localhost:8082/note/${noteId}`, 'PUT', {
       header,
       text
     }).then(response => {
-      if (!response.ok) {
+      if (response.ok) {
+        dispatch(completeSync(syncId))
+      } else {
         dispatch(showErrorNotification(response.body.error))
       }
     })
@@ -139,9 +171,14 @@ export const deleteNote = (noteId, columnIndex, columns) =>
     })
     dispatch(showSuccessNotification('Note deleted'))
 
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
     return request(`http://localhost:8082/note/${noteId}`, 'DELETE')
       .then(response => {
-        if (!response.ok) {
+        if (response.ok) {
+          dispatch(completeSync(syncId))
+        } else {
           dispatch(showErrorNotification(response.body.error))
         }
       })

@@ -6,7 +6,9 @@ import {
   EDIT_NOTE,
   DELETE_NOTE,
   REQUEST_NOTES,
-  RECEIVE_NOTES
+  RECEIVE_NOTES,
+  START_SYNC,
+  COMPLETE_SYNC
 } from '../actions/notesActions'
 
 /**
@@ -25,10 +27,10 @@ import {
  * @param {number} [columnCount=3] - number of notes columns
  */
 export const prepareInitialState = (notes, columnCount = 3) => ({
-  notes, // TODO: remove notes from state
   columnCount,
   isLoading: false,
-  columns: spreadNotesToColumns(notes, columnCount)
+  columns: spreadNotesToColumns(notes, columnCount),
+  syncArray: []
 })
 
 /**
@@ -53,40 +55,10 @@ export const reducer = (
     case RECEIVE_NOTES:
       return prepareInitialState(action.notes, state.columnCount)
 
-    case MOVE_NOTE_OVER_COLUMN: {
-      const { newColumns } = action
-      return {
-        ...state,
-        columns: newColumns
-      }
-    }
-
-    case MOVE_NOTE_OVER_NOTE: {
-      const { newColumns } = action
-      return {
-        ...state,
-        columns: newColumns
-      }
-    }
-
     case CREATE_NOTE: {
       return {
         ...state,
         columns: action.newColumns
-      }
-    }
-
-    case RECEIVE_CREATE_NOTE: {
-      const { uiID, id, columnIndex } = action
-
-      const newColumns = [...state.columns]
-      // replacing temporal uiId with a permanent noteId from API
-      newColumns[columnIndex] = newColumns[columnIndex]
-        .map(note => note.id === uiID ? { ...note, id } : note)
-
-      return {
-        ...state,
-        columns: newColumns
       }
     }
 
@@ -101,6 +73,49 @@ export const reducer = (
       return {
         ...state,
         columns: action.newColumns
+      }
+    }
+
+    case MOVE_NOTE_OVER_COLUMN: {
+      return {
+        ...state,
+        columns: action.newColumns
+      }
+    }
+
+    case MOVE_NOTE_OVER_NOTE: {
+      return {
+        ...state,
+        columns: action.newColumns
+      }
+    }
+
+    // TODO: move it to the rest of calculations
+    case RECEIVE_CREATE_NOTE: {
+      const { uiID, id, columnIndex } = action
+
+      const newColumns = [...state.columns]
+      // replacing temporal uiId with a permanent noteId from API
+      newColumns[columnIndex] = newColumns[columnIndex]
+        .map(note => note.id === uiID ? { ...note, id } : note)
+
+      return {
+        ...state,
+        columns: newColumns
+      }
+    }
+
+    case START_SYNC: {
+      return {
+        ...state,
+        syncArray: [...state.syncArray, action.syncId]
+      }
+    }
+
+    case COMPLETE_SYNC: {
+      return {
+        ...state,
+        syncArray: state.syncArray.filter(id => id !== action.syncId)
       }
     }
 

@@ -24,13 +24,14 @@ const styles = {
  * The root notes component, a Grid container for NotesColumns
  * @param {Object} props
  * @param {Object[][]} props.columns - array of arrays (one for each column) of notes
+ * @param {boolean} props.isSyncing - is API response pending
  * @param {function} props.onColumnDrop - function to be called when note is dropped on column
  * @param {function} props.onNoteDrop - function to be called when note is dropped on another note
  * @param {function} props.onCreateNote - function to be called when a new note is created
  * @param {function} props.onEditNote - function to be called when an existing note is edited
  * @param {function} props.onDeleteNote - function to be called when an existing note is deleted
  */
-const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote, onFetchNotes }) => {
+const NotesContainer = ({ columns, isSyncing, onColumnDrop, onNoteDrop, onCreateNote, onEditNote, onDeleteNote, onFetchNotes }) => {
   const [modalOpen, setModalOpen] = useState(false)
 
   // TODO: do smth to the warning here
@@ -75,6 +76,17 @@ const NotesContainer = ({ columns, onColumnDrop, onNoteDrop, onCreateNote, onEdi
         onSave={onCreateNote}
         onClose={() => setModalOpen(false)}
       />
+
+      <div
+        id='sync-icon'
+        style={{
+          position: 'absolute',
+          top: '1em',
+          right: '1em',
+          height: '5px',
+          width: '5px',
+          backgroundColor: isSyncing ? 'black' : 'transparent'
+        }}/>
     </>
   )
 }
@@ -83,13 +95,14 @@ NotesContainer.propTypes = {
   columns: Types.arrayOf(
     Types.arrayOf(
       Types.shape({
-        id: Types.oneOfType([ Types.number, Types.string ]),
+        id: Types.oneOfType([ Types.number, Types.string ]).isRequired,
         header: Types.string,
         text: Types.string,
         image: Types.bool,
         order: Types.number.isRequired
       }))
   ).isRequired,
+  isSyncing: Types.bool.isRequired,
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired,
   onCreateNote: Types.func.isRequired,
@@ -99,7 +112,8 @@ NotesContainer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  columns: state.home.columns
+  columns: state.notes.columns,
+  isSyncing: state.notes.syncArray.length > 0
 })
 
 const mapDispatchToProps = dispatch => ({

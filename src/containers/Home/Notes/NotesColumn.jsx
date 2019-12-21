@@ -65,7 +65,7 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop, onEd
 NotesColumn.propTypes = {
   notes: Types.arrayOf(
     Types.shape({
-      id: Types.oneOfType([ Types.number, Types.string ]),
+      id: Types.oneOfType([ Types.number, Types.string ]).isRequired,
       header: Types.string,
       text: Types.string,
       image: Types.bool,
