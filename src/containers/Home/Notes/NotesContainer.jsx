@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Grid, Button } from 'semantic-ui-react'
+import { Grid, Button, Loader } from 'semantic-ui-react'
 import Types from 'prop-types'
 
 import {
@@ -77,16 +77,14 @@ const NotesContainer = ({ columns, isSyncing, onColumnDrop, onNoteDrop, onCreate
         onClose={() => setModalOpen(false)}
       />
 
-      <div
-        id='sync-icon'
-        style={{
-          position: 'absolute',
-          top: '1em',
-          right: '1em',
-          height: '5px',
-          width: '5px',
-          backgroundColor: isSyncing ? 'black' : 'transparent'
-        }}/>
+      <div style={{
+        position: 'absolute',
+        top: '1em',
+        right: '1em',
+        height: '1em',
+        width: '1em'
+      }}/>
+      <Loader size='tiny' active={isSyncing} />
     </>
   )
 }

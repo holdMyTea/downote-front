@@ -9,6 +9,6 @@
 - Ensure there's no redundant spreads in homeReducer
 - Add loading indicator on GET /notes
 - TODOs
-- Sync marker
+- ~~Sync marker~~
 - Update tests
 - Update docs
