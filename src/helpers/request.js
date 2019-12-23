@@ -1,4 +1,5 @@
 const request = (url, method = 'get', body) => {
+  console.log(process.env.REACT_APP_API)
   let code, ok
   return fetch(url, {
     method,
