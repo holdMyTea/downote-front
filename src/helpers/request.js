@@ -8,7 +8,7 @@
  */
 const request = (endpoint, method = 'get', body) => {
   let code, ok
-  return fetch(`${process.env.REACT_APP_API}${endpoint}`, {
+  return fetch(`http://${process.env.REACT_APP_API}${endpoint}`, {
     method,
     headers: {
       'Accept': 'application/json',

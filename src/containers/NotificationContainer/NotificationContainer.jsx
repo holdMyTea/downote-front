@@ -10,7 +10,8 @@ const containerStyle = {
   width: 150,
   top: 0,
   left: 0,
-  margin: 30
+  margin: 30,
+  zIndex: 10001 // loading dimmer has it set to 1000
 }
 
 const NotificationContainer = ({ queue }) => (
