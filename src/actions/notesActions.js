@@ -40,7 +40,7 @@ export const moveNoteOverColumn = (columns, noteId, oldColumnIndex, newColumnInd
     const syncId = uuid()
     dispatch(startSync(syncId))
 
-    return request('http://localhost:8082/notes/reorder', 'PUT', {
+    return request('/notes/reorder', 'PUT', {
       newOrder
     }).then(response => {
       if (response.ok) {
@@ -77,7 +77,7 @@ export const moveNoteOverNote = (columns, noteId, targetNoteId, oldColumnIndex, 
     const syncId = uuid()
     dispatch(startSync(syncId))
 
-    return request('http://localhost:8082/notes/reorder', 'PUT', {
+    return request('/notes/reorder', 'PUT', {
       newOrder
     }).then(response => {
       if (response.ok) {
@@ -107,7 +107,7 @@ export const createNote = (columns, header, text) => dispatch => {
   const syncId = uuid()
   dispatch(startSync(syncId))
 
-  return request('http://localhost:8082/note', 'POST', {
+  return request('/note', 'POST', {
     header,
     text,
     order
@@ -145,7 +145,7 @@ export const editNote = (noteId, header, text, columnIndex, columns) =>
     const syncId = uuid()
     dispatch(startSync(syncId))
 
-    return request(`http://localhost:8082/note/${noteId}`, 'PUT', {
+    return request(`/note/${noteId}`, 'PUT', {
       header,
       text
     }).then(response => {
@@ -174,7 +174,7 @@ export const deleteNote = (noteId, columnIndex, columns) =>
     const syncId = uuid()
     dispatch(startSync(syncId))
 
-    return request(`http://localhost:8082/note/${noteId}`, 'DELETE')
+    return request(`/note/${noteId}`, 'DELETE')
       .then(response => {
         if (response.ok) {
           dispatch(completeSync(syncId))
@@ -197,7 +197,7 @@ const receiveNotes = notes => ({
  */
 export const fetchNotes = _ => dispatch => {
   dispatch(requestNotes())
-  return request('http://localhost:8082/notes')
+  return request('/notes')
     .then(response => {
       if (response.ok) {
         dispatch(receiveNotes(response.body))

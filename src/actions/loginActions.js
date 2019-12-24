@@ -23,7 +23,7 @@ const receiveLoginFailure = (message) => ({
 export const logIn = (email, pass) => {
   return dispatch => {
     dispatch(sendLoginRequest(email))
-    return request('http://localhost:8082/token', 'post', { email, pass })
+    return request('/token', 'post', { email, pass })
       .then(response => {
         if (response.ok) { // got 200
           dispatch(showSuccessNotification('Login successful'))
@@ -43,7 +43,7 @@ export const logIn = (email, pass) => {
 export const logOut = () => {
   return dispatch => {
     // TODO: add something to lock the screen while logging out
-    return request('http://localhost:8082/token', 'delete')
+    return request('/token', 'delete')
       .then(() => {
         dispatch(showSuccessNotification('Logout successful'))
         dispatch(removeToken())
