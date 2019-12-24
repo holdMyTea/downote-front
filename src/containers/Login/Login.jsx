@@ -27,9 +27,7 @@ const Login = ({ token, email, isLoginPending, error, onFormSubmit }) => {
           DowNote
         </Header>
         {
-          isLoginPending
-            ? <h6>Woopsi-Doopsie</h6>
-            : <LoginForm email={email} onSubmit={onFormSubmit} />
+          <LoginForm email={email} onSubmit={onFormSubmit} isLoginPending={isLoginPending} />
         }
       </Grid.Column>
     </Grid>

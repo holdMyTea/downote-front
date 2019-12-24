@@ -2,19 +2,15 @@ import { showErrorNotification, showSuccessNotification } from './notificationAc
 import request from '../helpers/request'
 
 export const SEND_LOGIN_REQUEST = 'SEND_LOGIN_REQUEST'
-export const SAVE_TOKEN = 'SAVE_TOKEN'
-export const REMOVE_TOKEN = 'REMOVE_TOKEN'
-export const RECEIVE_LOGIN_FAILURE = 'RECEIVE_LOGIN_FAILURE'
-
-export const sendLoginRequest = (email) => ({
+const sendLoginRequest = (email) => ({
   type: SEND_LOGIN_REQUEST,
   email
 })
 
-export const saveToken = (token) => ({ type: SAVE_TOKEN, token })
+export const SAVE_TOKEN = 'SAVE_TOKEN'
+const saveToken = (token) => ({ type: SAVE_TOKEN, token })
 
-export const removeToken = () => ({ type: REMOVE_TOKEN })
-
+export const RECEIVE_LOGIN_FAILURE = 'RECEIVE_LOGIN_FAILURE'
 const receiveLoginFailure = (message) => ({
   type: RECEIVE_LOGIN_FAILURE,
   error: message
@@ -40,9 +36,16 @@ export const logIn = (email, pass) => {
   }
 }
 
+export const SEND_LOGOUT_REQUEST = 'SEND_LOGOUT_REQUEST'
+const sendLogoutRequest = () => ({ type: SEND_LOGOUT_REQUEST })
+
+export const REMOVE_TOKEN = 'REMOVE_TOKEN'
+const removeToken = () => ({ type: REMOVE_TOKEN })
+
 export const logOut = () => {
   return dispatch => {
-    // TODO: add something to lock the screen while logging out
+    dispatch(sendLogoutRequest())
+
     return request('/token', 'delete')
       .then(() => {
         dispatch(showSuccessNotification('Logout successful'))
@@ -50,6 +53,7 @@ export const logOut = () => {
       })
       .catch(error => { // only triggers in case of network error
         dispatch(showErrorNotification('No connection'))
+        dispatch(removeToken())
         dispatch(receiveLoginFailure(error.message))
       })
   }

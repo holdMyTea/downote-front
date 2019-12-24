@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Sidebar } from 'semantic-ui-react'
+import { Icon, Sidebar, Dimmer, Loader } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -19,7 +19,7 @@ const styles = {
   }
 }
 
-const Home = ({ token, onLogOutClick }) => {
+const Home = ({ token, isLoading, onLogOutClick }) => {
   const [sidePanleVisibility, setSidePanelVisibility] = useState(false)
 
   if (!token) { return (<Redirect to='/login' />) }
@@ -31,6 +31,11 @@ const Home = ({ token, onLogOutClick }) => {
         <SidePanel visible={sidePanleVisibility} onLogOutClick={onLogOutClick} />
 
         <Sidebar.Pusher>
+
+          <Dimmer active={isLoading} page>
+            <Loader />
+          </Dimmer>
+
           <Icon style={styles.menuIconStyles} name='bars' onClick={() => setSidePanelVisibility(!sidePanleVisibility)}/>
 
           <Notes />
@@ -43,11 +48,13 @@ const Home = ({ token, onLogOutClick }) => {
 
 Home.propTypes = {
   token: Types.string,
+  isLoading: Types.bool.isRequired,
   onLogOutClick: Types.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token
+  token: state.login.token,
+  isLoading: state.login.isLoginPending || state.notes.isLoading
 })
 
 const mapDispatchToProps = dispatch => ({

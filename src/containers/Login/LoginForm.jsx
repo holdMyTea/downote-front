@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import Types from 'prop-types'
-import { Form } from 'semantic-ui-react'
+import { Form, Dimmer } from 'semantic-ui-react'
 
 /**
  * Component with two inputs, email and password, and submit button
  * @param {string} [email=''] value to pre-fill email input with
  * @param {function} onSubmit submit function will be called with email string as the first param and password as the second one
  */
-const LoginForm = ({ email = '', onSubmit }) => {
+const LoginForm = ({ email = '', isLoginPending, onSubmit }) => {
   // stores the current email input value
   const [ emailInput, setEmailInput ] = useState(email)
   // used for applying styles to email input and submit button
@@ -45,35 +45,38 @@ const LoginForm = ({ email = '', onSubmit }) => {
   }
 
   return (
-    <Form>
-      <Form.Input
-        label='Email'
-        type='email'
-        placeholder='Email'
-        error={!isEmailValid}
-        onChange={onEmailChange} />
+    <Dimmer.Dimmable dimmed={isLoginPending}>
+      <Form>
+        <Form.Input
+          label='Email'
+          type='email'
+          placeholder='Email'
+          error={!isEmailValid}
+          onChange={onEmailChange} />
 
-      <Form.Input
-        label='Password'
-        type='password'
-        placeholder='Password'
-        error={!isPassValid}
-        onChange={onPassChange} />
+        <Form.Input
+          label='Password'
+          type='password'
+          placeholder='Password'
+          error={!isPassValid}
+          onChange={onPassChange} />
 
-      <Form.Button
-        fluid
-        onClick={handleSubmit}
-        disabled={isButtonDisabled}
-        positive={!isButtonDisabled}
-      >
+        <Form.Button
+          fluid
+          onClick={handleSubmit}
+          disabled={isButtonDisabled}
+          positive={!isButtonDisabled}
+        >
         Log In
-      </Form.Button>
-    </Form>
+        </Form.Button>
+      </Form>
+    </Dimmer.Dimmable>
   )
 }
 
 LoginForm.propTypes = {
   email: Types.string,
+  isLoginPending: Types.bool.isRequired,
   onSubmit: Types.func.isRequired
 }
 

@@ -3,8 +3,9 @@ import Cookies from 'universal-cookie'
 import {
   SEND_LOGIN_REQUEST,
   SAVE_TOKEN,
-  REMOVE_TOKEN,
-  RECEIVE_LOGIN_FAILURE
+  RECEIVE_LOGIN_FAILURE,
+  SEND_LOGOUT_REQUEST,
+  REMOVE_TOKEN
 } from '../actions/loginActions'
 
 export default (
@@ -29,18 +30,24 @@ export default (
         token: action.token
       }
 
-    case REMOVE_TOKEN:
-      return {
-        token: '',
-        email: '',
-        isLoginPending: false
-      }
-
     case RECEIVE_LOGIN_FAILURE:
       return {
         ...state,
         isLoginPending: false,
         error: action.error
+      }
+
+    case SEND_LOGOUT_REQUEST:
+      return {
+        ...state,
+        isLoginPending: true
+      }
+
+    case REMOVE_TOKEN:
+      return {
+        token: '',
+        email: '',
+        isLoginPending: false
       }
 
     default: return state
