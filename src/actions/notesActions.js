@@ -23,13 +23,13 @@ export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
  * @param {number} oldColumnIndex - initial column the note belonged to
  * @param {number} newColumnIndex - column the note was dropped on
  */
-export const moveNoteOverColumn = (columns, noteId, oldColumnIndex, newColumnIndex) =>
-  dispatch => {
+export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) =>
+  (dispatch, getState) => {
     const { newColumns, newOrder } = dropOnColumn(
       noteId,
       oldColumnIndex,
       newColumnIndex,
-      columns
+      getState().notes.columns
     )
 
     dispatch({
@@ -59,14 +59,14 @@ export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
  * @param {number} oldColumnIndex - initial column the note belonged to
  * @param {number} newColumnIndex - column the note was dropped on (column where target note is)
  */
-export const moveNoteOverNote = (columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
-  dispatch => {
+export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
+  (dispatch, getState) => {
     const { newColumns, newOrder } = dropOnNote(
       noteId,
       targetNoteId,
       oldColumnIndex,
       newColumnIndex,
-      columns
+      getState().notes.columns
     )
 
     dispatch({
@@ -92,39 +92,39 @@ export const CREATE_NOTE = 'CREATE_NOTE'
 export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
 /**
  * Redux action for adding a new note
- * @param {Object[][]} columns - current notes in columns
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const createNote = (columns, header, text) => dispatch => {
-  const { newColumns, uiID, order, columnIndex } = add(columns, header, text)
-  dispatch({ // dispatching note creation before fetching
-    type: CREATE_NOTE,
-    newColumns
-  })
-  dispatch(showSuccessNotification('Note created'))
+export const createNote = (header, text) =>
+  (dispatch, getState) => {
+    const { newColumns, uiID, order, columnIndex } = add(getState().notes.columns, header, text)
+    dispatch({ // dispatching note creation before fetching
+      type: CREATE_NOTE,
+      newColumns
+    })
+    dispatch(showSuccessNotification('Note created'))
 
-  const syncId = uuid()
-  dispatch(startSync(syncId))
+    const syncId = uuid()
+    dispatch(startSync(syncId))
 
-  return request('/note', 'POST', {
-    header,
-    text,
-    order
-  }).then(response => {
-    if (response.ok) {
-      dispatch({
-        type: RECEIVE_CREATE_NOTE,
-        uiID,
-        id: response.body.noteId,
-        columnIndex
-      })
-      dispatch(completeSync(syncId))
-    } else {
-      dispatch(showErrorNotification(response.body.error))
-    }
-  })
-}
+    return request('/note', 'POST', {
+      header,
+      text,
+      order
+    }).then(response => {
+      if (response.ok) {
+        dispatch({
+          type: RECEIVE_CREATE_NOTE,
+          uiID,
+          id: response.body.noteId,
+          columnIndex
+        })
+        dispatch(completeSync(syncId))
+      } else {
+        dispatch(showErrorNotification(response.body.error))
+      }
+    })
+  }
 
 export const EDIT_NOTE = 'EDIT_NOTE'
 /**
@@ -133,9 +133,9 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  * @param {string} header - header of the note
  * @param {string} text - text of the note
  */
-export const editNote = (noteId, header, text, columnIndex, columns) =>
-  dispatch => {
-    const { newColumns } = edit(noteId, header, text, columnIndex, columns)
+export const editNote = (noteId, header, text, columnIndex) =>
+  (dispatch, getState) => {
+    const { newColumns } = edit(noteId, header, text, columnIndex, getState().notes.columns)
     dispatch({
       type: EDIT_NOTE,
       newColumns
@@ -162,9 +162,9 @@ export const DELETE_NOTE = 'DELETE_NOTE'
  * Redux action for deleting a note
  * @param {string} noteId - id of the deleted note
  */
-export const deleteNote = (noteId, columnIndex, columns) =>
-  dispatch => {
-    const { newColumns } = remove(noteId, columnIndex, columns)
+export const deleteNote = (noteId, columnIndex) =>
+  (dispatch, getState) => {
+    const { newColumns } = remove(noteId, columnIndex, getState().notes.columns)
     dispatch({
       type: DELETE_NOTE,
       newColumns
