@@ -17,7 +17,7 @@ const request = (endpoint, method = 'get', body) => {
     credentials: 'include',
     body: body ? JSON.stringify(body) : undefined
   }).then(response => {
-    code = response.code
+    code = response.status
     ok = response.ok
     return response.json()
   }).then(body => ({

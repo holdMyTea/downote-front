@@ -40,7 +40,7 @@ export const SEND_LOGOUT_REQUEST = 'SEND_LOGOUT_REQUEST'
 const sendLogoutRequest = () => ({ type: SEND_LOGOUT_REQUEST })
 
 export const REMOVE_TOKEN = 'REMOVE_TOKEN'
-const removeToken = () => ({ type: REMOVE_TOKEN })
+export const removeToken = () => ({ type: REMOVE_TOKEN })
 
 export const logOut = () => {
   return dispatch => {

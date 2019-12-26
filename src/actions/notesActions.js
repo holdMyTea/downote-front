@@ -1,8 +1,22 @@
 import { add, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
 
+import { removeToken } from './loginActions'
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
 import uuid from 'uuid'
+
+const handleError = response => {
+  switch (response.code) {
+    case 401:
+      return dispatch => {
+        dispatch(removeToken())
+        dispatch(showErrorNotification('Please login to continue'))
+      }
+
+    default:
+      return showErrorNotification(response.body.error)
+  }
+}
 
 export const START_SYNC = 'START_SYNC'
 const startSync = syncId => ({
@@ -46,7 +60,7 @@ export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) =>
       if (response.ok) {
         dispatch(completeSync(syncId))
       } else {
-        dispatch(showErrorNotification(response.body.error))
+        dispatch(handleError(response))
       }
     })
   }
@@ -83,7 +97,7 @@ export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumn
       if (response.ok) {
         dispatch(completeSync(syncId))
       } else {
-        dispatch(showErrorNotification(response.body.error))
+        dispatch(handleError(response))
       }
     })
   }
@@ -121,7 +135,7 @@ export const createNote = (header, text) =>
         })
         dispatch(completeSync(syncId))
       } else {
-        dispatch(showErrorNotification(response.body.error))
+        dispatch(handleError(response))
       }
     })
   }
@@ -152,7 +166,7 @@ export const editNote = (noteId, header, text, columnIndex) =>
       if (response.ok) {
         dispatch(completeSync(syncId))
       } else {
-        dispatch(showErrorNotification(response.body.error))
+        dispatch(handleError(response))
       }
     })
   }
@@ -179,7 +193,7 @@ export const deleteNote = (noteId, columnIndex) =>
         if (response.ok) {
           dispatch(completeSync(syncId))
         } else {
-          dispatch(showErrorNotification(response.body.error))
+          dispatch(handleError(response))
         }
       })
   }
@@ -202,7 +216,7 @@ export const fetchNotes = _ => dispatch => {
       if (response.ok) {
         dispatch(receiveNotes(response.body))
       } else {
-        dispatch(showErrorNotification(response.body.error))
+        dispatch(handleError(response))
       }
     })
 }
