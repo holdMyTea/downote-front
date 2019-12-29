@@ -1,4 +1,4 @@
-import { add, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
+import { add, updateAdded, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
 
 import { removeToken } from './loginActions'
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
@@ -129,9 +129,12 @@ export const createNote = (header, text) =>
       if (response.ok) {
         dispatch({
           type: RECEIVE_CREATE_NOTE,
-          uiID,
-          id: response.body.noteId,
-          columnIndex
+          newColumns: updateAdded(
+            uiID,
+            response.body.noteId,
+            columnIndex,
+            getState().notes.columns
+          )
         })
         dispatch(completeSync(syncId))
       } else {

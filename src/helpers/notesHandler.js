@@ -48,6 +48,14 @@ const add = (columns, header, text) => {
   }
 }
 
+const updateAdded = (oldId, newId, columnIndex, columns) => {
+  const newColumns = [ ...columns ]
+  newColumns[columnIndex] = newColumns[columnIndex].map(
+    n => n.id === oldId ? { ...n, id: newId } : n
+  )
+  return newColumns
+}
+
 const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   const newColumns = [ ...columns ]
   const columnCount = newColumns.length
@@ -171,6 +179,7 @@ const remove = (noteId, columnIndex, columns) => {
 
 export {
   add,
+  updateAdded,
   edit,
   remove,
   dropOnColumn,

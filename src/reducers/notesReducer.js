@@ -90,18 +90,10 @@ export const reducer = (
       }
     }
 
-    // TODO: move it to the rest of calculations
     case RECEIVE_CREATE_NOTE: {
-      const { uiID, id, columnIndex } = action
-
-      const newColumns = [...state.columns]
-      // replacing temporal uiId with a permanent noteId from API
-      newColumns[columnIndex] = newColumns[columnIndex]
-        .map(note => note.id === uiID ? { ...note, id } : note)
-
       return {
         ...state,
-        columns: newColumns
+        columns: action.newColumns
       }
     }
 
