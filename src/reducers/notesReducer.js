@@ -55,61 +55,28 @@ export const reducer = (
     case RECEIVE_NOTES:
       return prepareInitialState(action.notes, state.columnCount)
 
-    case CREATE_NOTE: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case EDIT_NOTE: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case DELETE_NOTE: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case MOVE_NOTE_OVER_COLUMN: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case MOVE_NOTE_OVER_NOTE: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case RECEIVE_CREATE_NOTE: {
-      return {
-        ...state,
-        columns: action.newColumns
-      }
-    }
-
-    case START_SYNC: {
+    case START_SYNC:
       return {
         ...state,
         syncArray: [...state.syncArray, action.syncId]
       }
-    }
 
-    case COMPLETE_SYNC: {
+    case COMPLETE_SYNC:
       return {
         ...state,
         syncArray: state.syncArray.filter(id => id !== action.syncId)
       }
-    }
+
+    case CREATE_NOTE:
+    case EDIT_NOTE:
+    case DELETE_NOTE:
+    case MOVE_NOTE_OVER_COLUMN:
+    case MOVE_NOTE_OVER_NOTE:
+    case RECEIVE_CREATE_NOTE:
+      return {
+        ...state,
+        columns: action.newColumns
+      }
 
     default: return state
   }

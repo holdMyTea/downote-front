@@ -19,8 +19,13 @@
       "react", "jest"
   ],
   "rules": {
-      "indent": ["error", 2, {
-          "SwitchCase": 1
-      }]
+      "indent": [
+          "error",
+          2,
+          {
+            "SwitchCase": 1
+          }
+    ],
+      "no-fallthrough": "off"
   }
 }
