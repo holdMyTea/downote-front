@@ -39,9 +39,9 @@ const NotesContainer = ({ columns, isSyncing, onColumnDrop, onNoteDrop, onCreate
 
   return (
     <>
-      <Grid padded columns={columns.length} style={styles}>
+      <Grid padded columns={Object.values(columns).length} style={styles}>
         {
-          columns.map((col, index) => (
+          Object.values(columns).map((col, index) => (
             <NotesColumn
               key={index}
               notes={col}

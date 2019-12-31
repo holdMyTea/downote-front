@@ -127,15 +127,15 @@ export const createNote = (header, text) =>
       order
     }).then(response => {
       if (response.ok) {
-        dispatch({
-          type: RECEIVE_CREATE_NOTE,
-          newColumns: updateAdded(
-            uiID,
-            response.body.noteId,
-            columnIndex,
-            getState().notes.columns
-          )
-        })
+        // dispatch({
+        //   type: RECEIVE_CREATE_NOTE,
+        //   newColumns: updateAdded(
+        //     uiID,
+        //     response.body.noteId,
+        //     columnIndex,
+        //     getState().notes.columns
+        //   )
+        // })
         dispatch(completeSync(syncId))
       } else {
         dispatch(handleError(response))

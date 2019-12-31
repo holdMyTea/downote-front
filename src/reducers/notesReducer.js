@@ -21,6 +21,13 @@ import {
  */
 
 /**
+ * @typedef {Object} NoteStore
+ * @property {Note[]} 0 - notes of the first column
+ * @property {Note[]} 1 - notes of the second column
+ * and so on
+ */
+
+/**
  * Creates initial state from the array of notes,
  * used in tests
  * @param {Note[]} notes - array of notes
@@ -29,7 +36,7 @@ import {
 export const prepareInitialState = (notes, columnCount = 3) => ({
   columnCount,
   isLoading: false,
-  columns: spreadNotesToColumns(notes, columnCount),
+  columns: spreadNotesToObject(notes, columnCount),
   syncArray: []
 })
 
@@ -43,6 +50,14 @@ const spreadNotesToColumns = (notes, columnCount) =>
   Array(columnCount).fill(0).map(
     (column, columnIndex) => notes.filter(note => note.order % columnCount === columnIndex)
   )
+
+const spreadNotesToObject = (notes, columnCount) => {
+  const result = {}
+  for (let i = 0; i < columnCount; i++) {
+    result[i] = notes.filter(note => note.order % columnCount === i)
+  }
+  return result
+}
 
 export const reducer = (
   state = prepareInitialState([], 3),
@@ -68,6 +83,10 @@ export const reducer = (
       }
 
     case CREATE_NOTE:
+      return {
+        ...state,
+        columns: { ...state.columns, ...action.newColumns }
+      }
     case EDIT_NOTE:
     case DELETE_NOTE:
     case MOVE_NOTE_OVER_COLUMN:

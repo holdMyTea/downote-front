@@ -24,24 +24,26 @@ const add = (columns, header, text) => {
   // selecting the column with the fewest notes
   let index = 0
   let length = Number.POSITIVE_INFINITY
-  columns.forEach((c, i) => {
-    if (c.length < length) {
-      index = i
-      length = c.length
-    }
-  })
+  Object.values(columns).forEach(
+    (v, i) => {
+      if (v.length < length) {
+        index = i
+        length = v.length
+      }
+    })
+
+  const order = length * Object.values(columns).length + index
 
   const uiID = uuid()
   columns[index].push({
     header,
     text,
+    order,
     id: uiID
   })
 
-  columns[index] = updateOrderInColumn(columns[index], index, columns.length)
-  const order = columns[index][columns[index].length - 1].order
   return {
-    newColumns: [...columns],
+    newColumns: { [index]: columns[index] },
     uiID,
     order,
     columnIndex: index
