@@ -50,26 +50,25 @@ const add = (columns, header, text) => {
   }
 }
 
-const updateAdded = (oldId, newId, columnIndex, columns) => {
-  const newColumns = [ ...columns ]
-  newColumns[columnIndex] = newColumns[columnIndex].map(
+const updateAdded = (oldId, newId, columnIndex, columns) => ({
+  [columnIndex]: columns[columnIndex].map(
     n => n.id === oldId ? { ...n, id: newId } : n
   )
-  return newColumns
-}
+})
 
 const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
-  const newColumns = [ ...columns ]
-  const columnCount = newColumns.length
+  const columnCount = Object.values(columns).length
   // finding the dragged note
-  const note = newColumns[oldColumnIndex].find(n => n.id === noteId)
+  const note = columns[oldColumnIndex].find(n => n.id === noteId)
 
   let newOrder
+  const newColumns = {}
 
+  // when the note is dropped onto the same column it's already in
   if (newColumnIndex === oldColumnIndex) {
     const columnIndex = newColumnIndex
     // removing the note from the column
-    newColumns[columnIndex] = newColumns[columnIndex].filter(
+    newColumns[columnIndex] = columns[columnIndex].filter(
       n => n.id !== noteId
     )
     // and appending it again
@@ -83,19 +82,20 @@ const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   } else {
     // removing the node from the oldColumn and updating order in it
     newColumns[oldColumnIndex] = updateOrderInColumn(
-      newColumns[oldColumnIndex].filter(
+      columns[oldColumnIndex].filter(
         n => n.id !== noteId
       ),
       oldColumnIndex,
       columnCount
     )
     // updating the order of the note before inserting it
-    note.order = newColumns[newColumnIndex].length * columnCount + newColumnIndex
+    note.order = columns[newColumnIndex].length * columnCount + newColumnIndex
     // inserting the note into the new column
-    newColumns[newColumnIndex].push(note)
+    newColumns[newColumnIndex] = [...columns[newColumnIndex], note]
 
+    // adding the whole oldColumn to newOrder
     newOrder = newColumns[oldColumnIndex].map(toOrderArray)
-
+    // and the moved note
     newOrder.push({
       id: note.id,
       order: note.order

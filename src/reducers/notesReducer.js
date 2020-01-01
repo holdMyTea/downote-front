@@ -40,21 +40,12 @@ export const prepareInitialState = (notes, columnCount = 3) => ({
   syncArray: []
 })
 
-/**
- * Spread (using order) a single notes array into an array of arrays
- * @param {Note[]} notes - array to unflatten
- * @param {number} columnCount - number of resulting sub-arrays
- * @returns {Note[][]} array of arrays (columns) of notes
- */
-const spreadNotesToColumns = (notes, columnCount) =>
-  Array(columnCount).fill(0).map(
-    (column, columnIndex) => notes.filter(note => note.order % columnCount === columnIndex)
-  )
-
 const spreadNotesToObject = (notes, columnCount) => {
   const result = {}
   for (let i = 0; i < columnCount; i++) {
-    result[i] = notes.filter(note => note.order % columnCount === i)
+    result[i] = notes
+      .filter(note => note.order % columnCount === i)
+      .sort((a, b) => a.order - b.order)
   }
   return result
 }
@@ -83,19 +74,22 @@ export const reducer = (
       }
 
     case CREATE_NOTE:
+    case MOVE_NOTE_OVER_COLUMN:
+      return {
+        ...state,
+        // TODO: optimize these spread
+        columns: { ...state.columns, ...action.newColumns }
+      }
+
+    case RECEIVE_CREATE_NOTE:
       return {
         ...state,
         columns: { ...state.columns, ...action.newColumns }
       }
+
     case EDIT_NOTE:
     case DELETE_NOTE:
-    case MOVE_NOTE_OVER_COLUMN:
     case MOVE_NOTE_OVER_NOTE:
-    case RECEIVE_CREATE_NOTE:
-      return {
-        ...state,
-        columns: action.newColumns
-      }
 
     default: return state
   }
