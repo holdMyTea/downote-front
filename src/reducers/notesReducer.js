@@ -75,9 +75,10 @@ export const reducer = (
 
     case CREATE_NOTE:
     case MOVE_NOTE_OVER_COLUMN:
+    case MOVE_NOTE_OVER_NOTE:
       return {
         ...state,
-        // TODO: optimize these spread
+        // TODO: optimize these spreads
         columns: { ...state.columns, ...action.newColumns }
       }
 
@@ -89,7 +90,6 @@ export const reducer = (
 
     case EDIT_NOTE:
     case DELETE_NOTE:
-    case MOVE_NOTE_OVER_NOTE:
 
     default: return state
   }

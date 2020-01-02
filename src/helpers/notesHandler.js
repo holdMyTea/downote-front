@@ -109,46 +109,68 @@ const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
 }
 
 const dropOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns) => {
-  const newColumns = [ ...columns ]
-  const columnCount = newColumns.length
+  const columnCount = Object.values(columns).length
 
   // finding the dragged note
-  const note = newColumns[oldColumnIndex].find(n => n.id === noteId)
+  const note = columns[oldColumnIndex].find(n => n.id === noteId)
 
-  // removing the node from the oldColumn
-  newColumns[oldColumnIndex] = oldColumnIndex === newColumnIndex
-    //
-    ? newColumns[oldColumnIndex] = newColumns[oldColumnIndex].filter(
+  const newColumns = {}
+  let newOrder
+
+  // if the note stays within its initial column
+  if (oldColumnIndex === newColumnIndex) {
+    const columnIndex = oldColumnIndex
+
+    // removing note from oldColumn
+    newColumns[columnIndex] = columns[columnIndex].filter(
       n => n.id !== noteId
     )
-    : updateOrderInColumn( // and updating order in it
-      newColumns[oldColumnIndex].filter(
+
+    // and adding it back into the new place
+    newColumns[columnIndex].splice(
+      newColumns[columnIndex].findIndex(note => note.id === targetNoteId),
+      0,
+      note
+    )
+
+    // updating order in column
+    newColumns[columnIndex] = updateOrderInColumn(
+      newColumns[columnIndex],
+      newColumnIndex,
+      columnCount
+    )
+
+    newOrder = newColumns[columnIndex].map(toOrderArray)
+  } else {
+    // removing note from oldColumn and updating order in it
+    newColumns[oldColumnIndex] = updateOrderInColumn(
+      columns[oldColumnIndex].filter(
         n => n.id !== noteId
       ),
       oldColumnIndex,
       columnCount
     )
 
-  // inserting the note into the newColumn
-  newColumns[newColumnIndex].splice(
-    newColumns[newColumnIndex].findIndex(note => note.id === targetNoteId),
-    0,
-    note
-  )
-  // updating the order of the newColumn
-  newColumns[newColumnIndex] = updateOrderInColumn(
-    newColumns[newColumnIndex],
-    newColumnIndex,
-    columnCount
-  )
+    newColumns[newColumnIndex] = columns[newColumnIndex]
 
-  const newOrder = oldColumnIndex === newColumnIndex
-    ? newColumns[oldColumnIndex].map(toOrderArray)
-    : newColumns[oldColumnIndex]
+    // inserting the note into the newColumn
+    newColumns[newColumnIndex].splice(
+      newColumns[newColumnIndex].findIndex(note => note.id === targetNoteId),
+      0,
+      note
+    )
+
+    // updating the order in the newColumn
+    newColumns[newColumnIndex] = updateOrderInColumn(
+      columns[newColumnIndex],
+      newColumnIndex,
+      columnCount
+    )
+
+    newOrder = newColumns[oldColumnIndex]
+      .concat(newColumns[newColumnIndex])
       .map(toOrderArray)
-      .concat(
-        newColumns[newColumnIndex].map(toOrderArray)
-      )
+  }
 
   return {
     newColumns,
