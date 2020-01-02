@@ -13,6 +13,7 @@ import {
 } from '../../../actions/notesActions'
 import NotesColumn from './NotesColumn'
 import AddNoteModal from './AddNoteModal'
+import { columnsType } from './noteTypes'
 
 const styles = {
   backgroundColor: 'snow',
@@ -90,16 +91,7 @@ const NotesContainer = ({ columns, isSyncing, onColumnDrop, onNoteDrop, onCreate
 }
 
 NotesContainer.propTypes = {
-  columns: Types.arrayOf(
-    Types.arrayOf(
-      Types.shape({
-        id: Types.oneOfType([ Types.number, Types.string ]).isRequired,
-        header: Types.string,
-        text: Types.string,
-        image: Types.bool,
-        order: Types.number.isRequired
-      }))
-  ).isRequired,
+  columns: columnsType,
   isSyncing: Types.bool.isRequired,
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired,
