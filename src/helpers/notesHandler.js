@@ -179,7 +179,9 @@ const dropOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, column
 }
 
 const edit = (noteId, header, text, columnIndex, columns) => {
-  const newColumns = [...columns]
+  const newColumns = {
+    [columnIndex]: columns[columnIndex]
+  }
 
   const noteIndex = newColumns[columnIndex].findIndex(n => n.id === noteId)
 
@@ -191,15 +193,11 @@ const edit = (noteId, header, text, columnIndex, columns) => {
   }
 }
 
-const remove = (noteId, columnIndex, columns) => {
-  const newColumns = [...columns]
-
-  newColumns[columnIndex] = newColumns[columnIndex].filter(n => n.id !== noteId)
-
-  return {
-    newColumns
+const remove = (noteId, columnIndex, columns) => ({
+  newColumns: {
+    [columnIndex]: columns[columnIndex].filter(n => n.id !== noteId)
   }
-}
+})
 
 export {
   add,
