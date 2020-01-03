@@ -30,77 +30,28 @@ const completeSync = syncId => ({
   syncId
 })
 
-export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
+export const REQUEST_NOTES = 'REQUEST_NOTES'
+const requestNotes = _ => ({ type: REQUEST_NOTES })
+
+export const RECEIVE_NOTES = 'RECEIVE_NOTES'
+const receiveNotes = notes => ({
+  type: RECEIVE_NOTES,
+  notes
+})
 /**
- * Redux action for removing note from the oldColumn and appending it to the end of the newColumn
- * @param {string} noteId - id of the note
- * @param {number} oldColumnIndex - initial column the note belonged to
- * @param {number} newColumnIndex - column the note was dropped on
+ * Redux action to fetch notes from API.
  */
-export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) =>
-  (dispatch, getState) => {
-    const { newColumns, newOrder } = dropOnColumn(
-      noteId,
-      oldColumnIndex,
-      newColumnIndex,
-      getState().notes.columns
-    )
-
-    dispatch({
-      type: MOVE_NOTE_OVER_COLUMN,
-      newColumns
-    })
-
-    const syncId = uuid()
-    dispatch(startSync(syncId))
-
-    return request('/notes/reorder', 'PUT', {
-      newOrder
-    }).then(response => {
+export const fetchNotes = _ => dispatch => {
+  dispatch(requestNotes())
+  return request('/notes')
+    .then(response => {
       if (response.ok) {
-        dispatch(completeSync(syncId))
+        dispatch(receiveNotes(response.body))
       } else {
         dispatch(handleError(response))
       }
     })
-  }
-
-export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
-/**
- * Redux action for moving one note on top of the other
- * @param {string} noteId - id of the note
- * @param {string} targetNoteId - the dragged note will be placed on top of
- * @param {number} oldColumnIndex - initial column the note belonged to
- * @param {number} newColumnIndex - column the note was dropped on (column where target note is)
- */
-export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
-  (dispatch, getState) => {
-    const { newColumns, newOrder } = dropOnNote(
-      noteId,
-      targetNoteId,
-      oldColumnIndex,
-      newColumnIndex,
-      getState().notes.columns
-    )
-
-    dispatch({
-      type: MOVE_NOTE_OVER_NOTE,
-      newColumns
-    })
-
-    const syncId = uuid()
-    dispatch(startSync(syncId))
-
-    return request('/notes/reorder', 'PUT', {
-      newOrder
-    }).then(response => {
-      if (response.ok) {
-        dispatch(completeSync(syncId))
-      } else {
-        dispatch(handleError(response))
-      }
-    })
-  }
+}
 
 export const CREATE_NOTE = 'CREATE_NOTE'
 export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
@@ -127,14 +78,15 @@ export const createNote = (header, text) =>
       order
     }).then(response => {
       if (response.ok) {
+        const { newColumns } = updateAdded(
+          getState().notes.columns,
+          uiID,
+          response.body.noteId,
+          columnIndex
+        )
         dispatch({
           type: RECEIVE_CREATE_NOTE,
-          newColumns: updateAdded(
-            uiID,
-            response.body.noteId,
-            columnIndex,
-            getState().notes.columns
-          )
+          newColumns
         })
         dispatch(completeSync(syncId))
       } else {
@@ -152,7 +104,7 @@ export const EDIT_NOTE = 'EDIT_NOTE'
  */
 export const editNote = (noteId, header, text, columnIndex) =>
   (dispatch, getState) => {
-    const { newColumns } = edit(noteId, header, text, columnIndex, getState().notes.columns)
+    const { newColumns } = edit(getState().notes.columns, noteId, header, text, columnIndex)
     dispatch({
       type: EDIT_NOTE,
       newColumns
@@ -181,7 +133,7 @@ export const DELETE_NOTE = 'DELETE_NOTE'
  */
 export const deleteNote = (noteId, columnIndex) =>
   (dispatch, getState) => {
-    const { newColumns } = remove(noteId, columnIndex, getState().notes.columns)
+    const { newColumns } = remove(getState().notes.columns, noteId, columnIndex)
     dispatch({
       type: DELETE_NOTE,
       newColumns
@@ -201,25 +153,74 @@ export const deleteNote = (noteId, columnIndex) =>
       })
   }
 
-export const REQUEST_NOTES = 'REQUEST_NOTES'
-const requestNotes = () => ({ type: REQUEST_NOTES })
-
-export const RECEIVE_NOTES = 'RECEIVE_NOTES'
-const receiveNotes = notes => ({
-  type: RECEIVE_NOTES,
-  notes
-})
+export const MOVE_NOTE_OVER_COLUMN = 'MOVE_NOTE_TO_COLUMN'
 /**
- * Redux action to fetch notes from API.
- */
-export const fetchNotes = _ => dispatch => {
-  dispatch(requestNotes())
-  return request('/notes')
-    .then(response => {
+   * Redux action for removing note from the oldColumn and appending it to the end of the newColumn
+   * @param {string} noteId - id of the note
+   * @param {number} oldColumnIndex - initial column the note belonged to
+   * @param {number} newColumnIndex - column the note was dropped on
+   */
+export const moveNoteOverColumn = (noteId, oldColumnIndex, newColumnIndex) =>
+  (dispatch, getState) => {
+    const { newColumns, newOrder } = dropOnColumn(
+      getState().notes.columns,
+      noteId,
+      oldColumnIndex,
+      newColumnIndex
+    )
+
+    dispatch({
+      type: MOVE_NOTE_OVER_COLUMN,
+      newColumns
+    })
+
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
+    return request('/notes/reorder', 'PUT', {
+      newOrder
+    }).then(response => {
       if (response.ok) {
-        dispatch(receiveNotes(response.body))
+        dispatch(completeSync(syncId))
       } else {
         dispatch(handleError(response))
       }
     })
-}
+  }
+
+export const MOVE_NOTE_OVER_NOTE = 'MOVE_NOTE_OVER_NOTE'
+/**
+   * Redux action for moving one note on top of the other
+   * @param {string} noteId - id of the note
+   * @param {string} targetNoteId - the dragged note will be placed on top of
+   * @param {number} oldColumnIndex - initial column the note belonged to
+   * @param {number} newColumnIndex - column the note was dropped on (column where target note is)
+   */
+export const moveNoteOverNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex) =>
+  (dispatch, getState) => {
+    const { newColumns, newOrder } = dropOnNote(
+      getState().notes.columns,
+      noteId,
+      targetNoteId,
+      oldColumnIndex,
+      newColumnIndex
+    )
+
+    dispatch({
+      type: MOVE_NOTE_OVER_NOTE,
+      newColumns
+    })
+
+    const syncId = uuid()
+    dispatch(startSync(syncId))
+
+    return request('/notes/reorder', 'PUT', {
+      newOrder
+    }).then(response => {
+      if (response.ok) {
+        dispatch(completeSync(syncId))
+      } else {
+        dispatch(handleError(response))
+      }
+    })
+  }

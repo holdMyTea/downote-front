@@ -1,6 +1,22 @@
 import uuid from 'uuid/v4'
 
 /**
+ * @typedef {Object} Note
+ * @property {string} id
+ * @property {string} [header]
+ * @property {string} [text]
+ * @property {boolean} [image] - temporal abstraction for an attached image
+ * @property {number} order - integer to determine order of a note for render
+ */
+
+/**
+ * @typedef {Object} newColumns
+ * @property {Note[]} 0 - new 0 column
+ * @property {Note[]} 1 - new 1 column
+ * @property {Note[]} 2 - new 2 column
+ */
+
+/**
  * Updates the order property of all notes in array
  * @param {Note[]} column - array to update
  * @param {number} columnIndex - index of supplied column
@@ -17,7 +33,6 @@ const updateOrderInColumn = (column, columnIndex, columnCount) =>
 
 const toOrderArray = n => ({ id: n.id, order: n.order })
 
-// TODO param ordering in exported functions
 // TODO move column spreads to return
 
 const add = (columns, header, text) => {
@@ -50,13 +65,36 @@ const add = (columns, header, text) => {
   }
 }
 
-const updateAdded = (oldId, newId, columnIndex, columns) => ({
-  [columnIndex]: columns[columnIndex].map(
-    n => n.id === oldId ? { ...n, id: newId } : n
-  )
+const updateAdded = (columns, oldId, newId, columnIndex) => ({
+  newColumns: {
+    [columnIndex]: columns[columnIndex].map(
+      n => n.id === oldId ? { ...n, id: newId } : n
+    )
+  }
 })
 
-const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
+const edit = (columns, noteId, header, text, columnIndex) => {
+  const newColumns = {
+    [columnIndex]: columns[columnIndex]
+  }
+
+  const noteIndex = newColumns[columnIndex].findIndex(n => n.id === noteId)
+
+  newColumns[columnIndex][noteIndex].header = header
+  newColumns[columnIndex][noteIndex].text = text
+
+  return {
+    newColumns
+  }
+}
+
+const remove = (columns, noteId, columnIndex) => ({
+  newColumns: {
+    [columnIndex]: columns[columnIndex].filter(n => n.id !== noteId)
+  }
+})
+
+const dropOnColumn = (columns, noteId, oldColumnIndex, newColumnIndex) => {
   const columnCount = Object.values(columns).length
   // finding the dragged note
   const note = columns[oldColumnIndex].find(n => n.id === noteId)
@@ -108,7 +146,7 @@ const dropOnColumn = (noteId, oldColumnIndex, newColumnIndex, columns) => {
   }
 }
 
-const dropOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, columns) => {
+const dropOnNote = (columns, noteId, targetNoteId, oldColumnIndex, newColumnIndex) => {
   const columnCount = Object.values(columns).length
 
   // finding the dragged note
@@ -177,27 +215,6 @@ const dropOnNote = (noteId, targetNoteId, oldColumnIndex, newColumnIndex, column
     newOrder
   }
 }
-
-const edit = (noteId, header, text, columnIndex, columns) => {
-  const newColumns = {
-    [columnIndex]: columns[columnIndex]
-  }
-
-  const noteIndex = newColumns[columnIndex].findIndex(n => n.id === noteId)
-
-  newColumns[columnIndex][noteIndex].header = header
-  newColumns[columnIndex][noteIndex].text = text
-
-  return {
-    newColumns
-  }
-}
-
-const remove = (noteId, columnIndex, columns) => ({
-  newColumns: {
-    [columnIndex]: columns[columnIndex].filter(n => n.id !== noteId)
-  }
-})
 
 export {
   add,

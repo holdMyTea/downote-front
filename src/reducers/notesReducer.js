@@ -20,6 +20,7 @@ import {
  * @property {number} order - integer to determine order of a note for render
  */
 
+// TODO: update the docs in this file
 /**
  * @typedef {Object} NoteStore
  * @property {Note[]} 0 - notes of the first column
@@ -48,6 +49,14 @@ const spreadNotesToObject = (notes, columnCount) => {
       .sort((a, b) => a.order - b.order)
   }
   return result
+}
+
+const updateColumns = (state, action) => {
+  for (const [k, v] of Object.entries(action.newColumns)) {
+    state.columns[k] = v
+  }
+
+  return state.columns
 }
 
 export const reducer = (
@@ -81,8 +90,7 @@ export const reducer = (
     case MOVE_NOTE_OVER_NOTE:
       return {
         ...state,
-        // TODO: optimize these spreads
-        columns: { ...state.columns, ...action.newColumns }
+        columns: updateColumns(state, action)
       }
 
     default: return state
