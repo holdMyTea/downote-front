@@ -1,4 +1,5 @@
 import { showErrorNotification, showSuccessNotification } from './notificationActions'
+import { fetchNotes } from './notesActions'
 import request from '../helpers/request'
 
 export const SEND_LOGIN_REQUEST = 'SEND_LOGIN_REQUEST'
@@ -24,6 +25,7 @@ export const logIn = (email, pass) => {
         if (response.ok) { // got 200
           dispatch(showSuccessNotification('Login successful'))
           dispatch(saveToken(response.body.token))
+          dispatch(fetchNotes())
         } else {
           dispatch(showErrorNotification(response.body.error))
           dispatch(receiveLoginFailure(response.body.error))

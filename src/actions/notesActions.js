@@ -31,22 +31,19 @@ const completeSync = syncId => ({
 })
 
 export const REQUEST_NOTES = 'REQUEST_NOTES'
-const requestNotes = _ => ({ type: REQUEST_NOTES })
-
 export const RECEIVE_NOTES = 'RECEIVE_NOTES'
-const receiveNotes = notes => ({
-  type: RECEIVE_NOTES,
-  notes
-})
 /**
  * Redux action to fetch notes from API.
  */
 export const fetchNotes = _ => dispatch => {
-  dispatch(requestNotes())
+  dispatch({ type: REQUEST_NOTES })
   return request('/notes')
     .then(response => {
       if (response.ok) {
-        dispatch(receiveNotes(response.body))
+        dispatch(({
+          type: RECEIVE_NOTES,
+          notes: response.body
+        }))
       } else {
         dispatch(handleError(response))
       }
