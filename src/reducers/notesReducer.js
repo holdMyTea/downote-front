@@ -20,9 +20,8 @@ import {
  * @property {number} order - integer to determine order of a note for render
  */
 
-// TODO: update the docs in this file
 /**
- * @typedef {Object} NoteStore
+ * @typedef {Object} NotesStore
  * @property {Note[]} 0 - notes of the first column
  * @property {Note[]} 1 - notes of the second column
  * and so on
@@ -41,6 +40,13 @@ export const prepareInitialState = (notes, columnCount = 3) => ({
   syncArray: []
 })
 
+/**
+ * Converts a flat array of Notes into an object with Note arrays
+ * according to their `order` property.
+ * @param {Note[]} notes - array of initial notes
+ * @param {number} columnCount - number of notes columns
+ * @returns {NotesStore} columns object for store
+ */
 const spreadNotesToObject = (notes, columnCount) => {
   const result = {}
   for (let i = 0; i < columnCount; i++) {
@@ -51,12 +57,18 @@ const spreadNotesToObject = (notes, columnCount) => {
   return result
 }
 
-const updateColumns = (state, action) => {
-  for (const [k, v] of Object.entries(action.newColumns)) {
-    state.columns[k] = v
+/**
+ * Updates props in state.columns with action.newColumns,
+ * and returns the former.
+ * @param {NotesStore} stateColumns - `state.columns`
+ * @param {NotesStore} actionColumns - `action.newColumns`
+ * @returns {NotesStore} stateColumns updated with actionColumns
+ */
+const updateColumns = (stateColumns, actionColumns) => {
+  for (const [k, v] of Object.entries(actionColumns)) {
+    stateColumns[k] = v
   }
-
-  return state.columns
+  return stateColumns
 }
 
 export const reducer = (
@@ -90,7 +102,7 @@ export const reducer = (
     case MOVE_NOTE_OVER_NOTE:
       return {
         ...state,
-        columns: updateColumns(state, action)
+        columns: updateColumns(state.columns, action.newColumns)
       }
 
     default: return state

@@ -8,7 +8,7 @@
 - Refactor actions, pls
 - ~~Ensure there's no redundant spreads in homeReducer~~
 - ~~Add loading indicator on GET /notes~~
-- TODOs
+- ~~TODOs~~
 - ~~Sync marker~~
 - Update tests
-- Update docs
+- ~~Update docs~~

@@ -5,6 +5,11 @@ import { showSuccessNotification, showErrorNotification } from './notificationAc
 import request from '../helpers/request'
 import uuid from 'uuid'
 
+/**
+ * Redux action for non-200 response. Shows an error notification,
+ * logs out the current user in case of 401.
+ * @param {Object} response - server's response
+ */
 const handleError = response => {
   switch (response.code) {
     case 401:
@@ -19,12 +24,21 @@ const handleError = response => {
 }
 
 export const START_SYNC = 'START_SYNC'
+/**
+ * Adds `syncId` to store's syncArray.
+ * While its length > 0 a sync indicator will be shown.
+ * @param {string} syncId
+ */
 const startSync = syncId => ({
   type: START_SYNC,
   syncId
 })
 
 export const COMPLETE_SYNC = 'COMPLETE_SYNC'
+/**
+ * Removes `syncId` from store's syncArray.
+ * @param {string} syncId
+ */
 const completeSync = syncId => ({
   type: COMPLETE_SYNC,
   syncId
@@ -33,7 +47,7 @@ const completeSync = syncId => ({
 export const REQUEST_NOTES = 'REQUEST_NOTES'
 export const RECEIVE_NOTES = 'RECEIVE_NOTES'
 /**
- * Redux action to fetch notes from API.
+ * Redux action for fetching notes from API.
  */
 export const fetchNotes = _ => dispatch => {
   dispatch({ type: REQUEST_NOTES })
@@ -53,9 +67,10 @@ export const fetchNotes = _ => dispatch => {
 export const CREATE_NOTE = 'CREATE_NOTE'
 export const RECEIVE_CREATE_NOTE = 'RECEIVE_CREATE_NOTE'
 /**
- * Redux action for adding a new note
- * @param {string} header - header of the note
- * @param {string} text - text of the note
+ * Redux action for adding a new note. Adds a note with `header` and `text`
+ * to a column with the least notes, then makes a request to API to save it.
+ * @param {string} header - header of the new note
+ * @param {string} text - text of the new note
  */
 export const createNote = (header, text) =>
   (dispatch, getState) => {
@@ -96,10 +111,12 @@ export const createNote = (header, text) =>
 
 export const EDIT_NOTE = 'EDIT_NOTE'
 /**
- * Redux action for editing of a note
+ * Redux action for editing of a note. Replaces content of the note with `noteId` in
+ * a column with `columnIndex`. Then makes a reqeust to API to save it.
  * @param {string} noteId - id of the note
- * @param {string} header - header of the note
- * @param {string} text - text of the note
+ * @param {string} header - new header of the note
+ * @param {string} text - new text of the note
+ * @param {number} columnIndex - index of the note's current column
  */
 export const editNote = (noteId, header, text, columnIndex) =>
   (dispatch, getState) => {
@@ -127,9 +144,11 @@ export const editNote = (noteId, header, text, columnIndex) =>
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 /**
- * Redux action for deleting a note
+ * Redux action for deleting a note. Removes the note from the notes column with `columnIndex`
+ * and fetches the change to the API.
  * @param {string} noteId - id of the deleted note
- */
+ * @param {number} columnIndex - index of the note's current column
+*/
 export const deleteNote = (noteId, columnIndex) =>
   (dispatch, getState) => {
     const { newColumns } = remove(getState().notes.columns, noteId, columnIndex)
