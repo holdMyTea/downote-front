@@ -10,5 +10,5 @@
 - ~~Add loading indicator on GET /notes~~
 - ~~TODOs~~
 - ~~Sync marker~~
-- Update tests
+- ~~Update tests~~
 - ~~Update docs~~
