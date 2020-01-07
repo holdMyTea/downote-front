@@ -4,6 +4,7 @@ import { useDrop } from 'react-dnd'
 import Types from 'prop-types'
 
 import Note from './Note'
+import { columnType } from './noteTypes'
 
 /**
  * A Grid.Column for Notes, also handles Notes drops
@@ -63,14 +64,7 @@ const NotesColumn = ({ notes, createNoteDragItem, onColumnDrop, onNoteDrop, onEd
 }
 
 NotesColumn.propTypes = {
-  notes: Types.arrayOf(
-    Types.shape({
-      id: Types.string.isRequired,
-      header: Types.string,
-      text: Types.string,
-      image: Types.bool,
-      order: Types.number.isRequired
-    })),
+  notes: columnType,
   createNoteDragItem: Types.func.isRequired,
   onColumnDrop: Types.func.isRequired,
   onNoteDrop: Types.func.isRequired,

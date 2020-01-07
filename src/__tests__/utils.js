@@ -7,8 +7,8 @@ import thunk from 'redux-thunk'
 import { render } from '@testing-library/react'
 import { createBrowserHistory } from 'history'
 
-import reducers from '../src/reducers'
-import { prepareInitialState } from '../src/reducers/homeReducer'
+import reducers from '../reducers'
+import { prepareInitialState } from '../reducers/notesReducer'
 
 // exposing history object, to be able to flush it to root in beforeEach
 export const history = createBrowserHistory({ initialEntries: ['/'] })
@@ -72,7 +72,7 @@ export const renderForHome = component => {
     // mock login token to not get redirected to login page
     {
       login: { token: 'totally-valid-token-for-testing' },
-      home: prepareInitialState(initialNotes, 3)
+      notes: prepareInitialState(initialNotes, 3)
     }
   )
 }

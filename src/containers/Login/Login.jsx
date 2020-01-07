@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
 import { Redirect } from 'react-router-dom'
-import { Grid, Header } from 'semantic-ui-react'
+import { Grid, Header, Dimmer, Loader } from 'semantic-ui-react'
 
 import LoginForm from './LoginForm'
 import { logIn } from '../../actions/loginActions'
@@ -26,11 +26,14 @@ const Login = ({ token, email, isLoginPending, error, onFormSubmit }) => {
         <Header textAlign='center'>
           DowNote
         </Header>
-        {
-          isLoginPending
-            ? <h6>Woopsi-Doopsie</h6>
-            : <LoginForm email={email} onSubmit={onFormSubmit} />
-        }
+        <LoginForm email={email} onSubmit={onFormSubmit} />
+
+        { isLoginPending && (
+          <Dimmer active={isLoginPending} page>
+            <Loader />
+          </Dimmer>
+        )}
+
       </Grid.Column>
     </Grid>
   )

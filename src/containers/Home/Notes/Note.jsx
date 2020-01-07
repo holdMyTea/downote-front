@@ -23,7 +23,7 @@ const styles = {
  * @param {boolean} [props.image] - flag to display the image (temporal abstraction)
  * @param {Object} props.dragItem - data object to contain the drag information
  * @param {string} props.dragItem.type - should be 'Note'
- * @param {string} props.dragItem.id - the id of the current (dragged) note
+ * @param {string|number} props.dragItem.id - the id of the current (dragged) note
  * @param {number} props.dragItem.columnIndex - the column the Note belongs to
  * @param {function} props.onNoteDrop - the function to be called when a Note dropped on this Note
  * @param {function} props.onCanDrop - the function that checks whether a note can be droped on this note
@@ -87,7 +87,7 @@ Note.propTypes = {
   image: Types.bool,
   dragItem: Types.shape({
     type: Types.string.isRequired,
-    id: Types.string.isRequired,
+    id: Types.oneOfType([ Types.number, Types.string ]).isRequired,
     columnIndex: Types.number.isRequired
   }).isRequired,
   onNoteDrop: Types.func.isRequired,
