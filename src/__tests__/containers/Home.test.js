@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect'
 
 import React from 'react'
 
-import { renderForHome } from '../../../test/utils'
+import { renderForHome } from '../utils'
 import Home from '../../containers/Home/Home'
 import { fireEvent, within, cleanup } from '@testing-library/react'
 

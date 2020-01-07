@@ -76,7 +76,7 @@ export const createNote = (header, text) =>
   (dispatch, getState) => {
     const { newColumns, uiID, order } = add(getState().notes.columns, header, text)
     // index of the column to which the note was added
-    const columnIndex = console.log(Object.keys(newColumns)[0])
+    const columnIndex = Object.keys(newColumns)[0]
     dispatch({ // dispatching note creation before fetching
       type: CREATE_NOTE,
       newColumns

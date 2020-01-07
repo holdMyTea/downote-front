@@ -3,7 +3,7 @@ import { fireEvent, findByText, wait } from '@testing-library/react'
 
 import React from 'react'
 
-import { history, renderWithRedux } from '../../../test/utils'
+import { history, renderWithRedux } from '../utils'
 import Login from '../../containers/Login/Login'
 
 describe('Login component', () => {
