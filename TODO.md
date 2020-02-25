@@ -1,14 +1,2 @@
-- ~~Fetch notes~~
-- ~~Add notes~~
-- ~~Update notes~~
-- ~~Move notes~~
-- ~~Delete notes~~
-- ~~Separate URL to env~~
-- ~~Handle 401 and errors in general~~
-- ~~Refactor actions, pls~~
-- ~~Ensure there's no redundant spreads in homeReducer~~
-- ~~Add loading indicator on GET /notes~~
-- ~~TODOs~~
-- ~~Sync marker~~
-- ~~Update tests~~
-- ~~Update docs~~
+- Update ESlint config
+- Update dependencies
