@@ -1,6 +1,4 @@
-FROM node:current-alpine
-
-RUN apk add git
+FROM node:current
 
 WORKDIR /home/downote/app
 COPY package*.json ./
