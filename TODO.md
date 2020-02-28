@@ -1,2 +1,3 @@
 - Update ESlint config
 - Update dependencies
+- Tree shaking

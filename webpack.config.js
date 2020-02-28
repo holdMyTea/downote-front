@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const EnvironmentPlugin = require('webpack').EnvironmentPlugin
 
 module.exports = {
   mode: 'development',
@@ -47,6 +48,7 @@ module.exports = {
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
       inject: 'body'
-    })
-  ]
+    }),
+    new EnvironmentPlugin([ 'API_HOST', 'API_PORT' ])
+  ],
 }

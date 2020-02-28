@@ -1,3 +1,4 @@
+const baseURL = `http://${process.env.API_HOST}:${process.env.API_PORT}`
 /**
  * A fetch wrapper for making a request with credentials,
  * and parsing JSON response.
@@ -8,7 +9,7 @@
  */
 const request = (endpoint, method = 'get', body) => {
   let code, ok
-  return fetch(`http://${process.env.REACT_APP_API}${endpoint}`, {
+  return fetch(`${baseURL}${endpoint}`, {
     method,
     headers: {
       'Accept': 'application/json',
