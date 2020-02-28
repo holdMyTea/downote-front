@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Icon, Sidebar, Dimmer, Loader } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
@@ -9,6 +9,7 @@ import Types from 'prop-types'
 import SidePanel from './SidePanel'
 import Notes from './Notes/NotesContainer'
 import { logOut } from '../../actions/loginActions'
+import { fetchNotes } from '../../actions/notesActions'
 
 const styles = {
   menuIconStyles: {
@@ -19,10 +20,14 @@ const styles = {
   }
 }
 
-const Home = ({ token, isLoading, onLogOutClick }) => {
+const Home = ({ token, isLoading, fetchNotes, onLogOutClick }) => {
   const [sidePanleVisibility, setSidePanelVisibility] = useState(false)
 
+  // redirecting to /login, if no token is in state
   if (!token) { return (<Redirect to='/login' />) }
+
+  // fetching /notes on first render
+  useEffect(() => { fetchNotes() }, [])
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -49,6 +54,7 @@ const Home = ({ token, isLoading, onLogOutClick }) => {
 Home.propTypes = {
   token: Types.string,
   isLoading: Types.bool.isRequired,
+  fetchNotes: Types.func.isRequired,
   onLogOutClick: Types.func.isRequired
 }
 
@@ -58,6 +64,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  fetchNotes: () => dispatch(fetchNotes()),
   onLogOutClick: () => dispatch(logOut())
 })
 

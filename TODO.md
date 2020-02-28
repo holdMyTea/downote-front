@@ -1,3 +1,5 @@
 - Update ESlint config
 - Update dependencies
 - Tree shaking
+- Get rid of Semantic
+- Add 'No notes here' screen

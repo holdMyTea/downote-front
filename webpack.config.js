@@ -51,4 +51,7 @@ module.exports = {
     }),
     new EnvironmentPlugin([ 'API_HOST', 'API_PORT' ])
   ],
+  devServer: {
+    historyApiFallback: true
+  }
 }
