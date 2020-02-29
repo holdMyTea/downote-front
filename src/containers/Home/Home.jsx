@@ -23,11 +23,11 @@ const styles = {
 const Home = ({ token, isLoading, fetchNotes, onLogOutClick }) => {
   const [sidePanleVisibility, setSidePanelVisibility] = useState(false)
 
-  // redirecting to /login, if no token is in state
-  if (!token) { return (<Redirect to='/login' />) }
-
   // fetching /notes on first render
   useEffect(() => { fetchNotes() }, [])
+
+  // redirecting to /login, if no token is in state
+  if (!token) { return (<Redirect to='/login' />) }
 
   return (
     <DndProvider backend={HTML5Backend}>

@@ -1,9 +1,9 @@
-import { add, updateAdded, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
+import { v4 as uuid } from 'uuid'
 
+import { add, updateAdded, edit, remove, dropOnColumn, dropOnNote } from '../helpers/notesHandler'
 import { removeToken } from './loginActions'
 import { showSuccessNotification, showErrorNotification } from './notificationActions'
 import request from '../helpers/request'
-import uuid from 'uuid'
 
 /**
  * Redux action for non-200 response. Shows an error notification,
