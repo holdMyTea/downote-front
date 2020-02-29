@@ -1,14 +1,26 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { connect } from 'react-redux'
 import Types from 'prop-types'
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom'
+import { Dimmer, Loader } from 'semantic-ui-react'
 
-import Login from './Login/Login'
-import Home from './Home/Home'
 import NotificationContainer from './NotificationContainer/NotificationContainer'
 
+const Login = lazy(() => import(
+  /* webpackChunkName: "Login" */
+  './Login/Login'
+))
+const Home = lazy(() => import(
+  /* webpackChunkName: "Home" */
+  './Home/Home'
+))
+
 const App = ({ token }) => (
-  <>
+  <Suspense fallback={(
+    <Dimmer active={true} page>
+      <Loader />
+    </Dimmer>
+  )}>
     <Switch>
       <Route path='/login' exact component={Login} />
       <Route path='/home' exact component={Home} />
@@ -21,7 +33,7 @@ const App = ({ token }) => (
     </Switch>
 
     <NotificationContainer />
-  </>
+  </Suspense>
 )
 
 const mapStateToProps = state => ({

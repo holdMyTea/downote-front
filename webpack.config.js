@@ -3,11 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const EnvironmentPlugin = require('webpack').EnvironmentPlugin
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: path.resolve(__dirname, 'src/index.jsx'),
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].js'
   },
   module: {
     rules: [
@@ -49,7 +50,7 @@ module.exports = {
       filename: 'index.html',
       inject: 'body'
     }),
-    new EnvironmentPlugin([ 'API_HOST', 'API_PORT' ])
+    new EnvironmentPlugin(['API_HOST', 'API_PORT'])
   ],
   devServer: {
     historyApiFallback: true

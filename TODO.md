@@ -3,3 +3,4 @@
 - Tree shaking
 - Get rid of Semantic
 - Add 'No notes here' screen
+- Fix '[name]/[name]/[name]' imports
