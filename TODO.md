@@ -5,3 +5,4 @@
 - Add 'No notes here' screen
 - Fix '[name]/[name]/[name]' imports
 - Fix tests
+- Refactor tests

@@ -6,11 +6,13 @@ import { renderForHome } from '../utils'
 import Home from '../../containers/Home/Home'
 import { fireEvent, within, cleanup } from '@testing-library/react'
 
+global.fetch = jest.fn()
+
 describe('Home component', () => {
   afterEach(cleanup)
 
   it('Moves a note to another column using drag\'n\'drop', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({}),
       ok: true,
       code: 200
@@ -35,8 +37,8 @@ describe('Home component', () => {
     expect(fetch.mock.calls[0][0]).toBe(`http://${process.env.REACT_APP_API}/notes/reorder`)
   })
 
-  it('Moves a note in from of another one using drag\'n\'drop', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+  it('Moves a note in front of another one using drag\'n\'drop', async () => {
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({}),
       ok: true,
       code: 200
@@ -68,7 +70,7 @@ describe('Home component', () => {
   })
 
   it('Moves a note to the bottom when dragged\'n\'dropped onto its current column', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({}),
       ok: true,
       code: 200
@@ -127,7 +129,7 @@ describe('Home component', () => {
   })
 
   it('Opens \'Add note\' modal and creates a note', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({ noteId: 99 }),
       ok: true,
       code: 200
@@ -166,7 +168,7 @@ describe('Home component', () => {
   })
 
   it('Opens \'Edit note\' modal and updates the note', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({ noteId: 99 }),
       ok: true,
       code: 200
@@ -207,7 +209,7 @@ describe('Home component', () => {
   })
 
   it('Opens \'Edit note\' modal and deletes the note', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({ noteId: 99 }),
       ok: true,
       code: 200
