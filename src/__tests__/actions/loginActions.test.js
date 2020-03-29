@@ -2,15 +2,16 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 
 import { logIn, SEND_LOGIN_REQUEST, SAVE_TOKEN, RECEIVE_LOGIN_FAILURE } from '../../actions/loginActions'
-import { REQUEST_NOTES, RECEIVE_NOTES } from '../../actions/notesActions'
 import { CREATE_NOTIFICATION, REMOVE_NOTIFICATION, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from '../../actions/notificationActions'
+
+global.fetch = jest.fn()
 
 describe('Login actions', () => {
   it('Logs in with correct credentials', async () => {
     jest.useFakeTimers()
 
     const token = 'testToken'
-    jest.spyOn(global, 'fetch').mockResolvedValue({ // mocking successful fetch
+    global.fetch.mockResolvedValueOnce({ // mocking successful login fetch
       json: () => ({ token }),
       ok: true,
       code: 200
@@ -27,15 +28,13 @@ describe('Login actions', () => {
     expect(actions[2]).toEqual({ type: SAVE_TOKEN, token }) // saving token from fetch to store
 
     jest.runAllTimers()
-    expect(actions[3]).toHaveProperty('type', REQUEST_NOTES) // request notes for user right after login
-    expect(actions[4]).toHaveProperty('type', RECEIVE_NOTES) // receive response from API
-    expect(actions[5]).toHaveProperty('type', REMOVE_NOTIFICATION) // remove notification after delay
+    expect(actions[3]).toHaveProperty('type', REMOVE_NOTIFICATION) // remove notification after delay
   })
 
   it('doesn\'t log in with wrong credentials', async () => {
     jest.useFakeTimers()
 
-    jest.spyOn(global, 'fetch').mockResolvedValue({ // mocking failed fetch
+    global.fetch.mockResolvedValue({ // mocking failed fetch
       json: () => ({ error: 'Wrong' }),
       ok: false,
       code: 401
@@ -58,7 +57,7 @@ describe('Login actions', () => {
   it('doesn\'t log in with no connection', async () => {
     jest.useFakeTimers()
 
-    jest.spyOn(global, 'fetch').mockRejectedValue({
+    global.fetch.mockRejectedValue({
       error: 'Nope'
     })
 
