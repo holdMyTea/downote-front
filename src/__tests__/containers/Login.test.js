@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect'
-import { fireEvent, findByText, wait } from '@testing-library/react'
+import { fireEvent, wait } from '@testing-library/react'
 
 import React from 'react'
 
@@ -41,7 +41,7 @@ describe('Login component', () => {
     })
 
     // render
-    const { getByPlaceholderText, getByText } = renderWithRedux(
+    const { getByPlaceholderText, getByText, findByText } = renderWithRedux(
       (<Login />)
     )
 
@@ -51,9 +51,7 @@ describe('Login component', () => {
 
     fireEvent.click(getByText(/Log In/i)) // submitting
 
-    await wait(() => {
-      expect(findByText('Wrong login credentials')).toBeTruthy() // loading message is shown
-      expect(location.pathname).toBe('/') // checking the user was NOT redirected
-    })
+    expect(findByText('Wrong login credentials')).toBeTruthy() // loading message is shown
+    expect(location.pathname).toBe('/') // checking the user was NOT redirected
   })
 })
