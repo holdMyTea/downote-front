@@ -2,22 +2,24 @@ import '@testing-library/jest-dom/extend-expect'
 
 import React from 'react'
 
-import { renderForHome } from '../utils'
+import { renderForHome, initialNotes } from '../utils'
 import Home from '../../containers/Home/Home'
 import { fireEvent, within, cleanup } from '@testing-library/react'
 
 global.fetch = jest.fn()
+global.fetch.mockResolvedValue({
+  json: () => initialNotes,
+  ok: true,
+  code: 200
+})
 
 describe('Home component', () => {
-  afterEach(cleanup)
+  afterEach(() => {
+    global.fetch.mockClear()
+    cleanup()
+  })
 
   it('Moves a note to another column using drag\'n\'drop', async () => {
-    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
-      json: () => ({}),
-      ok: true,
-      code: 200
-    })
-
     const { findAllByTestId } = renderForHome((<Home/>))
 
     const [intialColumn, targetColumn] = await findAllByTestId('note-col')
@@ -33,17 +35,11 @@ describe('Home component', () => {
     // and is gone from the intial one
     expect(within(intialColumn).queryByText(noteText)).toBeFalsy()
 
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[0][0]).toBe(`http://${process.env.REACT_APP_API}/notes/reorder`)
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
+    expect(fetch.mock.calls[fetch.mock.calls.length - 1][0].endsWith('/notes/reorder')).toBe(true)
   })
 
   it('Moves a note in front of another one using drag\'n\'drop', async () => {
-    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
-      json: () => ({}),
-      ok: true,
-      code: 200
-    })
-
     const { findAllByTestId } = renderForHome((<Home/>))
 
     const [initialColumn, targetColumn] = await findAllByTestId('note-col')
@@ -65,17 +61,11 @@ describe('Home component', () => {
     // dragged note should not be in the initial column now
     expect(within(initialColumn).queryByText(draggedNoteText)).toBeFalsy()
 
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[0][0]).toBe(`http://${process.env.REACT_APP_API}/notes/reorder`)
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
+    expect(fetch.mock.calls[fetch.mock.calls.length - 1][0].endsWith('/notes/reorder')).toBe(true)
   })
 
   it('Moves a note to the bottom when dragged\'n\'dropped onto its current column', async () => {
-    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
-      json: () => ({}),
-      ok: true,
-      code: 200
-    })
-
     const { findAllByTestId } = renderForHome((<Home/>))
 
     const [intialColumn] = await findAllByTestId('note-col')
@@ -91,8 +81,8 @@ describe('Home component', () => {
     expect(finalFirst).toBe(initialSecond)
     expect(finalSecond).toBe(initialFirst)
 
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[0][0]).toBe(`http://${process.env.REACT_APP_API}/notes/reorder`)
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
+    expect(fetch.mock.calls[fetch.mock.calls.length - 1][0].endsWith('/notes/reorder')).toBe(true)
   })
 
   it('Doesn\'t move a note when dragged\'n\'dropped onto the following note in the same column', async () => {
@@ -110,6 +100,8 @@ describe('Home component', () => {
     const [finalFirst, finalSecond] = within(initialColumn).getAllByText(/note/i)
     expect(finalFirst).toBe(initialFirst)
     expect(finalSecond).toBe(initialSecond)
+
+    expect(fetch).toHaveBeenCalledTimes(1)
   })
 
   it('Doesn\'t move a note when dragged\'n\'dropped onto itself', async () => {
@@ -129,12 +121,6 @@ describe('Home component', () => {
   })
 
   it('Opens \'Add note\' modal and creates a note', async () => {
-    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
-      json: () => ({ noteId: 99 }),
-      ok: true,
-      code: 200
-    })
-
     const { findByTitle, findByPlaceholderText, findByText, queryByTestId } = renderForHome((<Home/>))
 
     fireEvent.click(await findByTitle('Add note'))
@@ -143,16 +129,22 @@ describe('Home component', () => {
     expect(queryByTestId('add-note-modal')).toBeTruthy()
 
     const headerValue = 'Test header'
-    fireEvent.change(
+    fireEvent.input(
       await findByPlaceholderText('Header'),
       { target: { value: headerValue } }
     )
 
     const textValue = 'Test text'
-    fireEvent.change(
+    fireEvent.input(
       await findByPlaceholderText('Text'),
       { target: { value: textValue } }
     )
+
+    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
+      json: () => ({ noteId: 99 }),
+      ok: true,
+      code: 200
+    })
 
     fireEvent.click(await findByText('Save'))
 
@@ -160,20 +152,14 @@ describe('Home component', () => {
     expect(queryByTestId('add-note-modal')).toBeFalsy()
 
     // new note should appear
-    expect(findByText(headerValue)).toBeTruthy()
-    expect(findByText(textValue)).toBeTruthy()
+    expect(await findByText(headerValue)).toBeTruthy()
+    expect(await findByText(textValue)).toBeTruthy()
 
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[3][0]).toBe(`http://${process.env.REACT_APP_API}/note`)
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
+    expect(fetch.mock.calls[fetch.mock.calls.length - 1][0].endsWith('/note')).toBe(true)
   })
 
   it('Opens \'Edit note\' modal and updates the note', async () => {
-    global.fetch.mockResolvedValueOnce({ // mocking successful fetch
-      json: () => ({ noteId: 99 }),
-      ok: true,
-      code: 200
-    })
-
     const { findByPlaceholderText, findByText, queryByTestId, queryByText } = renderForHome((<Home/>))
 
     const initialHeader = 'A paragraph long note'
@@ -194,27 +180,26 @@ describe('Home component', () => {
       { target: { value: textValue } }
     )
 
-    fireEvent.click(await findByText('Save'))
-
-    // modal closed
-    expect(queryByTestId('add-note-modal')).toBeFalsy()
-
-    // note should be updated
-    expect(findByText(headerValue)).toBeTruthy()
-    expect(findByText(textValue)).toBeTruthy()
-    expect(queryByText(initialHeader)).toBeFalsy()
-
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[4][0]).toMatch(`http://${process.env.REACT_APP_API}/note/`)
-  })
-
-  it('Opens \'Edit note\' modal and deletes the note', async () => {
     global.fetch.mockResolvedValueOnce({ // mocking successful fetch
       json: () => ({ noteId: 99 }),
       ok: true,
       code: 200
     })
 
+    fireEvent.click(await findByText('Save'))
+
+    // modal closed
+    expect(queryByTestId('add-note-modal')).toBeFalsy()
+
+    // note should be updated
+    expect(await findByText(headerValue)).toBeTruthy()
+    expect(await findByText(textValue)).toBeTruthy()
+    expect(queryByText(initialHeader)).toBeFalsy()
+
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
+  })
+
+  it('Opens \'Edit note\' modal and deletes the note', async () => {
     const { findByTitle, findByText, queryByTestId, queryByText } = renderForHome((<Home/>))
 
     const initialHeader = 'A paragraph long note'
@@ -223,6 +208,14 @@ describe('Home component', () => {
     // modal open
     expect(queryByTestId('add-note-modal')).toBeTruthy()
 
+    global.fetch.mockResolvedValueOnce({ // mocking delete fetch
+      json: () => ({
+        noteId: 99,
+        message: 'Note has been deleted'
+      }),
+      ok: true,
+      code: 200
+    })
     fireEvent.click(await findByTitle('Delete note'))
 
     // modal closed
@@ -231,7 +224,6 @@ describe('Home component', () => {
     // note should be deleted
     expect(queryByText(initialHeader)).toBeFalsy()
 
-    expect(fetch).toHaveBeenCalled() // ensuring API is called
-    expect(fetch.mock.calls[5][0]).toMatch(`http://${process.env.REACT_APP_API}/note/`)
+    expect(fetch).toHaveBeenCalledTimes(2) // ensuring API is called
   })
 })
